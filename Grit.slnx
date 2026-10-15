@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Grit.SharedKernel/Grit.SharedKernel.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Grit.ArchitectureTests/Grit.ArchitectureTests.csproj" />
+    <Project Path="tests/Grit.SharedKernel.Tests/Grit.SharedKernel.Tests.csproj" />
+  </Folder>
+</Solution>
