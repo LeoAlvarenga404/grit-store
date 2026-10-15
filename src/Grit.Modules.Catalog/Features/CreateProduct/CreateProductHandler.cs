@@ -36,10 +36,11 @@ internal sealed class CreateProductHandler(CatalogDbContext db)
         {
             await db.SaveChangesAsync(cancellationToken);
         }
-        catch (DbUpdateException exception) when (exception.InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation })
+        catch (DbUpdateException exception) when (exception.InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation, ConstraintName: "ix_products_slug" })
         {
             return CatalogErrors.ProductSlugTaken;
         }
+
         return new CreateProductResponse(product.Id.Value, product.Slug.Value, db.VersionOf(product));
     }
 }

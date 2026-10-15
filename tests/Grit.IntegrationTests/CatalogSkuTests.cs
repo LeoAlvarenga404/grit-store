@@ -68,6 +68,22 @@ public class CatalogSkuTests(ApiFactory factory)
         (await CatalogAdminApi.GetProductAsync(_client, id)).GetProperty("skus").GetArrayLength().ShouldBe(1);
     }
 
+    [Fact]
+    public async Task AddSku_MissingVersion_Returns400WithFieldErrorAndAddsNothing()
+    {
+        var (id, _) = await CatalogAdminApi.CreateProductAsync(_client);
+
+        var response = await _client.PostAsJsonAsync(
+            CatalogAdminApi.SkusPath(id),
+            new { attributes = new { cor = "verde" }, priceAmount = 10m, priceCurrency = "BRL" },
+            TestContext.Current.CancellationToken);
+
+        var problem = await ProblemResponse.ReadAsync(response, HttpStatusCode.BadRequest);
+        problem.GetProperty("code").GetString().ShouldBe("validation.failed");
+        problem.GetProperty("errors").GetProperty("version").GetArrayLength().ShouldBe(1);
+        (await CatalogAdminApi.GetProductAsync(_client, id)).GetProperty("skus").GetArrayLength().ShouldBe(0);
+    }
+
     [Theory]
     [MemberData(nameof(InvalidPrices))]
     public async Task AddSku_InvalidPrice_Returns400WithCodeAndAddsNothing(decimal priceAmount, string priceCurrency, string code)

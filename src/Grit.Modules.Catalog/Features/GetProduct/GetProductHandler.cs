@@ -23,6 +23,7 @@ internal sealed class GetProductHandler(CatalogDbContext db) : IRequestHandler<G
                 product.Attributes,
                 EF.Property<uint>(product, CatalogDbContext.Version),
                 product.Skus
+                    .OrderBy(sku => sku.Id)
                     .Select(sku => new GetProductSkuResponse(sku.Id.Value, sku.Attributes, sku.Price.Amount, sku.Price.Currency))
                     .ToList()))
             .SingleOrDefaultAsync(cancellationToken);

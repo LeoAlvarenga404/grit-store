@@ -24,6 +24,7 @@ public class CatalogSkuPriceTests(ApiFactory factory)
         PriceOf(product, blue.Id).ShouldBe(149.90m);
         PriceOf(product, green.Id).ShouldBe(99.90m);
         product.GetProperty("version").GetUInt32().ShouldBe(newVersion);
+        product.GetProperty("skus").EnumerateArray().Select(sku => sku.GetProperty("id").GetGuid()).ShouldBe([blue.Id, green.Id]);
     }
 
     [Fact]
@@ -38,6 +39,23 @@ public class CatalogSkuPriceTests(ApiFactory factory)
         var problem = await ProblemResponse.ReadAsync(response, HttpStatusCode.Conflict);
         problem.GetProperty("code").GetString().ShouldBe("catalog.product_changed");
         PriceOf(await CatalogAdminApi.GetProductAsync(_client, id), sku.Id).ShouldBe(120m);
+    }
+
+    [Fact]
+    public async Task ChangeSkuPrice_MissingVersion_Returns400WithFieldErrorAndKeepsThePrice()
+    {
+        var (id, version) = await CatalogAdminApi.CreateProductAsync(_client);
+        var sku = await CatalogAdminApi.AddSkuAsync(_client, id, version, "azul");
+
+        var response = await _client.PutAsJsonAsync(
+            $"{CatalogAdminApi.SkusPath(id)}/{sku.Id}/price",
+            new { priceAmount = 120m, priceCurrency = "BRL" },
+            TestContext.Current.CancellationToken);
+
+        var problem = await ProblemResponse.ReadAsync(response, HttpStatusCode.BadRequest);
+        problem.GetProperty("code").GetString().ShouldBe("validation.failed");
+        problem.GetProperty("errors").GetProperty("version").GetArrayLength().ShouldBe(1);
+        PriceOf(await CatalogAdminApi.GetProductAsync(_client, id), sku.Id).ShouldBe(99.90m);
     }
 
     [Theory]

@@ -30,10 +30,11 @@ internal sealed class CreateCategoryHandler(CatalogDbContext db)
         {
             await db.SaveChangesAsync(cancellationToken);
         }
-        catch (DbUpdateException exception) when (exception.InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation })
+        catch (DbUpdateException exception) when (exception.InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation, ConstraintName: "ix_categories_slug" })
         {
             return CatalogErrors.CategorySlugTaken;
         }
+
         return new CreateCategoryResponse(category.Id.Value, category.Slug.Value);
     }
 }
