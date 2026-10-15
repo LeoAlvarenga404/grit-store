@@ -8,6 +8,8 @@
   <Folder Name="/tests/">
     <Project Path="tests/Grit.ArchitectureTests/Grit.ArchitectureTests.csproj" />
     <Project Path="tests/Grit.BuildingBlocks.Tests/Grit.BuildingBlocks.Tests.csproj" />
+    <Project Path="tests/Grit.Modules.Probe.Contracts/Grit.Modules.Probe.Contracts.csproj" />
+    <Project Path="tests/Grit.Modules.Probe/Grit.Modules.Probe.csproj" />
     <Project Path="tests/Grit.SharedKernel.Tests/Grit.SharedKernel.Tests.csproj" />
   </Folder>
 </Solution>

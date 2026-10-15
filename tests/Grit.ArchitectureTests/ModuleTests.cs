@@ -43,4 +43,29 @@ public class ModuleTests
 
         violations.ShouldBeEmpty();
     }
+
+    [Fact]
+    public void ProbeModule_IsCheckedByTheModuleRules()
+    {
+        var names = ModuleAssemblies.Load().Select(assembly => assembly.GetName().Name).ToList();
+
+        names.ShouldContain("Grit.Modules.Probe");
+        names.ShouldContain("Grit.Modules.Probe.Contracts");
+    }
+
+    // Contracts cross module boundaries and the wire: primitives only, never Money or another kernel type.
+    [Fact]
+    public void Contracts_DependOnlyOnSystem()
+    {
+        var violations = ModuleAssemblies.Load()
+            .Where(assembly => assembly.GetName().Name!.EndsWith(".Contracts", StringComparison.Ordinal))
+            .SelectMany(assembly => Types.InAssembly(assembly)
+                .Should()
+                .OnlyHaveDependencyOn("System", assembly.GetName().Name!)
+                .GetResult()
+                .FailingTypes
+                .Select(type => type.FullName));
+
+        violations.ShouldBeEmpty();
+    }
 }

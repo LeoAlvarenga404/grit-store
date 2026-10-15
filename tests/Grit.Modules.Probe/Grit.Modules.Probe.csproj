@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Grit.IntegrationTests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit.EntityFrameworkCore" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Grit.BuildingBlocks\Grit.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\Grit.Modules.Probe.Contracts\Grit.Modules.Probe.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
