@@ -58,6 +58,30 @@ public class ProductTests
     }
 
     [Fact]
+    public void Update_CallerChangesAttributesAfterwards_ProductKeepsItsCopy()
+    {
+        var product = Product.Create(Camping, "Barraca", "", Attributes()).Value;
+        var attributes = Attributes(("peso", "1.2 kg"));
+        product.Update(Camping, "Barraca", "", attributes);
+
+        attributes["peso"] = "3 kg";
+
+        product.Attributes["peso"].ShouldBe("1.2 kg");
+    }
+
+    [Fact]
+    public void AddSku_CallerChangesAttributesAfterwards_SkuKeepsItsCopy()
+    {
+        var product = NewProduct();
+        var attributes = Attributes(("cor", "azul"));
+        var sku = product.AddSku(attributes, Reais(99.90m)).Value;
+
+        attributes["cor"] = "verde";
+
+        sku.Attributes["cor"].ShouldBe("azul");
+    }
+
+    [Fact]
     public void AddSku_NewVariant_AddsSkuWithAttributesAndPrice()
     {
         var product = NewProduct();

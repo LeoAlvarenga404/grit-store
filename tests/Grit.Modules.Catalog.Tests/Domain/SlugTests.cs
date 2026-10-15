@@ -10,6 +10,7 @@ public class SlugTests
     [InlineData("  Bike  Aro 29!! ", "bike-aro-29")]
     [InlineData("Ação--Rápida", "acao-rapida")]
     [InlineData("GARRAFA 750ML", "garrafa-750ml")]
+    [InlineData("Meia 3ª Geração", "meia-3-geracao")]
     public void FromName_Name_ReturnsLowercaseAsciiWordsJoinedByHyphens(string name, string expected)
     {
         var result = Slug.FromName(name);
@@ -36,6 +37,14 @@ public class SlugTests
         var result = Slug.FromName(new string('a', 99) + " bbbb");
 
         result.Value.Value.ShouldBe(new string('a', 99));
+    }
+
+    [Fact]
+    public void FromName_LongName_KeepsExactlyMaxLengthCharacters()
+    {
+        var result = Slug.FromName(new string('a', 98) + " bbbb");
+
+        result.Value.Value.ShouldBe(new string('a', 98) + "-b");
     }
 
     [Fact]
