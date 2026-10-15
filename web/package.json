@@ -1,0 +1,27 @@
+{
+  "name": "grit-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "gen:api": "openapi-typescript ./openapi/grit-api.json --output ./lib/api/schema.d.ts"
+  },
+  "dependencies": {
+    "next": "16.3.8",
+    "openapi-fetch": "0.17.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^24",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.8",
+    "openapi-typescript": "7.13.0",
+    "typescript": "^5"
+  }
+}
