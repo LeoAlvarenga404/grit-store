@@ -53,6 +53,20 @@ public class TransactionBehaviorTests
     }
 
     [Fact]
+    public async Task Handle_CommandFailsWithResultOfT_RollsBackTransaction()
+    {
+        TransactionStatus? status = null;
+
+        await new TransactionBehavior<TestCommand, Result<int>>().Handle(new TestCommand(), _ =>
+        {
+            Transaction.Current!.TransactionCompleted += (_, completed) => status = completed.Transaction!.TransactionInformation.Status;
+            return Task.FromResult(Result.Failure<int>(SomeError));
+        }, TestContext.Current.CancellationToken);
+
+        status.ShouldBe(TransactionStatus.Aborted);
+    }
+
+    [Fact]
     public async Task Handle_CommandThrows_RollsBackTransaction()
     {
         TransactionStatus? status = null;

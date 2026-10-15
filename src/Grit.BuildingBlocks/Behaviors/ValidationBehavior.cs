@@ -1,5 +1,6 @@
 using System.Text.Json;
 using FluentValidation;
+using FluentValidation.Results;
 using Grit.SharedKernel;
 using MediatR;
 
@@ -13,9 +14,15 @@ public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidat
     {
         ArgumentNullException.ThrowIfNull(next);
 
-        var results = await Task.WhenAll(validators.Select(validator => validator.ValidateAsync(request, cancellationToken)));
-        var fieldErrors = results
-            .SelectMany(result => result.Errors)
+        var failures = new List<ValidationFailure>();
+        // Sequential: validators may share the request's scoped DbContext, which allows one operation at a time.
+        foreach (var validator in validators)
+        {
+            var result = await validator.ValidateAsync(request, cancellationToken);
+            failures.AddRange(result.Errors);
+        }
+
+        var fieldErrors = failures
             .GroupBy(failure => ToJsonName(failure.PropertyName))
             .ToDictionary(group => group.Key, group => group.Select(failure => failure.ErrorMessage).ToArray());
 

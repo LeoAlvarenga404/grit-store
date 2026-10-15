@@ -63,6 +63,32 @@ public class ValidationBehaviorTests
     }
 
     [Fact]
+    public async Task Handle_TwoValidators_RunOneAfterAnother()
+    {
+        var isFirstRunning = false;
+        var wasFirstRunningWhenSecondRan = true;
+        var first = new InlineValidator<TestRequest>();
+        first.RuleFor(request => request.Name).MustAsync(async (_, _) =>
+        {
+            isFirstRunning = true;
+            await Task.Delay(50, TestContext.Current.CancellationToken);
+            isFirstRunning = false;
+            return true;
+        });
+        var second = new InlineValidator<TestRequest>();
+        second.RuleFor(request => request.Name).Must(_ =>
+        {
+            wasFirstRunningWhenSecondRan = isFirstRunning;
+            return true;
+        });
+
+        await new ValidationBehavior<TestRequest, Result<int>>([first, second]).Handle(
+            new TestRequest("Ana"), _ => Task.FromResult(Result.Success(1)), TestContext.Current.CancellationToken);
+
+        wasFirstRunningWhenSecondRan.ShouldBeFalse();
+    }
+
+    [Fact]
     public async Task Handle_InvalidRequestReturningResult_ReturnsFailure()
     {
         var validator = new InlineValidator<TestRequest>();
@@ -85,5 +111,20 @@ public class ValidationBehaviorTests
             new TestRequest(""), _ => Task.FromResult("next"), TestContext.Current.CancellationToken));
     }
 
+    [Fact]
+    public async Task Handle_InvalidNestedProperty_UsesCamelCaseKeyPerSegment()
+    {
+        var validator = new InlineValidator<AddressRequest>();
+        validator.RuleFor(request => request.Address.ZipCode).NotEmpty();
+
+        var result = await new ValidationBehavior<AddressRequest, Result<int>>([validator]).Handle(
+            new AddressRequest(new Address("")), _ => Task.FromResult(Result.Success(1)), TestContext.Current.CancellationToken);
+
+        result.IsFailure.ShouldBeTrue();
+        result.Error.FieldErrors!.Keys.ShouldBe(["address.zipCode"]);
+    }
+
     public sealed record TestRequest(string Name);
+    public sealed record AddressRequest(Address Address);
+    public sealed record Address(string ZipCode);
 }
