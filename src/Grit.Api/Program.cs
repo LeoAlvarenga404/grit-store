@@ -17,8 +17,7 @@ builder.Services.AddRateLimiter(options => options.RejectionStatusCode = StatusC
 builder.Services.AddValidatorsFromAssemblies(moduleAssemblies, includeInternalTypes: true);
 builder.Services.AddMediatR(mediatr =>
 {
-    // MediatR rejects an empty assembly list, and the API alone has no module yet (the probe lives in the tests).
-    mediatr.RegisterServicesFromAssemblies([typeof(Program).Assembly, .. moduleAssemblies]);
+    mediatr.RegisterServicesFromAssemblies(moduleAssemblies);
     mediatr.AddOpenBehavior(typeof(LoggingBehavior<,>));
     mediatr.AddOpenBehavior(typeof(ValidationBehavior<,>));
     mediatr.AddOpenBehavior(typeof(TransactionBehavior<,>));
@@ -39,6 +38,15 @@ foreach (var module in modules)
 }
 
 var app = builder.Build();
+
+// Development covers the AppHost and the integration tests; the build-time OpenAPI run is Production and has no database.
+if (app.Environment.IsDevelopment())
+{
+    foreach (var module in modules)
+    {
+        await module.MigrateDatabaseAsync(app.Services, app.Lifetime.ApplicationStopping);
+    }
+}
 
 app.UseExceptionHandler(new ExceptionHandlerOptions
 {

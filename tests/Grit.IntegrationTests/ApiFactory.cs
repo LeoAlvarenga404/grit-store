@@ -62,7 +62,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         var options = new DbContextOptionsBuilder<ProbeDbContext>().UseNpgsql(_postgres.GetConnectionString()).Options;
         await using var probe = new ProbeDbContext(options);
 
-        // The probe module has no migrations; real modules bring their own from sub-plan 1a.
+        // Runs before the host starts: EnsureCreated does nothing once any table exists, and the API migrates Catalog at start-up.
         await probe.Database.EnsureCreatedAsync();
     }
 }
