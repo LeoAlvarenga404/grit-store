@@ -2,6 +2,8 @@ namespace Grit.SharedKernel;
 
 public sealed record Money
 {
+    private const decimal MaxAmount = 1_000_000_000_000m;
+
     private Money(decimal amount, string currency)
     {
         Amount = amount;
@@ -25,6 +27,11 @@ public sealed record Money
             return new Error("money.too_many_decimal_places", "Amount cannot have more than two decimal places.", ErrorType.Validation);
         }
 
+        if (amount > MaxAmount)
+        {
+            return new Error("money.amount_too_large", "Amount cannot exceed 1,000,000,000,000.00.", ErrorType.Validation);
+        }
+
         if (currency.Length != 3 || !currency.All(char.IsAsciiLetterUpper))
         {
             return new Error("money.invalid_currency", "Currency must be three uppercase ASCII letters.", ErrorType.Validation);
@@ -42,13 +49,23 @@ public sealed record Money
             throw new InvalidOperationException($"Cannot add {other.Currency} to {Currency}.");
         }
 
-        return new Money(Amount + other.Amount, Currency);
+        return WithAmount(Amount + other.Amount);
     }
 
     public Money Multiply(int quantity)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(quantity);
 
-        return new Money(Amount * quantity, Currency);
+        return WithAmount(Amount * quantity);
+    }
+
+    private Money WithAmount(decimal amount)
+    {
+        if (amount > MaxAmount)
+        {
+            throw new OverflowException("Money amount exceeds the maximum.");
+        }
+
+        return new Money(amount, Currency);
     }
 }

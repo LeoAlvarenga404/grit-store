@@ -93,6 +93,34 @@ public class MoneyTests
         result.Error.Type.ShouldBe(ErrorType.Validation);
     }
 
+    [Fact]
+    public void Create_AmountAtMaximum_ReturnsMoney()
+    {
+        var result = Money.Create(1_000_000_000_000m, "BRL");
+
+        result.IsSuccess.ShouldBeTrue();
+        result.Value.Amount.ShouldBe(1_000_000_000_000m);
+    }
+
+    [Fact]
+    public void Create_AmountAboveMaximum_ReturnsAmountTooLargeError()
+    {
+        var result = Money.Create(1_000_000_000_000.01m, "BRL");
+
+        result.IsFailure.ShouldBeTrue();
+        result.Error.Code.ShouldBe("money.amount_too_large");
+        result.Error.Type.ShouldBe(ErrorType.Validation);
+    }
+
+    [Fact]
+    public void Create_AmountAboveMaximumAndInvalidCurrency_ReturnsAmountTooLargeError()
+    {
+        var result = Money.Create(1_000_000_000_000.01m, "brl");
+
+        result.IsFailure.ShouldBeTrue();
+        result.Error.Code.ShouldBe("money.amount_too_large");
+    }
+
     [Theory]
     [InlineData("BRL")]
     [InlineData("USD")]
@@ -116,6 +144,26 @@ public class MoneyTests
         Should.Throw<InvalidOperationException>(() => real.Add(dollar));
     }
 
+    [Fact]
+    public void Add_ResultAboveMaximum_Throws()
+    {
+        var total = Money.Create(999_999_999_999.99m, "BRL").Value;
+        var extra = Money.Create(0.02m, "BRL").Value;
+
+        Should.Throw<OverflowException>(() => total.Add(extra));
+    }
+
+    [Fact]
+    public void Add_ResultAtMaximum_ReturnsMoney()
+    {
+        var total = Money.Create(999_999_999_999.99m, "BRL").Value;
+        var extra = Money.Create(0.01m, "BRL").Value;
+
+        var sum = total.Add(extra);
+
+        sum.Amount.ShouldBe(1_000_000_000_000m);
+    }
+
     [Theory]
     [MemberData(nameof(QuantitiesAndLineTotals))]
     public void Multiply_Quantity_MultipliesAmount(int quantity, decimal expectedAmount, string currency)
@@ -126,6 +174,24 @@ public class MoneyTests
 
         lineTotal.Amount.ShouldBe(expectedAmount);
         lineTotal.Currency.ShouldBe(currency);
+    }
+
+    [Fact]
+    public void Multiply_ResultAboveMaximum_Throws()
+    {
+        var unitPrice = Money.Create(500_000_000_000.01m, "BRL").Value;
+
+        Should.Throw<OverflowException>(() => unitPrice.Multiply(2));
+    }
+
+    [Fact]
+    public void Multiply_LargeQuantity_KeepsCents()
+    {
+        var unitPrice = Money.Create(0.01m, "BRL").Value;
+
+        var lineTotal = unitPrice.Multiply(int.MaxValue);
+
+        lineTotal.Amount.ShouldBe(21_474_836.47m);
     }
 
     [Fact]
