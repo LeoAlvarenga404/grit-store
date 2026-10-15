@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using FluentValidation;
 using Grit.Api;
 using Grit.BuildingBlocks.Behaviors;
@@ -12,6 +13,8 @@ var moduleAssemblies = modules.Select(module => module.GetType().Assembly).ToArr
 builder.AddServiceDefaults();
 builder.AddNpgsqlDataSource("grit");
 builder.Services.AddProblemDetails();
+// The web defaults also read numbers from strings, which types every number as integer-or-string in OpenAPI and the web client.
+builder.Services.ConfigureHttpJsonOptions(options => options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict);
 builder.Services.AddOpenApi();
 builder.Services.AddRateLimiter(options => options.RejectionStatusCode = StatusCodes.Status429TooManyRequests);
 builder.Services.AddValidatorsFromAssemblies(moduleAssemblies, includeInternalTypes: true);

@@ -4,4 +4,4 @@ internal sealed record CreateProductRequest(
     Guid CategoryId,
     string Name,
     string Description,
-    Dictionary<string, string>? Attributes);
+    Dictionary<string, string>? Attributes = null);

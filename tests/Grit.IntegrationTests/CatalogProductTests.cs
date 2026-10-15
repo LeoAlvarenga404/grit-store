@@ -46,6 +46,8 @@ public class CatalogProductTests(ApiFactory factory)
         var id = created.GetProperty("id").GetGuid();
         response.Headers.Location!.ToString().ShouldBe($"{CatalogAdminApi.ProductsPath}/{id}");
         var product = await CatalogAdminApi.GetProductAsync(_client, id);
+        product.GetProperty("id").GetGuid().ShouldBe(id);
+        product.GetProperty("description").GetString().ShouldBe("Leve.");
         product.GetProperty("categoryId").GetGuid().ShouldBe(categoryId);
         product.GetProperty("name").GetString().ShouldBe(name);
         product.GetProperty("slug").GetString().ShouldBe(created.GetProperty("slug").GetString());
@@ -160,6 +162,20 @@ public class CatalogProductTests(ApiFactory factory)
         problem.GetProperty("errors").GetProperty("attributes").GetArrayLength().ShouldBe(1);
         var product = await CatalogAdminApi.GetProductAsync(_client, id);
         product.GetProperty("attributes").GetProperty("material").GetString().ShouldBe("poliester");
+    }
+
+    [Fact]
+    public async Task UpdateProduct_MissingVersion_Returns400WithFieldError()
+    {
+        var (id, _) = await CatalogAdminApi.CreateProductAsync(_client);
+        var categoryId = (await CatalogAdminApi.GetProductAsync(_client, id)).GetProperty("categoryId").GetGuid();
+
+        var response = await _client.PutAsJsonAsync(
+            $"{CatalogAdminApi.ProductsPath}/{id}", new { categoryId, name = "Outro Nome", description = "" }, TestContext.Current.CancellationToken);
+
+        var problem = await ProblemResponse.ReadAsync(response, HttpStatusCode.BadRequest);
+        problem.GetProperty("code").GetString().ShouldBe("validation.failed");
+        problem.GetProperty("errors").GetProperty("version").GetArrayLength().ShouldBe(1);
     }
 
     [Fact]

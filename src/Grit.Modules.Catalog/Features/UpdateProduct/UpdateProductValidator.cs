@@ -10,5 +10,6 @@ internal sealed class UpdateProductValidator : AbstractValidator<UpdateProductCo
         RuleFor(command => command.Name).NotEmpty().MaximumLength(200);
         RuleFor(command => command.Description).NotNull().MaximumLength(4000);
         RuleFor(command => command.Attributes).Must(AttributesRule.IsValid).WithMessage(AttributesRule.Message);
+        RuleFor(command => command.Version).NotEmpty();
     }
 }

@@ -282,8 +282,7 @@
         "required": [
           "categoryId",
           "name",
-          "description",
-          "attributes"
+          "description"
         ],
         "type": "object",
         "properties": {
@@ -324,11 +323,7 @@
             "type": "string"
           },
           "version": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": "integer",
             "format": "uint32"
           }
         }
@@ -370,11 +365,7 @@
             }
           },
           "version": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": "integer",
             "format": "uint32"
           },
           "skus": {
@@ -405,11 +396,7 @@
             }
           },
           "priceAmount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "type": [
-              "number",
-              "string"
-            ],
+            "type": "number",
             "format": "double"
           },
           "priceCurrency": {
@@ -444,11 +431,9 @@
             ]
           },
           "status": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
               "null",
-              "integer",
-              "string"
+              "integer"
             ],
             "format": "int32"
           },
@@ -473,11 +458,7 @@
         "type": "object",
         "properties": {
           "version": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": "integer",
             "format": "uint32"
           }
         }
@@ -487,7 +468,6 @@
           "categoryId",
           "name",
           "description",
-          "attributes",
           "version"
         ],
         "type": "object",
@@ -502,6 +482,10 @@
           "description": {
             "type": "string"
           },
+          "version": {
+            "type": "integer",
+            "format": "uint32"
+          },
           "attributes": {
             "type": [
               "null",
@@ -510,14 +494,6 @@
             "additionalProperties": {
               "type": "string"
             }
-          },
-          "version": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
-            "format": "uint32"
           }
         }
       }

@@ -4,5 +4,5 @@ internal sealed record UpdateProductRequest(
     Guid CategoryId,
     string Name,
     string Description,
-    Dictionary<string, string>? Attributes,
-    uint Version);
+    uint Version,
+    Dictionary<string, string>? Attributes = null);

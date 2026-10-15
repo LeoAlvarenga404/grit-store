@@ -3,6 +3,7 @@ using Grit.Modules.Catalog.Infrastructure;
 using Grit.SharedKernel;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Grit.Modules.Catalog.Features.CreateProduct;
 
@@ -30,7 +31,15 @@ internal sealed class CreateProductHandler(CatalogDbContext db)
         }
 
         db.Products.Add(product);
-        await db.SaveChangesAsync(cancellationToken);
+        // The pre-check misses a concurrent double submit; the unique slug index is then the only guard.
+        try
+        {
+            await db.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException exception) when (exception.InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation })
+        {
+            return CatalogErrors.ProductSlugTaken;
+        }
         return new CreateProductResponse(product.Id.Value, product.Slug.Value, db.VersionOf(product));
     }
 }
