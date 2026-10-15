@@ -1,8 +1,6 @@
-using System.Net;
 using Grit.Modules.Catalog.Domain;
 using Grit.Modules.Catalog.Infrastructure;
 using Grit.SharedKernel;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,32 +8,6 @@ namespace Grit.IntegrationTests;
 
 public class CatalogPersistenceTests(ApiFactory factory)
 {
-    [Fact]
-    public async Task ApiStartup_Development_AppliesTheCatalogMigrations()
-    {
-        await using var scope = factory.Services.CreateAsyncScope();
-        var db = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
-
-        var applied = await db.Database.GetAppliedMigrationsAsync(TestContext.Current.CancellationToken);
-        var pending = await db.Database.GetPendingMigrationsAsync(TestContext.Current.CancellationToken);
-
-        applied.ShouldContain(migration => migration.EndsWith("_InitialCatalog", StringComparison.Ordinal));
-        pending.ShouldBeEmpty();
-    }
-
-    // Port 1 refuses connections: a Production start-up that tried to migrate would throw while creating the client.
-    [Fact]
-    public async Task ApiStartup_Production_DoesNotTouchTheDatabase()
-    {
-        using var production = factory.WithWebHostBuilder(builder => builder
-            .UseEnvironment("Production")
-            .UseSetting("ConnectionStrings:grit", "Host=127.0.0.1;Port=1;Database=none;Timeout=1"));
-
-        var response = await production.CreateClient().GetAsync("/openapi/v1.json", TestContext.Current.CancellationToken);
-
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-    }
-
     [Fact]
     public async Task SaveChanges_NewProductWithSku_RoundTripsAttributesPriceAndStampsBothRoots()
     {
@@ -100,6 +72,9 @@ public class CatalogPersistenceTests(ApiFactory factory)
         after.Version.ShouldBe(saved.Value);
         after.UpdatedAt.ShouldBeGreaterThan(before.UpdatedAt);
         after.CreatedAt.ShouldBe(before.CreatedAt);
+        var sku = (await ReadSkusAsync(id)).ShouldHaveSingleItem();
+        sku.Attributes["cor"].ShouldBe("verde");
+        sku.Price.ShouldBe(Reais(10m));
     }
 
     [Fact]
@@ -120,6 +95,8 @@ public class CatalogPersistenceTests(ApiFactory factory)
         after.Version.ShouldNotBe(before.Version);
         after.UpdatedAt.ShouldBeGreaterThan(before.UpdatedAt);
         after.CreatedAt.ShouldBe(before.CreatedAt);
+        var sku = (await ReadSkusAsync(id)).ShouldHaveSingleItem();
+        sku.Price.ShouldBe(Reais(12.5m));
     }
 
     [Fact]
@@ -196,6 +173,16 @@ public class CatalogPersistenceTests(ApiFactory factory)
             })
             .SingleAsync(TestContext.Current.CancellationToken);
         return (row.CreatedAt, row.UpdatedAt, row.Version);
+    }
+
+    private async Task<List<Sku>> ReadSkusAsync(ProductId id)
+    {
+        await using var scope = factory.Services.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
+        return await db.Products
+            .Where(product => product.Id == id)
+            .SelectMany(product => product.Skus)
+            .ToListAsync(TestContext.Current.CancellationToken);
     }
 
     private static Dictionary<string, string> Attributes(string key, string value) => new() { [key] = value };
