@@ -17,6 +17,7 @@ public class TransactionTests(ApiFactory factory)
 {
     private readonly string _text = $"transaction-{Guid.NewGuid():N}";
     private readonly Guid _messageId = Guid.NewGuid();
+    private Guid? _outboxId;
 
     [Fact]
     public async Task Command_Succeeds_CommitsNoteAndOutboxRows()
@@ -33,15 +34,18 @@ public class TransactionTests(ApiFactory factory)
         var result = await SaveNoteThen(_ => Task.FromResult(Result.Failure<Guid>(ProbeErrors.DuplicateText)));
 
         result.IsFailure.ShouldBeTrue();
+        _outboxId.ShouldNotBeNull();
         (await CountRows()).ShouldBe((0, 0, 0));
     }
 
     [Fact]
     public async Task Command_ThrowsAfterSaving_RollsBackNoteAndOutboxRows()
     {
-        await Should.ThrowAsync<InvalidOperationException>(
+        var exception = await Should.ThrowAsync<InvalidOperationException>(
             () => SaveNoteThen(_ => throw new InvalidOperationException("Bug after saving.")));
 
+        exception.Message.ShouldBe("Bug after saving.");
+        _outboxId.ShouldNotBeNull();
         (await CountRows()).ShouldBe((0, 0, 0));
     }
 
@@ -58,6 +62,7 @@ public class TransactionTests(ApiFactory factory)
             db.Notes.Add(note);
             await publisher.Publish(new NoteCreated(note.Id.Value, _text), context => context.MessageId = _messageId, cancellationToken);
             await db.SaveChangesAsync(cancellationToken);
+            _outboxId = db.ChangeTracker.Entries<OutboxState>().Single().Entity.OutboxId;
             return await finish(note.Id.Value);
         }, TestContext.Current.CancellationToken);
     }
@@ -70,11 +75,10 @@ public class TransactionTests(ApiFactory factory)
         var cancellationToken = TestContext.Current.CancellationToken;
 
         var notes = await db.Notes.CountAsync(note => note.Text == _text, cancellationToken);
-        var outboxIds = await db.Set<OutboxMessage>()
-            .Where(message => message.MessageId == _messageId && message.OutboxId != null)
-            .Select(message => message.OutboxId!.Value)
-            .ToListAsync(cancellationToken);
-        var outboxStates = await db.Set<OutboxState>().CountAsync(state => outboxIds.Contains(state.OutboxId), cancellationToken);
-        return (notes, outboxIds.Count, outboxStates);
+        var outboxMessages = await db.Set<OutboxMessage>().CountAsync(message => message.MessageId == _messageId, cancellationToken);
+        var outboxStates = _outboxId is { } outboxId
+            ? await db.Set<OutboxState>().CountAsync(state => state.OutboxId == outboxId, cancellationToken)
+            : 0;
+        return (notes, outboxMessages, outboxStates);
     }
 }

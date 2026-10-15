@@ -41,7 +41,13 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         // OutboxTests turns delivery back on in a host of its own.
         builder.ConfigureTestServices(services =>
         {
-            foreach (var delivery in services.Where(IsProbeOutboxDelivery).ToList())
+            var deliveries = services.Where(IsProbeOutboxDelivery).ToList();
+            if (deliveries.Count == 0)
+            {
+                throw new InvalidOperationException("Outbox delivery service for ProbeDbContext not found; MassTransit registration changed.");
+            }
+
+            foreach (var delivery in deliveries)
             {
                 services.Remove(delivery);
             }
