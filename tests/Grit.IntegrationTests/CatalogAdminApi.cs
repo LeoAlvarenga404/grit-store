@@ -31,6 +31,20 @@ internal static class CatalogAdminApi
         return (created.GetProperty("id").GetGuid(), created.GetProperty("version").GetUInt32());
     }
 
+    public static string SkusPath(Guid productId) => $"{ProductsPath}/{productId}/skus";
+
+    public static async Task<(Guid Id, uint Version)> AddSkuAsync(HttpClient client, Guid productId, uint version, string color)
+    {
+        var response = await client.PostAsJsonAsync(
+            SkusPath(productId),
+            new { attributes = new { cor = color }, priceAmount = 99.90m, priceCurrency = "BRL", version },
+            TestContext.Current.CancellationToken);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.Created);
+        var created = await ReadAsync(response);
+        return (created.GetProperty("id").GetGuid(), created.GetProperty("version").GetUInt32());
+    }
+
     public static Task<JsonElement> GetProductAsync(HttpClient client, Guid id) =>
         client.GetFromJsonAsync<JsonElement>($"{ProductsPath}/{id}", TestContext.Current.CancellationToken);
 

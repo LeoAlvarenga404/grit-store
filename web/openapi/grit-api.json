@@ -247,10 +247,231 @@
           }
         }
       }
+    },
+    "/api/v1/admin/products/{id}/skus": {
+      "post": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Adds a SKU (a variant such as color and size) with its price to a product.",
+        "description": "Send the product version last read; a stale version answers 409 catalog.product_changed. Prices are in BRL.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddSkuRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddSkuResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/products/{id}/skus/{skuId}/price": {
+      "put": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Changes the price of one SKU.",
+        "description": "Send the product version last read; a stale version answers 409 catalog.product_changed. Prices are in BRL.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "skuId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeSkuPriceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductVersionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AddSkuRequest": {
+        "required": [
+          "priceAmount",
+          "priceCurrency",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "priceAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "priceCurrency": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "attributes": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AddSkuResponse": {
+        "required": [
+          "id",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ChangeSkuPriceRequest": {
+        "required": [
+          "priceAmount",
+          "priceCurrency",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "priceAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "priceCurrency": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
       "CreateCategoryRequest": {
         "required": [
           "name"

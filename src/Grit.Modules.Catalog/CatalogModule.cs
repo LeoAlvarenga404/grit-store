@@ -1,4 +1,6 @@
 using Grit.BuildingBlocks;
+using Grit.Modules.Catalog.Features.AddSku;
+using Grit.Modules.Catalog.Features.ChangeSkuPrice;
 using Grit.Modules.Catalog.Features.CreateCategory;
 using Grit.Modules.Catalog.Features.CreateProduct;
 using Grit.Modules.Catalog.Features.GetProduct;
@@ -48,5 +50,7 @@ public sealed class CatalogModule : IModule
         products.MapCreateProduct();
         products.MapGetProduct();
         products.MapUpdateProduct();
+        products.MapAddSku();
+        products.MapChangeSkuPrice();
     }
 }
