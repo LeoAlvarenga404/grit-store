@@ -13,10 +13,11 @@ public class TransactionBehaviorTests
     {
         IsolationLevel? isolationLevel = null;
 
-        await new TransactionBehavior<TestCommand, Result>().Handle(new TestCommand(), _ =>
+        await new TransactionBehavior<TestCommand, Result>().Handle(new TestCommand(), async _ =>
         {
+            await Task.Yield();
             isolationLevel = Transaction.Current?.IsolationLevel;
-            return Task.FromResult(Result.Success());
+            return Result.Success();
         }, TestContext.Current.CancellationToken);
 
         isolationLevel.ShouldBe(IsolationLevel.ReadCommitted);
@@ -92,6 +93,38 @@ public class TransactionBehaviorTests
         }, TestContext.Current.CancellationToken);
 
         status.ShouldBe(TransactionStatus.Committed);
+    }
+
+    [Fact]
+    public async Task Handle_CommandAwaitsInsideScope_CommitsAndClearsAmbientTransaction()
+    {
+        TransactionStatus? status = null;
+
+        await new TransactionBehavior<TestCommand, Result>().Handle(new TestCommand(), async _ =>
+        {
+            await Task.Yield();
+            Transaction.Current!.TransactionCompleted += (_, completed) => status = completed.Transaction!.TransactionInformation.Status;
+            return Result.Success();
+        }, TestContext.Current.CancellationToken);
+
+        status.ShouldBe(TransactionStatus.Committed);
+        Transaction.Current.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task Handle_CommandAwaitsThenFails_RollsBackTransaction()
+    {
+        TransactionStatus? status = null;
+
+        await new TransactionBehavior<TestCommand, Result>().Handle(new TestCommand(), async _ =>
+        {
+            await Task.Yield();
+            Transaction.Current!.TransactionCompleted += (_, completed) => status = completed.Transaction!.TransactionInformation.Status;
+            return Result.Failure(SomeError);
+        }, TestContext.Current.CancellationToken);
+
+        status.ShouldBe(TransactionStatus.Aborted);
+        Transaction.Current.ShouldBeNull();
     }
 
     private static async Task<TransactionStatus?> StatusAfter(Func<Task<Result>> handler)
