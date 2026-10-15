@@ -6,6 +6,6 @@ internal sealed class CreateCategoryValidator : AbstractValidator<CreateCategory
 {
     public CreateCategoryValidator()
     {
-        RuleFor(command => command.Name).NotEmpty().MaximumLength(100);
+        RuleFor(command => command.Name).NotEmpty().MaximumLength(100).Must(TextRule.HasNoNullCharacter).WithMessage(TextRule.Message);
     }
 }

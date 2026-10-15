@@ -27,6 +27,7 @@ public class AttributesRuleTests
     [InlineData("co r", "azul")]
     [InlineData("", "azul")]
     [InlineData("cor", "")]
+    [InlineData("cor", "azul\u0000")]
     public void IsValid_BadKeyOrValue_ReturnsFalse(string key, string value)
     {
         AttributesRule.IsValid(new Dictionary<string, string> { [key] = value }).ShouldBeFalse();
