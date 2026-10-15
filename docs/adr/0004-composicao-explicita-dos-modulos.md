@@ -27,5 +27,10 @@ A varredura depende de DLLs que sobram de builds antigos e de ordem de arquivos,
 ## Consequências
 
 - A ordem dos módulos é determinística, e o OpenAPI gerado sai igual em qualquer máquina.
-- Adicionar um módulo é uma linha em `ModuleCatalog` mais a referência de projeto. Um teste de arquitetura falha se um módulo não estiver referenciado.
+- Adicionar um módulo exige quatro passos:
+  1. a linha em `ModuleCatalog`;
+  2. a referência de projeto em `Grit.Api`;
+  3. a referência em `Grit.ArchitectureTests`;
+  4. regenerar o OpenAPI e os tipos do front.
+- Um teste de arquitetura falha se uma pasta `src/Grit.Modules.*` não estiver referenciada em `Grit.ArchitectureTests`. A falta da linha em `ModuleCatalog` aparece como 404 nos testes de integração do módulo.
 - O registro de um módulo não pode lançar exceção por configuração ausente: a geração do OpenAPI no build roda `AddServices` sem configuração nem banco.

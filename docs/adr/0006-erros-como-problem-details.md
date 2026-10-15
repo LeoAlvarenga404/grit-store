@@ -29,5 +29,5 @@ O design (§5) pede que o endpoint converta `Error` em ProblemDetails (RFC 9457)
 
 ## Consequências
 
-- O front lê sempre o mesmo formato de erro, com `code` estável para tratar casos específicos.
+- O front lê sempre o formato RFC 9457. A extensão `code` só existe nos erros de negócio e de validação (os que vêm de um `Error`). Exceções não tratadas, JSON malformado e 404/405 de rota saem sem `code`, então o front trata `code` como opcional.
 - O `/health` responde 200 ou 503 com `{ status }` e aparece no OpenAPI, então os tipos gerados do front incluem esse endpoint.
