@@ -7,7 +7,7 @@ var database = builder.AddPostgres("postgres")
 
 // Declared now, referenced by the API when Basket (Redis) and product images (S3) arrive.
 builder.AddRedis("redis").WithImageTag("8.10.2-alpine");
-builder.AddSeaweedFS("storage").WithS3();
+builder.AddSeaweedFS("storage").WithImageTag("4.46").WithS3();
 
 var api = builder.AddProject<Projects.Grit_Api>("api")
     .WithReference(database)

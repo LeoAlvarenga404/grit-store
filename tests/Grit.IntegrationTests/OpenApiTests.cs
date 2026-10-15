@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Grit.IntegrationTests;
 
@@ -14,5 +15,17 @@ public class OpenApiTests(ApiFactory factory)
         document.ShouldContain("\"/health\"");
         document.ShouldContain("\"/api/v1/probe/notes\"");
         document.ShouldContain("\"Probe\"");
+    }
+
+    [Theory]
+    [InlineData("/openapi/v1.json")]
+    [InlineData("/scalar")]
+    public async Task DevelopmentOnlyEndpoints_Production_ReturnNotFound(string path)
+    {
+        using var production = factory.WithWebHostBuilder(builder => builder.UseEnvironment("Production"));
+
+        var response = await production.CreateClient().GetAsync(path, TestContext.Current.CancellationToken);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
 }

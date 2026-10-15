@@ -14,7 +14,7 @@ internal static class GetNoteEndpoint
             .WithSummary("Gets a note by id.")
             .ProducesProblem(StatusCodes.Status404NotFound);
 
-    private static async Task<Results<Ok<NoteResponse>, ProblemHttpResult>> GetNote(
+    private static async Task<Results<Ok<GetNoteResponse>, ProblemHttpResult>> GetNote(
         Guid id,
         ISender sender,
         CancellationToken cancellationToken)

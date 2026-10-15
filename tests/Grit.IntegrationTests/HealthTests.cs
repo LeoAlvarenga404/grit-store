@@ -4,6 +4,7 @@ using Grit.ServiceDefaults;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 
 namespace Grit.IntegrationTests;
 
@@ -12,6 +13,9 @@ public class HealthTests(ApiFactory factory)
     [Fact]
     public async Task Health_DatabaseReachable_ReturnsHealthy()
     {
+        var registrations = factory.Services.GetRequiredService<IOptions<HealthCheckServiceOptions>>().Value.Registrations;
+        registrations.ShouldNotBeEmpty();
+
         var response = await factory.CreateClient().GetAsync("/health", TestContext.Current.CancellationToken);
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
