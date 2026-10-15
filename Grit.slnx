@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Grit.Api/Grit.Api.csproj" />
+    <Project Path="src/Grit.AppHost/Grit.AppHost.csproj" />
     <Project Path="src/Grit.BuildingBlocks/Grit.BuildingBlocks.csproj" />
     <Project Path="src/Grit.ServiceDefaults/Grit.ServiceDefaults.csproj" />
     <Project Path="src/Grit.SharedKernel/Grit.SharedKernel.csproj" />
