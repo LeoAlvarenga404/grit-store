@@ -1,3 +1,4 @@
+using Grit.BuildingBlocks;
 using NetArchTest.Rules;
 
 namespace Grit.ArchitectureTests;
@@ -67,5 +68,19 @@ public class ModuleTests
                 .Select(type => type.FullName));
 
         violations.ShouldBeEmpty();
+    }
+
+    // TransactionBehavior keys on ICommand: a command without the marker would write outside the transaction.
+    [Fact]
+    public void Commands_ImplementICommand_AndQueriesDoNot()
+    {
+        var types = ModuleAssemblies.Load().SelectMany(assembly => assembly.GetTypes()).ToList();
+
+        var commandsWithoutMarker = types
+            .Where(type => type.Name.EndsWith("Command", StringComparison.Ordinal) && !type.IsAssignableTo(typeof(ICommand)));
+        var queriesWithMarker = types
+            .Where(type => type.Name.EndsWith("Query", StringComparison.Ordinal) && type.IsAssignableTo(typeof(ICommand)));
+
+        commandsWithoutMarker.Concat(queriesWithMarker).Select(type => type.FullName).ShouldBeEmpty();
     }
 }

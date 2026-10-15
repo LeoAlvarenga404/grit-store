@@ -15,6 +15,8 @@ public class OpenApiTests(ApiFactory factory)
         document.ShouldContain("\"/health\"");
         document.ShouldContain("\"/api/v1/probe/notes\"");
         document.ShouldContain("\"Probe\"");
+        document.ShouldContain("\"/api/v1/admin/products\"");
+        document.ShouldContain("\"Catalog\"");
     }
 
     [Theory]

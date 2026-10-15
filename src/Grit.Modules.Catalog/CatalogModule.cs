@@ -1,6 +1,12 @@
 using Grit.BuildingBlocks;
+using Grit.Modules.Catalog.Features.CreateCategory;
+using Grit.Modules.Catalog.Features.CreateProduct;
+using Grit.Modules.Catalog.Features.GetProduct;
+using Grit.Modules.Catalog.Features.UpdateProduct;
 using Grit.Modules.Catalog.Infrastructure;
 using MassTransit;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,5 +40,13 @@ public sealed class CatalogModule : IModule
 
     public void MapEndpoints(IEndpointRouteBuilder api)
     {
+        // Open until Identity (2a) puts the admin policy on this group.
+        var admin = api.MapGroup("/admin").WithTags("Catalog");
+        admin.MapCreateCategory();
+
+        var products = admin.MapGroup("/products");
+        products.MapCreateProduct();
+        products.MapGetProduct();
+        products.MapUpdateProduct();
     }
 }
