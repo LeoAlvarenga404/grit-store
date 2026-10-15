@@ -142,11 +142,11 @@ public class CatalogPersistenceTests(ApiFactory factory)
     public async Task SaveProductAsync_SkuAddedWithStaleVersion_ReturnsProductChangedAndSavesNoSku()
     {
         var (id, version) = await SaveNewProductAsync(_ => { });
-        (await RenameAsync(id, UniqueName("Renomeada"), version)).IsSuccess.ShouldBeTrue();
-
         await using var scope = factory.Services.CreateAsyncScope();
         var db = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
         var product = await db.Products.Include(saved => saved.Skus).SingleAsync(saved => saved.Id == id, TestContext.Current.CancellationToken);
+
+        (await RenameAsync(id, UniqueName("Renomeada"), version)).IsSuccess.ShouldBeTrue();
         product.AddSku(Attributes("cor", "azul"), Reais(10m));
         var result = await db.SaveProductAsync(product, version, TestContext.Current.CancellationToken);
 

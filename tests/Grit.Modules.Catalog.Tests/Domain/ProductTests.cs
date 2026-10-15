@@ -149,21 +149,23 @@ public class ProductTests
         var blue = product.AddSku(Attributes(("cor", "azul")), Reais(99.90m)).Value;
         var green = product.AddSku(Attributes(("cor", "verde")), Reais(99.90m)).Value;
 
-        var result = product.ChangeSkuPrice(blue.Id, Reais(79.90m));
+        var result = product.ChangeSkuPrice(green.Id, Reais(79.90m));
 
         result.IsSuccess.ShouldBeTrue();
-        blue.Price.ShouldBe(Reais(79.90m));
-        green.Price.ShouldBe(Reais(99.90m));
+        green.Price.ShouldBe(Reais(79.90m));
+        blue.Price.ShouldBe(Reais(99.90m));
     }
 
     [Fact]
-    public void ChangeSkuPrice_UnknownSku_ReturnsSkuNotFound()
+    public void ChangeSkuPrice_UnknownSku_ReturnsSkuNotFoundAndKeepsPrices()
     {
         var product = NewProduct();
+        var blue = product.AddSku(Attributes(("cor", "azul")), Reais(99.90m)).Value;
 
         var result = product.ChangeSkuPrice(SkuId.New(), Reais(79.90m));
 
         result.Error.ShouldBe(CatalogErrors.SkuNotFound);
+        blue.Price.ShouldBe(Reais(99.90m));
     }
 
     [Fact]
