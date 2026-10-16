@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { api } from "@/lib/api/client";
 import { formatPrice } from "@/lib/format";
+import { addToBasket } from "@/app/basket/actions";
 
 const errorMessages: Record<string, string> = {
   "basket.quantity_limit": "No máximo 10 unidades por item.",
@@ -44,7 +45,7 @@ export default async function ProductPage({
           {errorMessages[error] ?? "Não foi possível adicionar ao carrinho. Tente de novo."}
         </p>
       )}
-      <form className="stack">
+      <form action={addToBasket} className="stack">
         <input type="hidden" name="slug" value={product.slug} />
         <fieldset>
           <legend>Variante</legend>
@@ -59,7 +60,7 @@ export default async function ProductPage({
           Quantidade
           <input name="quantity" type="number" min={1} max={10} defaultValue={1} required />
         </label>
-        <button type="submit" disabled>
+        <button type="submit">
           Adicionar ao carrinho
         </button>
       </form>
