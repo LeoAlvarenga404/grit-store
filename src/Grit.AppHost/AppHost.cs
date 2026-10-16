@@ -12,8 +12,12 @@ builder.AddSeaweedFS("storage").WithImageTag("4.46").WithS3();
 // The API seeds this file at start-up in Development; seeding is idempotent, so restarts are safe.
 var seedPath = Path.GetFullPath(Path.Combine(builder.AppHostDirectory, "..", "..", "seed", "catalog.json"));
 
+// Generated on the first run and kept in the AppHost user secrets: a fresh clone needs no secret, and none is committed.
+var jwtSigningKey = builder.AddParameter("jwt-signing-key", new GenerateParameterDefault { MinLength = 64, Special = false }, secret: true, persist: true);
+
 var api = builder.AddProject<Projects.Grit_Api>("api")
     .WithReference(database)
+    .WithEnvironment("Identity__Jwt__SigningKey", jwtSigningKey)
     .WaitFor(database)
     .WithEnvironment("Seed__Path", seedPath)
     .WithHttpHealthCheck("/health");
