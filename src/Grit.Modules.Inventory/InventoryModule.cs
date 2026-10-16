@@ -36,7 +36,9 @@ public sealed class InventoryModule : IModule
         bus.AddEntityFrameworkOutbox<InventoryDbContext>(outbox =>
         {
             outbox.IsolationLevel = IsolationLevel.ReadCommitted;
-            outbox.UsePostgres();
+            // MassTransit caches lock-statement table names per entity type for the whole process, so with caching on
+            // every module would lock against the schema of the first DbContext that resolved OutboxState or InboxState.
+            outbox.UsePostgres(enableSchemaCaching: false);
         });
         bus.AddConsumer<StockConsumer, StockConsumerDefinition>();
     }
