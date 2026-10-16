@@ -561,6 +561,90 @@
           }
         }
       }
+    },
+    "/api/v1/catalog/suggestions": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Suggests up to 8 product names for the text typed so far.",
+        "description": "q takes 2 to 50 characters. Accents and case are ignored, and names that start with q come first.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductSuggestionResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/catalog/products/{slug}": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Gets a product page by slug: category, attributes and SKUs with prices.",
+        "description": "A product without SKUs is not for sale yet and answers 404, as does a slug in any other spelling.",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProductBySlugResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -764,6 +848,80 @@
           }
         }
       },
+      "GetProductBySlugResponse": {
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "description",
+          "attributes",
+          "categorySlug",
+          "categoryName",
+          "skus"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "categorySlug": {
+            "type": "string"
+          },
+          "categoryName": {
+            "type": "string"
+          },
+          "skus": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetProductBySlugSkuResponse"
+            }
+          }
+        }
+      },
+      "GetProductBySlugSkuResponse": {
+        "required": [
+          "id",
+          "attributes",
+          "priceAmount",
+          "priceCurrency"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "priceAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "priceCurrency": {
+            "type": "string"
+          }
+        }
+      },
       "GetProductFacetsResponse": {
         "required": [
           "categories",
@@ -937,6 +1095,21 @@
               "null",
               "string"
             ]
+          }
+        }
+      },
+      "ProductSuggestionResponse": {
+        "required": [
+          "slug",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
           }
         }
       },

@@ -4,7 +4,9 @@ using Grit.Modules.Catalog.Features.ChangeSkuPrice;
 using Grit.Modules.Catalog.Features.CreateCategory;
 using Grit.Modules.Catalog.Features.CreateProduct;
 using Grit.Modules.Catalog.Features.GetProduct;
+using Grit.Modules.Catalog.Features.GetProductBySlug;
 using Grit.Modules.Catalog.Features.GetProductFacets;
+using Grit.Modules.Catalog.Features.GetProductSuggestions;
 using Grit.Modules.Catalog.Features.SearchProducts;
 using Grit.Modules.Catalog.Features.UpdateProduct;
 using Grit.Modules.Catalog.Infrastructure;
@@ -58,5 +60,7 @@ public sealed class CatalogModule : IModule
         var catalog = api.MapGroup("/catalog").WithTags("Catalog");
         catalog.MapSearchProducts();
         catalog.MapGetProductFacets();
+        catalog.MapGetProductSuggestions();
+        catalog.MapGetProductBySlug();
     }
 }
