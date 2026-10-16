@@ -839,10 +839,210 @@
           }
         }
       }
+    },
+    "/api/v1/basket": {
+      "get": {
+        "tags": [
+          "Basket"
+        ],
+        "summary": "Gets the customer's basket with the price seen when each item was added and the current price.",
+        "description": "hasPriceChanged flags items whose price changed since they were added; the subtotal uses current prices of available items. Send that subtotal as expectedSubtotalAmount at checkout.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasketResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/basket/lines": {
+      "post": {
+        "tags": [
+          "Basket"
+        ],
+        "summary": "Adds a SKU to the basket.",
+        "description": "Adding a SKU already in the basket sums the quantities (at most 10 per item) and keeps today's price.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddBasketLineRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/basket/lines/{skuId}": {
+      "put": {
+        "tags": [
+          "Basket"
+        ],
+        "summary": "Changes the quantity of a basket item.",
+        "description": "Quantity 1 to 10; to remove an item use DELETE.",
+        "parameters": [
+          {
+            "name": "skuId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeBasketLineRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Basket"
+        ],
+        "summary": "Removes an item from the basket.",
+        "description": "Answers 204 also when the item is not in the basket.",
+        "parameters": [
+          {
+            "name": "skuId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AddBasketLineRequest": {
+        "required": [
+          "skuId",
+          "quantity"
+        ],
+        "type": "object",
+        "properties": {
+          "skuId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "AddSkuRequest": {
         "required": [
           "priceAmount",
@@ -924,6 +1124,75 @@
           }
         }
       },
+      "BasketLineResponse": {
+        "required": [
+          "skuId",
+          "productName",
+          "productSlug",
+          "quantity",
+          "unitPriceAmount",
+          "currentUnitPriceAmount",
+          "hasPriceChanged",
+          "isAvailable"
+        ],
+        "type": "object",
+        "properties": {
+          "skuId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "productSlug": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unitPriceAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "currentUnitPriceAmount": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "hasPriceChanged": {
+            "type": "boolean"
+          },
+          "isAvailable": {
+            "type": "boolean"
+          }
+        }
+      },
+      "BasketResponse": {
+        "required": [
+          "lines",
+          "subtotalAmount",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BasketLineResponse"
+            }
+          },
+          "subtotalAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      },
       "CategoryFacetResponse": {
         "required": [
           "slug",
@@ -941,6 +1210,18 @@
           "count": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "ChangeBasketLineRequest": {
+        "required": [
+          "quantity"
+        ],
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -1515,6 +1796,9 @@
     },
     {
       "name": "Identity"
+    },
+    {
+      "name": "Basket"
     }
   ]
 }

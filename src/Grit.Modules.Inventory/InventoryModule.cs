@@ -20,6 +20,12 @@ public sealed class InventoryModule : IModule
         builder.Services.AddDbContext<InventoryDbContext>((services, options) =>
             InventoryDbContext.Configure(options, services.GetRequiredService<NpgsqlDataSource>()));
         builder.Services.TryAddSingleton(TimeProvider.System);
+
+        // Same switch as the catalog seed: the AppHost sets Seed:Path in Development; tests never do and stock their own SKUs.
+        if (builder.Environment.IsDevelopment() && !string.IsNullOrEmpty(builder.Configuration["Seed:Path"]))
+        {
+            builder.Services.AddHostedService<DevelopmentStockSeeder>();
+        }
     }
 
     // Consumer outbox only: Inventory publishes from consumers, never from an HTTP command, so it needs no bus outbox (ADR 0005).

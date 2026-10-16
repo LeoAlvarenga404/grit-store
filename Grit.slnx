@@ -3,8 +3,17 @@
     <Project Path="src/Grit.Api/Grit.Api.csproj" />
     <Project Path="src/Grit.AppHost/Grit.AppHost.csproj" />
     <Project Path="src/Grit.BuildingBlocks/Grit.BuildingBlocks.csproj" />
+    <Project Path="src/Grit.Modules.Basket.Contracts/Grit.Modules.Basket.Contracts.csproj" />
+    <Project Path="src/Grit.Modules.Basket/Grit.Modules.Basket.csproj" />
+    <Project Path="src/Grit.Modules.Catalog.Contracts/Grit.Modules.Catalog.Contracts.csproj" />
     <Project Path="src/Grit.Modules.Catalog/Grit.Modules.Catalog.csproj" />
     <Project Path="src/Grit.Modules.Identity/Grit.Modules.Identity.csproj" />
+    <Project Path="src/Grit.Modules.Inventory.Contracts/Grit.Modules.Inventory.Contracts.csproj" />
+    <Project Path="src/Grit.Modules.Inventory/Grit.Modules.Inventory.csproj" />
+    <Project Path="src/Grit.Modules.Ordering.Contracts/Grit.Modules.Ordering.Contracts.csproj" />
+    <Project Path="src/Grit.Modules.Ordering/Grit.Modules.Ordering.csproj" />
+    <Project Path="src/Grit.Modules.Payments.Contracts/Grit.Modules.Payments.Contracts.csproj" />
+    <Project Path="src/Grit.Modules.Payments/Grit.Modules.Payments.csproj" />
     <Project Path="src/Grit.ServiceDefaults/Grit.ServiceDefaults.csproj" />
     <Project Path="src/Grit.SharedKernel/Grit.SharedKernel.csproj" />
   </Folder>
@@ -12,7 +21,10 @@
     <Project Path="tests/Grit.ArchitectureTests/Grit.ArchitectureTests.csproj" />
     <Project Path="tests/Grit.BuildingBlocks.Tests/Grit.BuildingBlocks.Tests.csproj" />
     <Project Path="tests/Grit.IntegrationTests/Grit.IntegrationTests.csproj" />
+    <Project Path="tests/Grit.Modules.Basket.Tests/Grit.Modules.Basket.Tests.csproj" />
     <Project Path="tests/Grit.Modules.Catalog.Tests/Grit.Modules.Catalog.Tests.csproj" />
+    <Project Path="tests/Grit.Modules.Inventory.Tests/Grit.Modules.Inventory.Tests.csproj" />
+    <Project Path="tests/Grit.Modules.Ordering.Tests/Grit.Modules.Ordering.Tests.csproj" />
     <Project Path="tests/Grit.Modules.Probe.Contracts/Grit.Modules.Probe.Contracts.csproj" />
     <Project Path="tests/Grit.Modules.Probe/Grit.Modules.Probe.csproj" />
     <Project Path="tests/Grit.SharedKernel.Tests/Grit.SharedKernel.Tests.csproj" />

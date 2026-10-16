@@ -5,8 +5,8 @@ var database = builder.AddPostgres("postgres")
     .WithImageTag("18.6-alpine")
     .AddDatabase("grit");
 
-// Declared now, referenced by the API when Basket (Redis) and product images (S3) arrive.
-builder.AddRedis("redis").WithImageTag("8.10.2-alpine");
+var redis = builder.AddRedis("redis").WithImageTag("8.10.2-alpine");
+// Declared now, referenced by the API when product images (S3) arrive.
 builder.AddSeaweedFS("storage").WithImageTag("4.46").WithS3();
 
 // The API seeds this file at start-up in Development; seeding is idempotent, so restarts are safe.
@@ -19,6 +19,8 @@ var api = builder.AddProject<Projects.Grit_Api>("api")
     .WithReference(database)
     .WithEnvironment("Identity__Jwt__SigningKey", jwtSigningKey)
     .WaitFor(database)
+    .WithReference(redis)
+    .WaitFor(redis)
     .WithEnvironment("Seed__Path", seedPath)
     .WithHttpHealthCheck("/health");
 

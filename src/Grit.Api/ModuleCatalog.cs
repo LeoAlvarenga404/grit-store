@@ -1,12 +1,15 @@
 using Grit.BuildingBlocks;
+using Grit.Modules.Basket;
 using Grit.Modules.Catalog;
 using Grit.Modules.Identity;
+using Grit.Modules.Inventory;
+using Grit.Modules.Payments;
 
 namespace Grit.Api;
 
 internal static class ModuleCatalog
 {
-    private static readonly IModule[] ProductionModules = [new CatalogModule(), new IdentityModule()];
+    private static readonly IModule[] ProductionModules = [new CatalogModule(), new IdentityModule(), new BasketModule(), new InventoryModule(), new PaymentsModule()];
 
     // Test hosts add the test-only probe module by type name; the setting is read before any module is composed.
     public static IReadOnlyList<IModule> Load(IConfiguration configuration)

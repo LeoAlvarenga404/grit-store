@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Testcontainers.PostgreSql;
+using Testcontainers.Redis;
 
 [assembly: AssemblyFixture(typeof(Grit.IntegrationTests.ApiFactory))]
 
@@ -23,9 +24,11 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         .WithTmpfsMount("/var/lib/postgresql")
         .Build();
 
+    private readonly RedisContainer _redis = new RedisBuilder("redis:8.10.2-alpine").Build();
+
     public async ValueTask InitializeAsync()
     {
-        await _postgres.StartAsync();
+        await Task.WhenAll(_postgres.StartAsync(), _redis.StartAsync());
         await CreateProbeSchemaAsync(_postgres.GetConnectionString());
         _ = Server;
     }
@@ -34,6 +37,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         await base.DisposeAsync();
         await _postgres.DisposeAsync();
+        await _redis.DisposeAsync();
     }
 
     // A database of its own on the same container, for tests that count rows no other test may add to.
@@ -53,6 +57,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting("ConnectionStrings:grit", _postgres.GetConnectionString());
+        builder.UseSetting("ConnectionStrings:redis", _redis.GetConnectionString());
         builder.UseSetting("Modules:Additional:0", typeof(ProbeModule).AssemblyQualifiedName);
         builder.UseSetting("Identity:Jwt:SigningKey", JwtSigningKey);
         builder.UseSetting("Identity:LoginAttemptsPerMinute", "1000");
