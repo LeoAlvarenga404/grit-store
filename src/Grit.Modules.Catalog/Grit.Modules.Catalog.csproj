@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Grit.BuildingBlocks\Grit.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\Grit.Modules.Catalog.Contracts\Grit.Modules.Catalog.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
