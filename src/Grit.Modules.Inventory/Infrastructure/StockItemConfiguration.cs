@@ -1,0 +1,25 @@
+using Grit.Modules.Inventory.Domain;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Grit.Modules.Inventory.Infrastructure;
+
+internal sealed class StockItemConfiguration : IEntityTypeConfiguration<StockItem>
+{
+    public void Configure(EntityTypeBuilder<StockItem> builder)
+    {
+        builder.ToTable("stock_items");
+        builder.HasKey(item => item.Id);
+        builder.Property(item => item.Id).HasColumnName("sku_id").ValueGeneratedNever();
+        builder.OwnsMany(item => item.Reservations, reservation =>
+        {
+            reservation.ToTable("stock_reservations");
+            reservation.WithOwner().HasForeignKey("SkuId");
+            reservation.HasKey("SkuId", nameof(StockReservation.OrderId));
+            // Get-only in the domain: EF maps them only when configured, and the constructor binds to them.
+            reservation.Property(row => row.Quantity);
+            reservation.Property(row => row.ExpiresAt);
+            reservation.HasIndex(row => row.OrderId);
+        });
+    }
+}
