@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Grit.IntegrationTests" />
+    <InternalsVisibleTo Include="Grit.Modules.Ordering.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Grit.BuildingBlocks\Grit.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\Grit.Modules.Ordering.Contracts\Grit.Modules.Ordering.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
