@@ -1,6 +1,7 @@
 using System.Data;
 using Grit.BuildingBlocks;
 using Grit.Modules.Ordering.Features.CancelOrder;
+using Grit.Modules.Ordering.Features.Checkout;
 using Grit.Modules.Ordering.Features.GetOrder;
 using Grit.Modules.Ordering.Features.ListOrders;
 using Grit.Modules.Ordering.Features.PlaceOrder;
@@ -46,6 +47,15 @@ public sealed class OrderingModule : IModule
             outbox.UsePostgres(enableSchemaCaching: false);
             outbox.UseBusOutbox();
         });
+        bus.AddSagaStateMachine<CheckoutStateMachine, CheckoutState>(typeof(CheckoutStateDefinition))
+            .EntityFrameworkRepository(repository =>
+            {
+                repository.ConcurrencyMode = ConcurrencyMode.Pessimistic;
+                repository.IsolationLevel = IsolationLevel.ReadCommitted;
+                repository.ExistingDbContext<OrderingDbContext>();
+                // Same process-wide cache as the outbox above; off for the same reason.
+                repository.LockStatementProvider = new PostgresLockStatementProvider(enableSchemaCaching: false);
+            });
     }
 
     public async Task MigrateDatabaseAsync(IServiceProvider services, CancellationToken cancellationToken)

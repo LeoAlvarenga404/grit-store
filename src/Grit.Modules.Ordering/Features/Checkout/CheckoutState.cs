@@ -2,7 +2,7 @@ using MassTransit;
 
 namespace Grit.Modules.Ordering.Features.Checkout;
 
-// The saga row; CorrelationId is the order id. The state machine itself arrives in Task 8.
+// The saga row; CorrelationId is the order id.
 internal sealed class CheckoutState : SagaStateMachineInstance
 {
     public Guid CorrelationId { get; set; }
