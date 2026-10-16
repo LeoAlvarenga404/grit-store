@@ -8,6 +8,7 @@
     <PackageVersion Include="Aspire.Hosting.Redis" Version="13.6.0" />
     <PackageVersion Include="Aspire.Npgsql" Version="13.6.0" />
     <PackageVersion Include="CommunityToolkit.Aspire.Hosting.SeaweedFS" Version="13.6.0" />
+    <PackageVersion Include="Dapper" Version="2.1.89" />
     <PackageVersion Include="EFCore.NamingConventions" Version="10.0.1" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageVersion Include="MassTransit" Version="8.5.11" />

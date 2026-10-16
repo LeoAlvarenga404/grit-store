@@ -400,6 +400,94 @@
           }
         }
       }
+    },
+    "/api/v1/catalog/products": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Searches and lists the products that have at least one SKU.",
+        "description": "q finds words with or without accents, in the singular or the plural, and names with a typo; results are ordered by relevance. Without q, the newest products come first (creation time, to the millisecond). attribute=key:value can repeat (one per key) and matches a single SKU. priceAmount is the lowest price among the SKUs that match. Pass nextCursor as after to read the next page.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minPrice",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "maxPrice",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "attribute",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchProductsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -672,6 +760,35 @@
           }
         }
       },
+      "ProductSummaryResponse": {
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "priceAmount",
+          "priceCurrency"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "priceAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "priceCurrency": {
+            "type": "string"
+          }
+        }
+      },
       "ProductVersionResponse": {
         "required": [
           "version"
@@ -681,6 +798,27 @@
           "version": {
             "type": "integer",
             "format": "uint32"
+          }
+        }
+      },
+      "SearchProductsResponse": {
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductSummaryResponse"
+            }
+          },
+          "nextCursor": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
