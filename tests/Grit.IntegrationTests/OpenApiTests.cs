@@ -24,6 +24,8 @@ public class OpenApiTests(ApiFactory factory)
         document.ShouldContain("\"Identity\"");
         document.ShouldContain("\"/api/v1/identity/register\"");
         document.ShouldContain("\"/api/v1/identity/login\"");
+        document.ShouldContain("\"/api/v1/identity/refresh\"");
+        document.ShouldContain("\"/api/v1/identity/me\"");
     }
 
     [Theory]

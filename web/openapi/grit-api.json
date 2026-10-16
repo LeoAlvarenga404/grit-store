@@ -757,6 +757,88 @@
           }
         }
       }
+    },
+    "/api/v1/identity/refresh": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Trades a refresh token for a new token pair.",
+        "description": "Each refresh token works once. Presenting one that was already traded ends every session started from the same login. Send one refresh at a time per session.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshSessionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/identity/me": {
+      "get": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Gets the logged-in user.",
+        "description": "Read from the access token, without a database read: a role change shows after the next refresh.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -957,6 +1039,29 @@
           "version": {
             "type": "integer",
             "format": "uint32"
+          }
+        }
+      },
+      "CurrentUserResponse": {
+        "required": [
+          "id",
+          "email",
+          "roles"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -1278,6 +1383,17 @@
           "version": {
             "type": "integer",
             "format": "uint32"
+          }
+        }
+      },
+      "RefreshSessionRequest": {
+        "required": [
+          "refreshToken"
+        ],
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string"
           }
         }
       },

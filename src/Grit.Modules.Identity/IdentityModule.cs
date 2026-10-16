@@ -1,6 +1,8 @@
 using System.Threading.RateLimiting;
 using Grit.BuildingBlocks;
+using Grit.Modules.Identity.Features.GetCurrentUser;
 using Grit.Modules.Identity.Features.LogIn;
+using Grit.Modules.Identity.Features.RefreshSession;
 using Grit.Modules.Identity.Features.Register;
 using Grit.Modules.Identity.Infrastructure;
 using MassTransit;
@@ -57,6 +59,8 @@ public sealed class IdentityModule : IModule
         var identity = api.MapGroup("/identity").WithTags("Identity");
         identity.MapRegister();
         identity.MapLogIn();
+        identity.MapRefreshSession();
+        identity.MapGetCurrentUser();
     }
 
     private static void ConfigureIdentity(IdentityOptions options)
