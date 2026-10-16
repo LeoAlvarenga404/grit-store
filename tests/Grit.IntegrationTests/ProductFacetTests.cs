@@ -83,6 +83,17 @@ public class ProductFacetTests(SearchCorpus corpus)
         names.Count.ShouldBe(int.Parse(range.Split(' ')[1], CultureInfo.InvariantCulture));
     }
 
+    // With a price filter already sent, the refinement intersects the range with it: maxPrice=100 and 100–250 give 100 to 100.
+    [Fact]
+    public async Task Facets_PriceRangeUnderAPriceFilter_CountsWhatTheIntersectionLists()
+    {
+        var facets = await corpus.GetAsync($"{FacetsPath}?maxPrice=100");
+        var names = await corpus.SearchNamesAsync("minPrice=100&maxPrice=100");
+
+        Prices(facets).ShouldContain("100-250 1");
+        names.ShouldBe(["Lanterna de Cabeça"]);
+    }
+
     [Fact]
     public async Task Facets_BlankParameters_CountEveryProductForSale()
     {

@@ -59,6 +59,7 @@ public class ProductSuggestionTests(SearchCorpus corpus, ApiFactory api)
     [InlineData("")]
     [InlineData("?q=")]
     [InlineData("?q=a")]
+    [InlineData("?q=%20a")]
     [InlineData("?q=ab%00")]
     [InlineData("?q=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")]
     public async Task Suggestions_TextMissingTooShortOrTooLong_Returns400(string queryString)

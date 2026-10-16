@@ -428,7 +428,7 @@ export interface paths {
         };
         /**
          * Searches and lists the products that have at least one SKU.
-         * @description q finds words with or without accents, in the singular or the plural, and names with a typo; results are ordered by relevance. Without q, the newest products come first (creation time, to the millisecond). attribute=key:value can repeat (one per key) and matches a single SKU. priceAmount is the lowest price among the SKUs that match. Pass nextCursor as after to read the next page.
+         * @description q finds words with or without accents, in the singular or the plural, and name words with a small typo (longer words tolerate more); results are ordered by relevance. Without q, the newest products come first (creation time, to the millisecond). attribute=key:value can repeat (one per key) and matches a single SKU. priceAmount is the lowest price among the SKUs that match. Pass nextCursor as after to read the next page.
          */
         get: {
             parameters: {
@@ -484,7 +484,7 @@ export interface paths {
         };
         /**
          * Counts the products of a search per category, price range and attribute value.
-         * @description Takes the q, category, minPrice, maxPrice and attribute of the product search. Every count is the number of products the search returns for that refinement. A price range is minAmount ≤ price < maxAmount (no upper bound when maxAmount is null); to list it, send minPrice=minAmount&maxPrice=maxAmount−0.01.
+         * @description Takes the q, category, minPrice, maxPrice and attribute of the product search. Every count is the number of products the search returns for that refinement. A price range is minAmount ≤ price < maxAmount (no upper bound when maxAmount is null); to list it, send minPrice = the larger of minAmount and the current minPrice, and maxPrice = the smaller of maxAmount−0.01 and the current maxPrice (leave out a bound that is absent on both sides).
          */
         get: {
             parameters: {

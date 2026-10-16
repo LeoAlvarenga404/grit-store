@@ -15,7 +15,8 @@ internal static class GetProductFacetsEndpoint
             .WithDescription(
                 "Takes the q, category, minPrice, maxPrice and attribute of the product search. Every count is the number of products "
                 + "the search returns for that refinement. A price range is minAmount ≤ price < maxAmount (no upper bound when maxAmount is null); "
-                + "to list it, send minPrice=minAmount&maxPrice=maxAmount−0.01.")
+                + "to list it, send minPrice = the larger of minAmount and the current minPrice, and maxPrice = the smaller of maxAmount−0.01 "
+                + "and the current maxPrice (leave out a bound that is absent on both sides).")
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
     private static async Task<Results<Ok<GetProductFacetsResponse>, ProblemHttpResult>> GetProductFacets(
