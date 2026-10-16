@@ -75,6 +75,29 @@ public class CheckoutSagaTests(ApiFactory factory)
         stock.Available(DateTimeOffset.UtcNow).ShouldBe(3);
     }
 
+    [Fact]
+    public async Task CancelOrder_TwiceAtOnce_CancelsOnceAndRecordsOneHistoryEntry()
+    {
+        for (var round = 0; round < 5; round++)
+        {
+            await StockedBasketAsync(onHand: 3, quantity: 2);
+            var orderId = await CheckoutApi.PlaceOrderIdAsync(_customer, "tok_visa", 199.80m);
+            await WaitForStatusAsync(orderId, "Confirmed");
+            // The clear of this round's basket must finish before the next round adds a line, or the clear deletes that line.
+            await Eventually.UntilAsync(() => BasketApi.GetAsync(_customer), value => value.GetProperty("lines").GetArrayLength() == 0);
+
+            var responses = await Task.WhenAll(
+                _customer.PostAsync($"{CheckoutApi.OrdersPath}/{orderId}/cancel", null, TestContext.Current.CancellationToken),
+                _customer.PostAsync($"{CheckoutApi.OrdersPath}/{orderId}/cancel", null, TestContext.Current.CancellationToken));
+
+            responses.Select(response => response.StatusCode).Order().ShouldBe([HttpStatusCode.NoContent, HttpStatusCode.Conflict]);
+            var conflict = responses.Single(response => response.StatusCode == HttpStatusCode.Conflict);
+            (await CheckoutApi.CodeOf(conflict)).ShouldBe("ordering.order_not_cancellable");
+            var order = await CheckoutApi.GetOrderAsync(_customer, orderId);
+            Statuses(order).Count(status => status == "Cancelled").ShouldBe(1);
+        }
+    }
+
     private static string?[] Statuses(JsonElement order) =>
         [.. order.GetProperty("history").EnumerateArray().Select(change => change.GetProperty("status").GetString())];
 

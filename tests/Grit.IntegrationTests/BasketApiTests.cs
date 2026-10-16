@@ -93,4 +93,15 @@ public class BasketApiTests(ApiFactory factory)
         missing.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         (await CatalogAdminApi.ReadAsync(missing)).GetProperty("code").GetString().ShouldBe("basket.line_not_found");
     }
+
+    [Fact]
+    public async Task GetBasket_OtherCustomer_DoesNotSeeTheLines()
+    {
+        var (_, _, skuId) = await BasketApi.CreateSkuAsync(_admin);
+        await BasketApi.AddLineAsync(_customer, skuId, 2);
+        var stranger = CustomerClient.Create(factory, Guid.NewGuid());
+
+        (await BasketApi.GetAsync(_customer)).GetProperty("lines").GetArrayLength().ShouldBe(1);
+        (await BasketApi.GetAsync(stranger)).GetProperty("lines").GetArrayLength().ShouldBe(0);
+    }
 }

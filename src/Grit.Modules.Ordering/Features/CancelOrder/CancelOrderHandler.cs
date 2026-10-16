@@ -16,6 +16,10 @@ internal sealed class CancelOrderHandler(
 {
     public async Task<Result> Handle(CancelOrderCommand command, CancellationToken cancellationToken)
     {
+        // Two cancels of one order must not both pass the Confirmed check: the row lock makes the second read the first one's result.
+        await db.Database.ExecuteSqlAsync(
+            $"SELECT 1 FROM ordering.orders WHERE id = {command.OrderId} AND customer_id = {command.CustomerId} FOR UPDATE",
+            cancellationToken);
         var orderId = new OrderId(command.OrderId);
         var order = await db.Orders.SingleOrDefaultAsync(order => order.Id == orderId && order.CustomerId == command.CustomerId, cancellationToken);
         if (order is null)

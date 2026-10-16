@@ -133,6 +133,33 @@ public class CheckoutTests(ApiFactory factory)
         (await CheckoutApi.CodeOf(response)).ShouldBe("ordering.order_not_cancellable");
     }
 
+    [Fact]
+    public async Task CancelOrder_AnotherCustomersOrder_Returns404()
+    {
+        var skuId = await BasketWithTwoUnitsAsync();
+        await InventoryStock.SetAsync(factory, skuId, onHand: 3);
+        var orderId = await CheckoutApi.PlaceOrderIdAsync(_customer, "tok_visa", 199.80m);
+        await Eventually.UntilAsync(() => CheckoutApi.GetOrderAsync(_customer, orderId), order => order.GetProperty("status").GetString() == "Confirmed");
+        var stranger = CustomerClient.Create(factory, Guid.NewGuid());
+
+        var response = await stranger.PostAsync($"{CheckoutApi.OrdersPath}/{orderId}/cancel", null, TestContext.Current.CancellationToken);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        (await CheckoutApi.CodeOf(response)).ShouldBe("ordering.order_not_found");
+        (await CheckoutApi.GetOrderAsync(_customer, orderId)).GetProperty("status").GetString().ShouldBe("Confirmed");
+    }
+
+    [Fact]
+    public async Task ListOrders_OtherCustomer_DoesNotSeeTheOrder()
+    {
+        await BasketWithTwoUnitsAsync();
+        await CheckoutApi.PlaceOrderIdAsync(_customer, "tok_visa", 199.80m);
+        var stranger = CustomerClient.Create(factory, Guid.NewGuid());
+
+        (await CheckoutApi.ListOrdersAsync(_customer)).GetArrayLength().ShouldBe(1);
+        (await CheckoutApi.ListOrdersAsync(stranger)).GetArrayLength().ShouldBe(0);
+    }
+
     private async Task<Guid> BasketWithTwoUnitsAsync()
     {
         var (_, _, skuId) = await BasketApi.CreateSkuAsync(_admin);
