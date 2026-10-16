@@ -13,6 +13,8 @@
     <PackageReference Include="Aspire.Hosting.PostgreSQL" />
     <PackageReference Include="Aspire.Hosting.Redis" />
     <PackageReference Include="CommunityToolkit.Aspire.Hosting.SeaweedFS" />
+    <!-- Lifts Aspire.Hosting's transitive MessagePack 2.5.302 past GHSA-qhrr-8q5h-9q3h (NuGet audit fails the build). -->
+    <PackageReference Include="MessagePack" />
   </ItemGroup>
 
   <ItemGroup>
