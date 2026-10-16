@@ -10,6 +10,7 @@ using Grit.Modules.Catalog.Features.GetProductSuggestions;
 using Grit.Modules.Catalog.Features.SearchProducts;
 using Grit.Modules.Catalog.Features.UpdateProduct;
 using Grit.Modules.Catalog.Infrastructure;
+using Grit.Modules.Catalog.Infrastructure.Seed;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -31,6 +32,14 @@ public sealed class CatalogModule : IModule
 
         builder.Services.AddDbContext<CatalogDbContext>((services, options) =>
             CatalogDbContext.Configure(options, services.GetRequiredService<NpgsqlDataSource>()).AddInterceptors(Audit));
+
+        builder.Services.AddScoped<CatalogSeeder>();
+
+        // Development only, like the migrations (ADR 0008): the AppHost points Seed:Path at seed/catalog.json.
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Services.AddHostedService<CatalogSeedService>();
+        }
     }
 
     // Catalog publishes no integration event yet, and the single bus-outbox slot stays with the probe (ADR 0005).

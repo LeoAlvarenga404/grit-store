@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Grit.Modules.Probe\Grit.Modules.Probe.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\seed\catalog.json" Link="Seed\catalog.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
