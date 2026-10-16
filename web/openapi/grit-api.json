@@ -1022,6 +1022,214 @@
           }
         }
       }
+    },
+    "/api/v1/orders": {
+      "post": {
+        "tags": [
+          "Ordering"
+        ],
+        "summary": "Places an order from the customer's basket (checkout).",
+        "description": "Send a new Idempotency-Key header per checkout attempt; repeating a key returns the same order. expectedSubtotalAmount is the basket subtotal the customer saw: a different current subtotal answers 409 ordering.price_changed. The order starts as Placed; poll GET /orders/{id} until Confirmed or Cancelled. The fake gateway declines the token tok_decline.",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaceOrderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaceOrderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Ordering"
+        ],
+        "summary": "Lists the customer's orders, newest first.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderSummaryResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{id}": {
+      "get": {
+        "tags": [
+          "Ordering"
+        ],
+        "summary": "Gets one of the customer's orders with its lines, totals and status timeline.",
+        "description": "Another customer's order answers 404.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{id}/cancel": {
+      "post": {
+        "tags": [
+          "Ordering"
+        ],
+        "summary": "Cancels a confirmed order: the stock is released and the payment refunded.",
+        "description": "Only Confirmed orders can be cancelled (409 ordering.order_not_cancellable otherwise).",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1550,6 +1758,184 @@
           }
         }
       },
+      "OrderLineResponse": {
+        "required": [
+          "skuId",
+          "productName",
+          "quantity",
+          "unitPriceAmount",
+          "lineTotalAmount"
+        ],
+        "type": "object",
+        "properties": {
+          "skuId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unitPriceAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "lineTotalAmount": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "OrderResponse": {
+        "required": [
+          "id",
+          "number",
+          "status",
+          "cancellationReason",
+          "lines",
+          "subtotalAmount",
+          "shippingAmount",
+          "totalAmount",
+          "currency",
+          "placedAt",
+          "history"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "cancellationReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderLineResponse"
+            }
+          },
+          "subtotalAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "shippingAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "placedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderStatusChangeResponse"
+            }
+          }
+        }
+      },
+      "OrderStatusChangeResponse": {
+        "required": [
+          "status",
+          "occurredAt"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OrderSummaryResponse": {
+        "required": [
+          "id",
+          "number",
+          "status",
+          "totalAmount",
+          "currency",
+          "placedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "placedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PlaceOrderRequest": {
+        "required": [
+          "paymentToken",
+          "expectedSubtotalAmount"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentToken": {
+            "type": "string"
+          },
+          "expectedSubtotalAmount": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "PlaceOrderResponse": {
+        "required": [
+          "orderId",
+          "orderNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "orderNumber": {
+            "type": "string"
+          }
+        }
+      },
       "PriceFacetResponse": {
         "required": [
           "minAmount",
@@ -1799,6 +2185,9 @@
     },
     {
       "name": "Basket"
+    },
+    {
+      "name": "Ordering"
     }
   ]
 }

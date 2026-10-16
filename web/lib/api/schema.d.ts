@@ -1087,6 +1087,232 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lists the customer's orders, newest first. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["OrderSummaryResponse"][];
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Places an order from the customer's basket (checkout).
+         * @description Send a new Idempotency-Key header per checkout attempt; repeating a key returns the same order. expectedSubtotalAmount is the basket subtotal the customer saw: a different current subtotal answers 409 ordering.price_changed. The order starts as Placed; poll GET /orders/{id} until Confirmed or Cancelled. The fake gateway declines the token tok_decline.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    "Idempotency-Key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["PlaceOrderRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PlaceOrderResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/orders/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Gets one of the customer's orders with its lines, totals and status timeline.
+         * @description Another customer's order answers 404.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["OrderResponse"];
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/orders/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancels a confirmed order: the stock is released and the payment refunded.
+         * @description Only Confirmed orders can be cancelled (409 ordering.order_not_cancellable otherwise).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1248,6 +1474,61 @@ export interface components {
         LogInRequest: {
             email: string;
             password: string;
+        };
+        OrderLineResponse: {
+            /** Format: uuid */
+            skuId: string;
+            productName: string;
+            /** Format: int32 */
+            quantity: number;
+            /** Format: double */
+            unitPriceAmount: number;
+            /** Format: double */
+            lineTotalAmount: number;
+        };
+        OrderResponse: {
+            /** Format: uuid */
+            id: string;
+            number: string;
+            status: string;
+            cancellationReason: null | string;
+            lines: components["schemas"]["OrderLineResponse"][];
+            /** Format: double */
+            subtotalAmount: number;
+            /** Format: double */
+            shippingAmount: number;
+            /** Format: double */
+            totalAmount: number;
+            currency: string;
+            /** Format: date-time */
+            placedAt: string;
+            history: components["schemas"]["OrderStatusChangeResponse"][];
+        };
+        OrderStatusChangeResponse: {
+            status: string;
+            /** Format: date-time */
+            occurredAt: string;
+        };
+        OrderSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            number: string;
+            status: string;
+            /** Format: double */
+            totalAmount: number;
+            currency: string;
+            /** Format: date-time */
+            placedAt: string;
+        };
+        PlaceOrderRequest: {
+            paymentToken: string;
+            /** Format: double */
+            expectedSubtotalAmount: number;
+        };
+        PlaceOrderResponse: {
+            /** Format: uuid */
+            orderId: string;
+            orderNumber: string;
         };
         PriceFacetResponse: {
             /** Format: double */
