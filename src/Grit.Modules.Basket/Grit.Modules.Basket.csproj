@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Grit.IntegrationTests" />
+    <InternalsVisibleTo Include="Grit.Modules.Basket.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Grit.BuildingBlocks\Grit.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\Grit.Modules.Basket.Contracts\Grit.Modules.Basket.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
