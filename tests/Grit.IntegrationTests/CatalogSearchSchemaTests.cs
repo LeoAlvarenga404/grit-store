@@ -17,6 +17,15 @@ public class CatalogSearchSchemaTests(ApiFactory factory)
         query.ShouldBe("'ten' & 'camiset' & 'termic' & 'caf'");
     }
 
+    // Hyphenated words go through the same unaccent + stem chain as plain words, whole and in parts.
+    [Fact]
+    public async Task SearchConfiguration_HyphenatedAccentedWord_IndexesTheWholeAndItsParts()
+    {
+        var document = await ScalarAsync<string>("SELECT to_tsvector('catalog.portuguese_unaccent', 'Pós-Treino')::text");
+
+        document.ShouldBe("'pos':2 'pos-trein':1 'trein':3");
+    }
+
     [Fact]
     public async Task ImmutableUnaccent_AccentedText_ReturnsPlainLetters()
     {

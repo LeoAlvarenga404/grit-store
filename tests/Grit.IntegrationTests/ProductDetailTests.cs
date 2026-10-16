@@ -65,6 +65,29 @@ public class ProductDetailTests(ApiFactory factory)
         problem.GetProperty("code").GetString().ShouldBe("catalog.product_not_found");
     }
 
+    // string.Normalize throws on U+FFFE (UTF-8 EF BF BE): the slug shape check answers before any normalisation.
+    [Fact]
+    public async Task GetProductBySlug_SlugWithNoncharacter_Returns404()
+    {
+        var response = await _client.GetAsync($"{ProductsPath}/x%EF%BF%BE", TestContext.Current.CancellationToken);
+
+        var problem = await ProblemResponse.ReadAsync(response, HttpStatusCode.NotFound);
+        problem.GetProperty("code").GetString().ShouldBe("catalog.product_not_found");
+    }
+
+    [Fact]
+    public async Task GetProductBySlug_SlugWithDoubleHyphen_Returns404()
+    {
+        var (id, version) = await CatalogAdminApi.CreateProductAsync(_client);
+        await CatalogAdminApi.AddSkuAsync(_client, id, version, "azul");
+        var slug = (await CatalogAdminApi.GetProductAsync(_client, id)).GetProperty("slug").GetString()!;
+
+        var response = await _client.GetAsync($"{ProductsPath}/{slug.Replace("-", "--", StringComparison.Ordinal)}", TestContext.Current.CancellationToken);
+
+        var problem = await ProblemResponse.ReadAsync(response, HttpStatusCode.NotFound);
+        problem.GetProperty("code").GetString().ShouldBe("catalog.product_not_found");
+    }
+
     [Fact]
     public async Task GetProductBySlug_SlugInUppercase_Returns404()
     {

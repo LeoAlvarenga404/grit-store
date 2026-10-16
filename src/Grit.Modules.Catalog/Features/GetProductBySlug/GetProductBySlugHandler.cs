@@ -10,7 +10,13 @@ internal sealed class GetProductBySlugHandler(CatalogDbContext db) : IRequestHan
 {
     public async Task<Result<GetProductBySlugResponse>> Handle(GetProductBySlugQuery query, CancellationToken cancellationToken)
     {
-        // Only the canonical slug is an address; otherwise "TENIS-X" would also serve the page of "tenis-x".
+        // Raw route text never reaches Slug.FromName: string.Normalize throws on U+FFFE, which a URL can carry.
+        if (!HasSlugShape(query.Slug))
+        {
+            return CatalogErrors.ProductNotFound;
+        }
+
+        // Only the canonical slug is an address; otherwise "tenis--x" would also serve the page of "tenis-x".
         var slug = Slug.FromName(query.Slug);
         if (slug.IsFailure || slug.Value.Value != query.Slug)
         {
@@ -36,4 +42,8 @@ internal sealed class GetProductBySlugHandler(CatalogDbContext db) : IRequestHan
 
         return product is null ? CatalogErrors.ProductNotFound : product;
     }
+
+    private static bool HasSlugShape(string text) =>
+        text.Length is > 0 and <= Slug.MaxLength
+        && text.All(character => char.IsAsciiLetterLower(character) || char.IsAsciiDigit(character) || character == '-');
 }

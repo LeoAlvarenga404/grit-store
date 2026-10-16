@@ -484,7 +484,7 @@ export interface paths {
         };
         /**
          * Counts the products of a search per category, price range and attribute value.
-         * @description Takes the q, category, minPrice, maxPrice and attribute of the product search. Every count is a number of products.
+         * @description Takes the q, category, minPrice, maxPrice and attribute of the product search. Every count is the number of products the search returns for that refinement. A price range is minAmount ≤ price < maxAmount (no upper bound when maxAmount is null); to list it, send minPrice=minAmount&maxPrice=maxAmount−0.01.
          */
         get: {
             parameters: {

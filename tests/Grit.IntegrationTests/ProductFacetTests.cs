@@ -15,7 +15,7 @@ public class ProductFacetTests(SearchCorpus corpus)
         var facets = await corpus.GetAsync(FacetsPath);
 
         Categories(facets).ShouldBe(["camping Camping 4", "calcados Calçados 3", "vestuario Vestuário 3"]);
-        Prices(facets).ShouldBe(["0-100 2", "100-250 2", "250-500 2", "500-1000 3", "1000- 1"]);
+        Prices(facets).ShouldBe(["0-100 2", "100-250 3", "250-500 2", "500-1000 3", "1000- 1"]);
         Attributes(facets).ShouldBe(
         [
             "capacidade=4 1",
@@ -67,6 +67,38 @@ public class ProductFacetTests(SearchCorpus corpus)
         Categories(redInRange).ShouldBe(["vestuario Vestuário 1"]);
         Prices(redInRange).ShouldBe(["100-250 1"]);
         Attributes(redInRange).ShouldBe(["cor=vermelho 1", "tamanho=G 1"]);
+    }
+
+    // Each range count is what the search lists for that range: Camiseta Dry Fit (79.90 and 119.90) is in 0–100 and 100–250.
+    [Theory]
+    [InlineData("0-100 2", "minPrice=0&maxPrice=99.99")]
+    [InlineData("100-250 3", "minPrice=100&maxPrice=249.99")]
+    [InlineData("250-500 2", "minPrice=250&maxPrice=499.99")]
+    public async Task Facets_PriceRange_CountsWhatTheSearchListsForIt(string range, string refinement)
+    {
+        var facets = await corpus.GetAsync(FacetsPath);
+        var names = await corpus.SearchNamesAsync(refinement);
+
+        Prices(facets).ShouldContain(range);
+        names.Count.ShouldBe(int.Parse(range.Split(' ')[1], CultureInfo.InvariantCulture));
+    }
+
+    [Fact]
+    public async Task Facets_BlankParameters_CountEveryProductForSale()
+    {
+        var facets = await corpus.GetAsync($"{FacetsPath}?q=%20%20&category=");
+
+        Categories(facets).ShouldBe(["camping Camping 4", "calcados Calçados 3", "vestuario Vestuário 3"]);
+    }
+
+    // Binding fails before validation, so the framework answers without a code (ADR 0006).
+    [Fact]
+    public async Task Facets_PriceThatIsNotANumber_Returns400WithoutCode()
+    {
+        var response = await corpus.Client.GetAsync($"{FacetsPath}?minPrice=abc", TestContext.Current.CancellationToken);
+
+        var problem = await ProblemResponse.ReadAsync(response, HttpStatusCode.BadRequest);
+        problem.TryGetProperty("code", out _).ShouldBeFalse();
     }
 
     [Fact]

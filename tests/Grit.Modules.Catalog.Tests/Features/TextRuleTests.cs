@@ -7,16 +7,18 @@ public class TextRuleTests
     [Theory]
     [InlineData("Barraca Iglu")]
     [InlineData("")]
-    public void HasNoNullCharacter_PlainText_ReturnsTrue(string text)
+    [InlineData("Ação \uFFFF")]
+    public void HasOnlySupportedCharacters_PlainText_ReturnsTrue(string text)
     {
-        TextRule.HasNoNullCharacter(text).ShouldBeTrue();
+        TextRule.HasOnlySupportedCharacters(text).ShouldBeTrue();
     }
 
     [Theory]
     [InlineData("Leve\u0000")]
     [InlineData("\u0000")]
-    public void HasNoNullCharacter_TextWithNul_ReturnsFalse(string text)
+    [InlineData("Trilha\uFFFE")]
+    public void HasOnlySupportedCharacters_UnsupportedCharacter_ReturnsFalse(string text)
     {
-        TextRule.HasNoNullCharacter(text).ShouldBeFalse();
+        TextRule.HasOnlySupportedCharacters(text).ShouldBeFalse();
     }
 }

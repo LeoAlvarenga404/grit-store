@@ -12,7 +12,10 @@ internal static class GetProductFacetsEndpoint
     public static void MapGetProductFacets(this IEndpointRouteBuilder catalog) =>
         catalog.MapGet("/facets", GetProductFacets)
             .WithSummary("Counts the products of a search per category, price range and attribute value.")
-            .WithDescription("Takes the q, category, minPrice, maxPrice and attribute of the product search. Every count is a number of products.")
+            .WithDescription(
+                "Takes the q, category, minPrice, maxPrice and attribute of the product search. Every count is the number of products "
+                + "the search returns for that refinement. A price range is minAmount ≤ price < maxAmount (no upper bound when maxAmount is null); "
+                + "to list it, send minPrice=minAmount&maxPrice=maxAmount−0.01.")
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
     private static async Task<Results<Ok<GetProductFacetsResponse>, ProblemHttpResult>> GetProductFacets(

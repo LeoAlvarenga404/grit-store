@@ -16,8 +16,8 @@ internal sealed class GetProductFacetsHandler(NpgsqlDataSource dataSource)
 
     private const string AttributeKind = "attribute";
 
-    // Counts are products, not SKUs. A product falls in the price range of its cheapest matching SKU, and its
-    // attribute values come from its matching SKUs only, so the counts describe exactly what the search lists.
+    // Every count is the number of products the search returns for that refinement, so a click never changes the
+    // number shown. Counting matching SKUs per product means a product with SKUs in two price ranges counts in both.
     private const string Sql = $"""
         WITH {ProductFilterSql.Input},
         matched AS (
@@ -26,20 +26,15 @@ internal sealed class GetProductFacetsHandler(NpgsqlDataSource dataSource)
             JOIN catalog.skus s ON s.product_id = p.id
             CROSS JOIN input
             WHERE {ProductFilterSql.Where}
-        ),
-        listed AS (
-            SELECT id, category_id, min(price_amount) AS price_amount
-            FROM matched
-            GROUP BY id, category_id
         )
-        SELECT '{CategoryKind}' AS kind, c.slug AS key, c.name AS value, count(*) AS count
-        FROM listed l
-        JOIN catalog.categories c ON c.id = l.category_id
+        SELECT '{CategoryKind}' AS kind, c.slug AS key, c.name AS value, count(DISTINCT m.id) AS count
+        FROM matched m
+        JOIN catalog.categories c ON c.id = m.category_id
         GROUP BY c.slug, c.name
         UNION ALL
-        SELECT '{PriceKind}', width_bucket(l.price_amount, @PriceBounds)::text, NULL, count(*)
-        FROM listed l
-        GROUP BY width_bucket(l.price_amount, @PriceBounds)
+        SELECT '{PriceKind}', width_bucket(m.price_amount, @PriceBounds)::text, NULL, count(DISTINCT m.id)
+        FROM matched m
+        GROUP BY width_bucket(m.price_amount, @PriceBounds)
         UNION ALL
         SELECT '{AttributeKind}', a.key, a.value, count(DISTINCT m.id)
         FROM matched m
@@ -47,7 +42,7 @@ internal sealed class GetProductFacetsHandler(NpgsqlDataSource dataSource)
         GROUP BY a.key, a.value
         """;
 
-    // Ranges are [lower, upper): width_bucket answers 0 below the first bound and 4 from the last bound up.
+    // Ranges are [lower, upper): width_bucket answers 0 below the first bound and PriceBounds.Length from the last bound up.
     private static readonly decimal[] PriceBounds = [100m, 250m, 500m, 1000m];
 
     public async Task<Result<GetProductFacetsResponse>> Handle(GetProductFacetsQuery query, CancellationToken cancellationToken)

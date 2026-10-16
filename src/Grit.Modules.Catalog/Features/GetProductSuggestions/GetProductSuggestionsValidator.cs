@@ -9,7 +9,7 @@ internal sealed class GetProductSuggestionsValidator : AbstractValidator<GetProd
         RuleFor(query => query.Query)
             .NotEmpty()
             .Length(2, 50)
-            .Must(TextRule.HasNoNullCharacter).WithMessage(TextRule.Message)
+            .Must(TextRule.HasOnlySupportedCharacters).WithMessage(TextRule.Message)
             .OverridePropertyName("q");
     }
 }

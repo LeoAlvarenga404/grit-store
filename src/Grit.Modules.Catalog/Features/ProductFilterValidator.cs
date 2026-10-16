@@ -12,11 +12,11 @@ internal sealed class ProductFilterValidator : AbstractValidator<IProductFilter>
     {
         RuleFor(filter => filter.Query)
             .MaximumLength(MaxQueryLength)
-            .Must(TextRule.HasNoNullCharacter).WithMessage(TextRule.Message)
+            .Must(TextRule.HasOnlySupportedCharacters).WithMessage(TextRule.Message)
             .OverridePropertyName("q");
         RuleFor(filter => filter.Category)
             .MaximumLength(Slug.MaxLength)
-            .Must(TextRule.HasNoNullCharacter).WithMessage(TextRule.Message);
+            .Must(TextRule.HasOnlySupportedCharacters).WithMessage(TextRule.Message);
         RuleFor(filter => filter.MinPrice).GreaterThanOrEqualTo(0m);
         RuleFor(filter => filter.MaxPrice).GreaterThanOrEqualTo(0m);
         RuleFor(filter => filter.MaxPrice)
