@@ -24,7 +24,8 @@ O design (§4) pede um pipeline behavior de transação. Cada módulo tem o pró
   Por isso o Dapper fica só em handlers de query (sub-plano 1b, ADR 0013); o teste `CommandHandlers_DoNotUseDapper` falha se um handler de `ICommand` referenciar o Dapper diretamente.
 - **Sem retry:** nunca `EnableRetryOnFailure` nem o `AddNpgsqlDbContext` do Aspire, que liga retry por padrão; retry lança exceção dentro de uma transação ambiente. Os módulos usam `AddDbContext` com o `NpgsqlDataSource` compartilhado do host.
 - **Consumers e sagas** do MassTransit abrem a própria transação local. Dentro deles, não se envia um `ICommand` pelo MediatR; o consumer usa o domínio e o `DbContext` do módulo direto.
-- **Outbox do barramento em um só `DbContext`.** O MassTransit permite um `DbContext` de bus outbox por barramento, e com dois o último registro vence. Copiar `UseBusOutbox()` para um segundo módulo é proibido até o sub-plano do segundo módulo que publica (4b, no máximo) provar a seleção por módulo com dois contextos.
+- **Outbox do barramento por módulo (emenda 2026-10-16, 4b).** O `UseBusOutbox()` vincula o `IPublishEndpoint` genérico a um só `DbContext` por barramento, e o último registro vence. Um segundo módulo que publica (Ordering) não usa esse endpoint genérico: publica pelo próprio `EntityFrameworkScopedBusContextProvider<IBus, OrderingDbContext>`, que grava no outbox do contexto dele, na mesma transação do comando.
+- **Sem cache de schema nas instruções de lock do outbox.** O `SqlLockStatementProvider` do MassTransit 8.5 guarda schema, tabela e colunas num dicionário estático indexado pelo tipo da entidade (`OutboxState`, `InboxState`), não pelo `DbContext`. Com dois módulos, o primeiro a resolver o tipo fixa a tabela de todos, e o outro passa a travar as linhas erradas. Por isso todo `AddEntityFrameworkOutbox<T>` usa `UsePostgres(enableSchemaCaching: false)`, e o repositório EF de saga usa `new PostgresLockStatementProvider(false)`.
 
 ## Consequências
 
