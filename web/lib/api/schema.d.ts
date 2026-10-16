@@ -475,6 +475,60 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/catalog/facets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Counts the products of a search per category, price range and attribute value.
+         * @description Takes the q, category, minPrice, maxPrice and attribute of the product search. Every count is a number of products.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    q?: string;
+                    category?: string;
+                    minPrice?: number;
+                    maxPrice?: number;
+                    attribute?: string[];
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GetProductFacetsResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -494,6 +548,21 @@ export interface components {
             id: string;
             /** Format: uint32 */
             version: number;
+        };
+        AttributeFacetResponse: {
+            key: string;
+            values: components["schemas"]["AttributeValueFacetResponse"][];
+        };
+        AttributeValueFacetResponse: {
+            value: string;
+            /** Format: int64 */
+            count: number;
+        };
+        CategoryFacetResponse: {
+            slug: string;
+            name: string;
+            /** Format: int64 */
+            count: number;
         };
         ChangeSkuPriceRequest: {
             /** Format: double */
@@ -526,6 +595,11 @@ export interface components {
             /** Format: uint32 */
             version: number;
         };
+        GetProductFacetsResponse: {
+            categories: components["schemas"]["CategoryFacetResponse"][];
+            prices: components["schemas"]["PriceFacetResponse"][];
+            attributes: components["schemas"]["AttributeFacetResponse"][];
+        };
         GetProductResponse: {
             /** Format: uuid */
             id: string;
@@ -553,6 +627,14 @@ export interface components {
         };
         HealthResponse: {
             status: string;
+        };
+        PriceFacetResponse: {
+            /** Format: double */
+            minAmount: number;
+            /** Format: double */
+            maxAmount: null | number;
+            /** Format: int64 */
+            count: number;
         };
         ProblemDetails: {
             type?: null | string;

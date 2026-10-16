@@ -488,6 +488,79 @@
           }
         }
       }
+    },
+    "/api/v1/catalog/facets": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Counts the products of a search per category, price range and attribute value.",
+        "description": "Takes the q, category, minPrice, maxPrice and attribute of the product search. Every count is a number of products.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minPrice",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "maxPrice",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "attribute",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProductFacetsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -536,6 +609,60 @@
           "version": {
             "type": "integer",
             "format": "uint32"
+          }
+        }
+      },
+      "AttributeFacetResponse": {
+        "required": [
+          "key",
+          "values"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttributeValueFacetResponse"
+            }
+          }
+        }
+      },
+      "AttributeValueFacetResponse": {
+        "required": [
+          "value",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "CategoryFacetResponse": {
+        "required": [
+          "slug",
+          "name",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
@@ -637,6 +764,34 @@
           }
         }
       },
+      "GetProductFacetsResponse": {
+        "required": [
+          "categories",
+          "prices",
+          "attributes"
+        ],
+        "type": "object",
+        "properties": {
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryFacetResponse"
+            }
+          },
+          "prices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceFacetResponse"
+            }
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttributeFacetResponse"
+            }
+          }
+        }
+      },
       "GetProductResponse": {
         "required": [
           "id",
@@ -721,6 +876,31 @@
         "properties": {
           "status": {
             "type": "string"
+          }
+        }
+      },
+      "PriceFacetResponse": {
+        "required": [
+          "minAmount",
+          "maxAmount",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "minAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxAmount": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
