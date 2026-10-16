@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Grit.Modules.Catalog\Grit.Modules.Catalog.csproj" />
+    <ProjectReference Include="..\..\src\Grit.Modules.Identity\Grit.Modules.Identity.csproj" />
     <ProjectReference Include="..\..\src\Grit.SharedKernel\Grit.SharedKernel.csproj" />
     <ProjectReference Include="..\Grit.Modules.Probe\Grit.Modules.Probe.csproj" />
   </ItemGroup>

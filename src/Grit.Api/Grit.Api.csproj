@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Grit.BuildingBlocks\Grit.BuildingBlocks.csproj" />
     <ProjectReference Include="..\Grit.Modules.Catalog\Grit.Modules.Catalog.csproj" />
+    <ProjectReference Include="..\Grit.Modules.Identity\Grit.Modules.Identity.csproj" />
     <ProjectReference Include="..\Grit.ServiceDefaults\Grit.ServiceDefaults.csproj" />
   </ItemGroup>
 
