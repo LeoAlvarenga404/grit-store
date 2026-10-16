@@ -11,6 +11,11 @@ public static class ClaimsPrincipalExtensions
     {
         ArgumentNullException.ThrowIfNull(user);
 
-        return Guid.TryParse(user.FindFirstValue(UserIdClaim), out var id) ? id : null;
+        // A "sub" claim on an anonymous identity does not make a user: only authenticated identities count.
+        var userIdValue = user.Identities
+            .Where(identity => identity.IsAuthenticated)
+            .Select(identity => identity.FindFirst(UserIdClaim)?.Value)
+            .FirstOrDefault(value => value is not null);
+        return Guid.TryParse(userIdValue, out var id) ? id : null;
     }
 }

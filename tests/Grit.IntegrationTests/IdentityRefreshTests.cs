@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Grit.Modules.Identity.Domain;
 using Grit.Modules.Identity.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -98,6 +99,50 @@ public class IdentityRefreshTests(ApiFactory factory)
             .SingleAsync(row => row.UserId == id, TestContext.Current.CancellationToken);
         stored.RevokedAt.ShouldBeNull();
         stored.ReplacedAt.ShouldBeNull();
+    }
+
+    // Stands in for a rotation of B that has not committed yet: the test transaction takes the family lock, replaces B and inserts its successor C.
+    [Fact]
+    public async Task Refresh_AncestorReusedWhileSuccessorRotationIsInFlight_RevokesTheSuccessor()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var (id, email) = await IdentityApi.RegisterAsync(_client);
+        var first = IdentityApi.RefreshTokenOf(await IdentityApi.LogInAsync(_client, email));
+        var second = IdentityApi.RefreshTokenOf(await IdentityApi.ReadOkAsync(await IdentityApi.RefreshAsync(_client, first)));
+        var familyId = await FamilyIdOfAsync(second);
+        var secondHash = RefreshToken.Hash(second);
+
+        await using var rotation = factory.Services.CreateAsyncScope();
+        var rotationDb = rotation.ServiceProvider.GetRequiredService<UsersDbContext>();
+        await using var transaction = await rotationDb.Database.BeginTransactionAsync(cancellationToken);
+        await rotationDb.Database.ExecuteSqlAsync($"SELECT pg_advisory_xact_lock(hashtextextended({familyId.ToString()}, 0))", cancellationToken);
+        await rotationDb.RefreshTokens
+            .Where(token => token.TokenHash == secondHash)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(token => token.ReplacedAt, DateTimeOffset.UtcNow), cancellationToken);
+        var successor = RefreshToken.Issue(id, familyId, DateTimeOffset.UtcNow).Token;
+        rotationDb.RefreshTokens.Add(successor);
+        await rotationDb.SaveChangesAsync(cancellationToken);
+
+        var reuse = IdentityApi.RefreshAsync(_client, first);
+        await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+        reuse.IsCompleted.ShouldBeFalse();
+
+        await transaction.CommitAsync(cancellationToken);
+        await IdentityApi.AssertUnauthorizedAsync(await reuse, "identity.refresh_token_reused");
+
+        await using var check = factory.Services.CreateAsyncScope();
+        var stored = await check.ServiceProvider.GetRequiredService<UsersDbContext>().RefreshTokens
+            .SingleAsync(row => row.Id == successor.Id, cancellationToken);
+        stored.RevokedAt.ShouldNotBeNull();
+    }
+
+    private async Task<Guid> FamilyIdOfAsync(string refreshToken)
+    {
+        var hash = RefreshToken.Hash(refreshToken);
+        await using var scope = factory.Services.CreateAsyncScope();
+        var stored = await scope.ServiceProvider.GetRequiredService<UsersDbContext>().RefreshTokens
+            .SingleAsync(row => row.TokenHash == hash, TestContext.Current.CancellationToken);
+        return stored.FamilyId;
     }
 
     [Fact]

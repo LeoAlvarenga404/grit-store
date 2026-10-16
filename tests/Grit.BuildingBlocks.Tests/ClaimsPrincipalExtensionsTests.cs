@@ -26,4 +26,12 @@ public class ClaimsPrincipalExtensionsTests
 
         user.GetUserId().ShouldBeNull();
     }
+
+    [Fact]
+    public void GetUserId_UnauthenticatedIdentityWithASubClaim_ReturnsNull()
+    {
+        var user = new ClaimsPrincipal(new ClaimsIdentity([new Claim("sub", Guid.CreateVersion7().ToString())]));
+
+        user.GetUserId().ShouldBeNull();
+    }
 }

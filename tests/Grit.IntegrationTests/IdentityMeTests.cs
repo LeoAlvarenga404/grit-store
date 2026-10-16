@@ -56,11 +56,29 @@ public class IdentityMeTests(ApiFactory factory)
         (await IdentityApi.GetMeAsync(_client, token)).StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    private static string Sign(string key, DateTime expires) =>
+    // Signed with the API's key and the right audience: only the issuer check can reject these.
+    [Fact]
+    public async Task GetMe_TokenFromAnotherIssuer_Returns401()
+    {
+        var token = Sign(ApiFactory.JwtSigningKey, DateTime.UtcNow.AddMinutes(15), issuer: "someone-else");
+
+        (await IdentityApi.GetMeAsync(_client, token)).StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+
+    // Signed with the API's key and the right issuer: only the audience check can reject this.
+    [Fact]
+    public async Task GetMe_TokenForAnotherAudience_Returns401()
+    {
+        var token = Sign(ApiFactory.JwtSigningKey, DateTime.UtcNow.AddMinutes(15), audience: "someone-else");
+
+        (await IdentityApi.GetMeAsync(_client, token)).StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+
+    private static string Sign(string key, DateTime expires, string issuer = "grit-api", string audience = "grit-web") =>
         new JsonWebTokenHandler().CreateToken(new SecurityTokenDescriptor
         {
-            Issuer = "grit-api",
-            Audience = "grit-web",
+            Issuer = issuer,
+            Audience = audience,
             IssuedAt = expires.AddMinutes(-15),
             NotBefore = expires.AddMinutes(-15),
             Expires = expires,

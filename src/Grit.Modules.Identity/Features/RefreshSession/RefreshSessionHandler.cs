@@ -15,6 +15,19 @@ internal sealed class RefreshSessionHandler(UsersDbContext db, TokenIssuer token
         var now = DateTimeOffset.UtcNow;
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
 
+        var familyId = await db.RefreshTokens.AsNoTracking()
+            .Where(token => token.TokenHash == hash)
+            .Select(token => (Guid?)token.FamilyId)
+            .SingleOrDefaultAsync(cancellationToken);
+        if (familyId is null)
+        {
+            await transaction.CommitAsync(cancellationToken);
+            return IdentityErrors.InvalidRefreshToken;
+        }
+
+        // The revocation UPDATE cannot see a successor inserted by a rotation that has not committed; the family lock orders them.
+        await db.Database.ExecuteSqlAsync($"SELECT pg_advisory_xact_lock(hashtextextended({familyId.Value.ToString()}, 0))", cancellationToken);
+
         // The conditional UPDATE takes the row lock: of two concurrent refreshes with one token only one changes the row;
         // the other waits, re-reads the row as replaced (READ COMMITTED) and is handled as reuse.
         var rotated = await db.RefreshTokens
