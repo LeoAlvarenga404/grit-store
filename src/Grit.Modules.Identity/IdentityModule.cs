@@ -2,6 +2,7 @@ using System.Threading.RateLimiting;
 using Grit.BuildingBlocks;
 using Grit.Modules.Identity.Features.GetCurrentUser;
 using Grit.Modules.Identity.Features.LogIn;
+using Grit.Modules.Identity.Features.LogOut;
 using Grit.Modules.Identity.Features.RefreshSession;
 using Grit.Modules.Identity.Features.Register;
 using Grit.Modules.Identity.Infrastructure;
@@ -66,6 +67,7 @@ public sealed class IdentityModule : IModule
         identity.MapRegister();
         identity.MapLogIn();
         identity.MapRefreshSession();
+        identity.MapLogOut();
         identity.MapGetCurrentUser();
     }
 

@@ -1261,6 +1261,40 @@
         }
       }
     },
+    "/api/v1/identity/logout": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Ends the session of a refresh token.",
+        "description": "Revokes the refresh token and every token rotated from the same login; other logins of the user keep working. Answers 204 for unknown or already revoked tokens too. An access token already issued stays valid until it expires (15 minutes).",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogOutRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/identity/me": {
       "get": {
         "tags": [
@@ -2584,6 +2618,17 @@
             "type": "string"
           },
           "password": {
+            "type": "string"
+          }
+        }
+      },
+      "LogOutRequest": {
+        "required": [
+          "refreshToken"
+        ],
+        "type": "object",
+        "properties": {
+          "refreshToken": {
             "type": "string"
           }
         }

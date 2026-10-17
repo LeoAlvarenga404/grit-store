@@ -1241,6 +1241,56 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/identity/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Ends the session of a refresh token.
+         * @description Revokes the refresh token and every token rotated from the same login; other logins of the user keep working. Answers 204 for unknown or already revoked tokens too. An access token already issued stays valid until it expires (15 minutes).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["LogOutRequest"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/identity/me": {
         parameters: {
             query?: never;
@@ -2216,6 +2266,9 @@ export interface components {
         LogInRequest: {
             email: string;
             password: string;
+        };
+        LogOutRequest: {
+            refreshToken: string;
         };
         OrderLineResponse: {
             /** Format: uuid */
