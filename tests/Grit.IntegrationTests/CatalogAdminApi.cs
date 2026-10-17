@@ -33,11 +33,17 @@ internal static class CatalogAdminApi
 
     public static string SkusPath(Guid productId) => $"{ProductsPath}/{productId}/skus";
 
-    public static async Task<(Guid Id, uint Version)> AddSkuAsync(HttpClient client, Guid productId, uint version, string color)
+    public static async Task<(Guid Id, uint Version)> AddSkuAsync(HttpClient client, Guid productId, uint version, string color, string? size = null)
     {
+        var attributes = new Dictionary<string, string> { ["cor"] = color };
+        if (size is not null)
+        {
+            attributes["tamanho"] = size;
+        }
+
         var response = await client.PostAsJsonAsync(
             SkusPath(productId),
-            new { attributes = new { cor = color }, priceAmount = 99.90m, priceCurrency = "BRL", version },
+            new { attributes, priceAmount = 99.90m, priceCurrency = "BRL", version },
             TestContext.Current.CancellationToken);
 
         response.StatusCode.ShouldBe(HttpStatusCode.Created);

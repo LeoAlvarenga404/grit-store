@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Grit.IntegrationTests;
 
@@ -32,8 +33,25 @@ public class BasketApiTests(ApiFactory factory)
         line.GetProperty("hasPriceChanged").GetBoolean().ShouldBeFalse();
         line.GetProperty("isAvailable").GetBoolean().ShouldBeTrue();
         line.GetProperty("productName").GetString()!.ShouldStartWith("Camiseta");
+        line.GetProperty("color").GetString().ShouldBe("azul");
+        line.GetProperty("size").ValueKind.ShouldBe(JsonValueKind.Null);
+        line.GetProperty("imageUrl").ValueKind.ShouldBe(JsonValueKind.Null);
         basket.GetProperty("subtotalAmount").GetDecimal().ShouldBe(199.80m);
         basket.GetProperty("currency").GetString().ShouldBe("BRL");
+    }
+
+    [Fact]
+    public async Task GetBasket_SkuWithColorAndSize_ShowsThemWithoutAnImage()
+    {
+        var (productId, version) = await CatalogAdminApi.CreateProductAsync(_admin);
+        var sku = await CatalogAdminApi.AddSkuAsync(_admin, productId, version, "preto", "42");
+        await BasketApi.AddLineAsync(_customer, sku.Id, 1);
+
+        var line = (await BasketApi.GetAsync(_customer)).GetProperty("lines").EnumerateArray().ShouldHaveSingleItem();
+
+        line.GetProperty("color").GetString().ShouldBe("preto");
+        line.GetProperty("size").GetString().ShouldBe("42");
+        line.GetProperty("imageUrl").ValueKind.ShouldBe(JsonValueKind.Null);
     }
 
     [Fact]
