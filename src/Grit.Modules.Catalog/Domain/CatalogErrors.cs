@@ -21,4 +21,14 @@ internal static class CatalogErrors
     public static readonly Error UnsupportedCurrency = new("catalog.unsupported_currency", "Prices must be in BRL.", ErrorType.Validation);
 
     public static readonly Error DuplicateVariant = new("catalog.duplicate_variant", "The product already has a SKU with these attributes.", ErrorType.Conflict);
+
+    public static readonly Error ImageLimit = new("catalog.image_limit", "A product has at most 8 images. Remove one first.", ErrorType.Conflict);
+
+    public static readonly Error InvalidImageKey = new("catalog.invalid_image_key", "The image key does not belong to this product.", ErrorType.Validation);
+
+    public static readonly Error ImageNotFound = new("catalog.image_not_found", "The product has no image with this key.", ErrorType.NotFound);
+
+    public static readonly Error ImageNotUploaded = new("catalog.image_not_uploaded", "Nothing was uploaded with this key. Send the file to the upload URL first.", ErrorType.Validation);
+
+    public static readonly Error InvalidImage = new("catalog.invalid_image", "Images must be JPEG, PNG or WebP files of at most 2 MB.", ErrorType.Validation);
 }

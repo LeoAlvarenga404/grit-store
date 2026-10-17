@@ -22,6 +22,7 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasIndex(product => product.Slug).IsUnique();
         builder.Property(product => product.Description).HasMaxLength(4000);
         builder.Property(product => product.Attributes).IsJsonAttributes();
+        builder.PrimitiveCollection(product => product.ImageKeys);
         builder.HasMany(product => product.Skus).WithOne().HasForeignKey("ProductId").IsRequired();
         builder.Property<uint>(CatalogDbContext.Version).IsRowVersion();
         builder.Property<DateTimeOffset>(AuditInterceptor.CreatedAt);

@@ -85,6 +85,11 @@ namespace Grit.Modules.Catalog.Infrastructure.Migrations
                         .HasColumnType("character varying(4000)")
                         .HasColumnName("description");
 
+                    b.PrimitiveCollection<string[]>("ImageKeys")
+                        .IsRequired()
+                        .HasColumnType("text[]")
+                        .HasColumnName("image_keys");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
