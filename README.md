@@ -73,13 +73,24 @@ O padrão é o gateway fake. Para usar o Stripe em modo de teste:
 
 A API não sobe com `Payments:Provider=Stripe` sem as duas chaves. O compose sempre usa o gateway fake.
 
+## Como regerar o seed
+
+O `seed/catalog.json` versionado foi escrito à mão. O importador `tools/Grit.MlImporter` gera um novo a partir da API de catálogo do Mercado Livre, com até 2 imagens WebP por produto em `seed/images/`. Ele precisa do token OAuth do app, que vale 6 horas:
+
+```bash
+dotnet user-secrets set "MercadoLivre:AccessToken" "<token>" --project tools/Grit.MlImporter
+dotnet run --project tools/Grit.MlImporter -- --category "Calçados=tênis corrida" --category "Vestuário=camiseta dry fit" --category "Camping=barraca camping" --category "Ciclismo=capacete ciclismo" --count 5 --output seed
+```
+
+Códigos de saída: 0 ok, 1 argumentos inválidos, 2 sem token, 3 falha HTTP. O arquivo só é gravado se passar na mesma validação do seeder. As imagens aparecem quando o AppHost sobe com o armazenamento; o compose publica só o `catalog.json`.
+
 ## Testes
 
 ```bash
 dotnet test
 ```
 
-Os testes de integração usam Testcontainers (Postgres e Redis reais, nunca mocks do banco), então o Docker precisa estar rodando. Hoje são 561 testes. O teste vitrine é `tests/Grit.IntegrationTests/CheckoutSagaTests.cs`: caminho feliz do checkout e pagamento recusado que libera a reserva. `StockReservationRaceTests.cs` prova que dois compradores não levam a última unidade.
+Os testes de integração usam Testcontainers (Postgres e Redis reais, nunca mocks do banco), então o Docker precisa estar rodando. Hoje são 621 testes. O teste vitrine é `tests/Grit.IntegrationTests/CheckoutSagaTests.cs`: caminho feliz do checkout e pagamento recusado que libera a reserva. `StockReservationRaceTests.cs` prova que dois compradores não levam a última unidade.
 
 ## Arquitetura
 
@@ -130,4 +141,4 @@ Os resultados ficam em `bench/results/`, que não é versionado.
 
 ## Fora do escopo por enquanto
 
-Importador do Mercado Livre (precisa do token do app), Stripe real (precisa de uma conta de teste), GIF do trace no Aspire, logout que revogue a família de tokens e "criado/alterado por" na auditoria. Estão no roadmap.
+Rodar o importador com o token real, ligar o Stripe com uma conta de teste (o código e os testes já existem; ver as seções acima) e um GIF do trace no Aspire.
