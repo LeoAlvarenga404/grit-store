@@ -7,7 +7,7 @@ export function catalogHref(filters: Filters, changes: Partial<Filters>): string
     if (value) params.set(key, value);
   }
   const query = params.toString();
-  return query ? `/?${query}` : "/";
+  return query ? `/catalog?${query}` : "/catalog";
 }
 
 export function toSearchQuery(filters: Filters) {

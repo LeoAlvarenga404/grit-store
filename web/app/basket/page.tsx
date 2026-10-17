@@ -16,7 +16,7 @@ export default async function BasketPage({ searchParams }: { searchParams: Promi
   if (!basket) throw new Error(`The basket answered ${response.status}.`);
 
   return (
-    <main>
+    <main className="legacy">
       <h1>Carrinho</h1>
       {error && (
         <p role="alert" className="error">

@@ -9,7 +9,7 @@ export default async function OrdersPage() {
   if (!orders) throw new Error(`The orders answered ${response.status}.`);
 
   return (
-    <main>
+    <main className="legacy">
       <h1>Meus pedidos</h1>
       {orders.length === 0 ? (
         <p>

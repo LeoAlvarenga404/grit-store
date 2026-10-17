@@ -25,7 +25,7 @@ export default async function AdminOrdersPage({
   const olderPage = data.nextCursor ? new URLSearchParams({ ...(status ? { status } : {}), after: data.nextCursor }) : null;
 
   return (
-    <main>
+    <main className="legacy">
       <h1>Pedidos</h1>
       {error && (
         <p role="alert" className="error">

@@ -18,7 +18,7 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
   if (!basket) throw new Error(`The basket answered ${response.status}.`);
 
   return (
-    <main className="narrow">
+    <main className="legacy narrow">
       <h1>Finalizar compra</h1>
       {error && (
         <p role="alert" className="error">

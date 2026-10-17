@@ -12,7 +12,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const { error } = await searchParams;
 
   return (
-    <main className="narrow">
+    <main className="legacy narrow">
       <h1>Entrar</h1>
       {error && (
         <p role="alert" className="error">

@@ -34,7 +34,7 @@ export default async function ProductPage({
   if (!product) throw new Error(`The catalog answered ${response.status} for the product ${slug}.`);
 
   return (
-    <main className="narrow">
+    <main className="legacy narrow">
       <p>
         <Link href={`/?category=${encodeURIComponent(product.categorySlug)}`}>{product.categoryName}</Link>
       </p>

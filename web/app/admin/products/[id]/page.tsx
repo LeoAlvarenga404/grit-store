@@ -47,7 +47,7 @@ export default async function AdminProductPage({
   const levelBySku = new Map(levels.map((level) => [level.skuId, level]));
 
   return (
-    <main className="narrow">
+    <main className="legacy narrow">
       <p>
         <Link href="/admin/products">Produtos</Link>
       </p>

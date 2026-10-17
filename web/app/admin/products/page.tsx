@@ -10,7 +10,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
   if (!data) throw new Error(`The admin products answered ${response.status}.`);
 
   return (
-    <main>
+    <main className="legacy">
       <h1>Produtos</h1>
       <table>
         <thead>

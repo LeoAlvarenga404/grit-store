@@ -11,7 +11,7 @@ export default async function RegisterPage({ searchParams }: { searchParams: Pro
   const { error } = await searchParams;
 
   return (
-    <main className="narrow">
+    <main className="legacy narrow">
       <h1>Criar conta</h1>
       {error && (
         <p role="alert" className="error">

@@ -17,7 +17,7 @@ export function SearchBox({ defaultValue, category }: { defaultValue?: string; c
   }
 
   return (
-    <form action="/" role="search" className="search">
+    <form action="/catalog" role="search" className="search">
       <label>
         Buscar produtos
         <input

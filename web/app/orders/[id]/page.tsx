@@ -27,7 +27,7 @@ export default async function OrderPage({
   const isProcessing = order.status === "Placed";
 
   return (
-    <main>
+    <main className="legacy">
       {/* The checkout saga confirms or cancels the order in the background; reload until it settles. */}
       {isProcessing && <meta httpEquiv="refresh" content="2" />}
       <p>
