@@ -26,5 +26,5 @@ O roadmap pede busca em português que aguente acentos, plurais e erros de digit
 ## Consequências
 
 - Os testes de busca usam um banco próprio (`search_corpus`) no mesmo contêiner, com um corpus fixo e resultados exatos para acentos, plurais, erros e ranking.
-- Limites conhecidos: erros em palavras curtas não são tolerados; uma consulta só com stopwords (como "de") casa pelo ramo de trigramas com todo nome que tem a palavra; sem `q`, cada página ordena todos os produtos públicos, e as facetas sem filtro percorrem todos os SKUs a cada pedido (o cache do 5b e um teste de carga no 1c decidem se precisa de índice ou pré-agregação).
+- Limites conhecidos: erros em palavras curtas não são tolerados; uma consulta só com stopwords (como "de") casa pelo ramo de trigramas com todo nome que tem a palavra; sem `q`, cada página ordena todos os produtos públicos, e as facetas sem filtro percorrem todos os SKUs a cada pedido (o cache do 5b resolveu isso: o k6 do 5b mediu cerca de 1,1 s por faceta sem filtro sobre 100 mil SKUs sem cache e 43,6 ms de p95 com cache; ver ADR 0017 e o README).
 - Mudar o tipo de `name` ou `description` exige recriar `search_vector` em SQL (ADR 0008).

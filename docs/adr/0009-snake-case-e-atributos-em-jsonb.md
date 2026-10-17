@@ -12,7 +12,7 @@ O sub-plano 1b escreve SQL à mão (Dapper, `tsvector`), e identificadores Pasca
 
 - **snake_case em tudo** pelo `EFCore.NamingConventions` (`UseSnakeCaseNamingConvention()`): tabelas, colunas, chaves, índices e as colunas da tabela de histórico de migrations, que fica no schema de cada módulo.
 - **Atributos como `IReadOnlyDictionary<string, string>` em `jsonb`**, no produto e no SKU. São gravados por um conversor para texto e um `ValueComparer` estrutural, sem ligar o JSON dinâmico no data source compartilhado da API.
-- **Regra de formato (FluentValidation, `AttributesRule`):** até 20 entradas, chaves de 1 a 50 caracteres em `a-z`, `0-9` e `-`, valores de 1 a 100 caracteres sem NUL.
+- **Regra de formato (FluentValidation, `AttributesRule`):** até 20 entradas, chaves de 1 a 50 caracteres em `a-z`, `0-9` e `-`, valores de 1 a 100 caracteres sem NUL nem U+FFFE (a regra de texto do 1b rejeita os dois).
 - **Invariante (agregado):** dois SKUs do mesmo produto não podem ter o mesmo conjunto de atributos, em qualquer ordem (`catalog.duplicate_variant`, 409).
 
 ## Consequências

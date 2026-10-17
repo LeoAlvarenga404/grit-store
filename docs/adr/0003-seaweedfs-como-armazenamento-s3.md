@@ -18,6 +18,6 @@ Usar o **SeaweedFS** com a API S3 ligada (`AddSeaweedFS("storage").WithS3()`, do
 
 ## Consequências
 
-- O código das imagens (1c) fala S3 puro, sem nada específico do SeaweedFS. Trocar de servidor é uma linha no AppHost.
+- O código das imagens (entregue no 5a, ADR 0016) fala S3 puro, sem nada específico do SeaweedFS. Trocar de servidor é uma linha no AppHost.
 - A imagem tem uns 94 MB e é baixada na primeira vez que o AppHost sobe.
-- No 0b o recurso só é declarado: a API não o referencia até o 1c (imagens e URL pré-assinada).
+- No 0b o recurso só foi declarado; a API passou a referenciá-lo no 5a, com as imagens de produto (ADR 0016).

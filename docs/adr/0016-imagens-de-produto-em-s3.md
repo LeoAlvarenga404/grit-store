@@ -15,7 +15,7 @@ O admin precisa anexar fotos aos produtos, e a vitrine precisa mostrá-las. O ar
 - **No domínio, o produto guarda só as chaves:** até 8 imagens, na ordem do upload, e a primeira é a capa. A remoção é feita pelo nome do arquivo.
 - **Leitura por GET pré-assinado de 1 hora, assinado a cada resposta,** em vez de bucket público. O SeaweedFS do toolkit não tem identidade anônima, e um bucket público exigiria versionar um `s3.json` com chaves literais.
 - **`ProductImageStorage` é uma classe concreta**, sem interface, porque não existe segunda implementação. Os testes usam um SeaweedFS real (Testcontainer) só nas classes de imagem. O cliente S3 é criado sob demanda, então hosts sem `ConnectionStrings:storage` nunca o tocam. O bucket é criado na subida em Development, junto com as migrations (ADR 0008).
-- **AWSSDK.S3** com endereçamento por caminho e `Protocol = HTTP` explícito, porque o SDK assina `https://` por padrão.
+- **AWSSDK.S3** com endereçamento por caminho e o protocolo das URLs assinadas tirado do esquema do endpoint, porque o SDK assina `https://` por padrão e o armazenamento local fala `http`.
 
 ## Consequências
 
