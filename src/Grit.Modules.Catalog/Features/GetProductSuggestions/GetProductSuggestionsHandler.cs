@@ -1,11 +1,12 @@
 using Dapper;
+using Grit.Modules.Catalog.Infrastructure;
 using Grit.SharedKernel;
 using MediatR;
 using Npgsql;
 
 namespace Grit.Modules.Catalog.Features.GetProductSuggestions;
 
-internal sealed class GetProductSuggestionsHandler(NpgsqlDataSource dataSource)
+internal sealed class GetProductSuggestionsHandler(NpgsqlDataSource dataSource, CatalogCache cache)
     : IRequestHandler<GetProductSuggestionsQuery, Result<IReadOnlyList<ProductSuggestionResponse>>>
 {
     private const int Limit = 8;
@@ -30,9 +31,16 @@ internal sealed class GetProductSuggestionsHandler(NpgsqlDataSource dataSource)
         GetProductSuggestionsQuery query,
         CancellationToken cancellationToken)
     {
+        // The validator has already required the text.
+        var text = query.Query!;
+        return await cache.GetOrCreateAsync(CatalogCache.SuggestionsKeyOf(text), token => SuggestAsync(text, token), cancellationToken);
+    }
+
+    private async ValueTask<List<ProductSuggestionResponse>> SuggestAsync(string text, CancellationToken cancellationToken)
+    {
         await using var connection = dataSource.CreateConnection();
         var suggestions = await connection.QueryAsync<ProductSuggestionResponse>(
-            new CommandDefinition(Sql, new { query.Query, Limit }, cancellationToken: cancellationToken));
+            new CommandDefinition(Sql, new { Query = text, Limit }, cancellationToken: cancellationToken));
 
         return suggestions.AsList();
     }

@@ -22,6 +22,8 @@ var api = builder.AddProject<Projects.Grit_Api>("api")
     .WithEnvironment("Identity__Jwt__SigningKey", jwtSigningKey)
     .WithEnvironment("Identity__Admin__Email", "admin@grit.local")
     .WithEnvironment("Identity__Admin__Password", adminPassword)
+    // k6 compares runs with and without the catalog cache: `dotnet run --project src/Grit.AppHost -- --Caching:Enabled=false`.
+    .WithEnvironment("Caching__Enabled", builder.Configuration["Caching:Enabled"] ?? "true")
     .WaitFor(database)
     .WithReference(redis)
     .WaitFor(redis)

@@ -21,6 +21,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
@@ -48,6 +50,14 @@ public sealed class CatalogModule : IModule
 
         builder.Services.AddScoped<ICatalogReader, CatalogReader>();
         builder.Services.AddSingleton<ProductImageStorage>();
+
+        // L2 is the Redis the basket uses, on a connection of its own; bound on first use because the build-time
+        // OpenAPI run has no connection string (ADR 0004).
+        builder.Services.AddStackExchangeRedisCache(_ => { });
+        builder.Services.AddOptions<RedisCacheOptions>()
+            .Configure<IConfiguration>((options, configuration) => options.Configuration = configuration.GetConnectionString("redis"));
+        builder.Services.AddHybridCache();
+        builder.Services.AddSingleton<CatalogCache>();
     }
 
     // Catalog publishes no integration event yet, and the single bus-outbox slot stays with the probe (ADR 0005).
@@ -70,7 +80,8 @@ public sealed class CatalogModule : IModule
 
     public void MapEndpoints(IEndpointRouteBuilder api)
     {
-        var admin = api.MapAdminGroup().WithTags("Catalog");
+        // Every successful admin write empties the public catalog cache once its transaction has committed.
+        var admin = api.MapAdminGroup().WithTags("Catalog").AddEndpointFilter(CatalogCache.InvalidateAfterWrite);
         admin.MapCreateCategory();
 
         var products = admin.MapGroup("/products");
