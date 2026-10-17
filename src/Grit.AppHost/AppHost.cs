@@ -30,6 +30,8 @@ var api = builder.AddProject<Projects.Grit_Api>("api")
     .WithReference(storage)
     .WaitFor(storage)
     .WithEnvironment("Seed__Path", seedPath)
+    // Generated products for k6, off unless asked: `dotnet run --project src/Grit.AppHost -- --Seed:VolumeProducts=50000`.
+    .WithEnvironment("Seed__VolumeProducts", builder.Configuration["Seed:VolumeProducts"] ?? "0")
     .WithHttpHealthCheck("/health");
 
 builder.AddJavaScriptApp("web", "../../web", "dev")

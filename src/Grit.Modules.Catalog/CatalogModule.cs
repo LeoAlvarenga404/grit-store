@@ -41,6 +41,7 @@ public sealed class CatalogModule : IModule
             CatalogDbContext.Configure(options, services.GetRequiredService<NpgsqlDataSource>()).AddInterceptors(Audit));
 
         builder.Services.AddScoped<CatalogSeeder>();
+        builder.Services.AddScoped<VolumeSeeder>();
 
         // Development only, like the migrations (ADR 0008): the AppHost points Seed:Path at seed/catalog.json.
         if (builder.Environment.IsDevelopment())
