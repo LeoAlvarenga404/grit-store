@@ -117,6 +117,48 @@ public class OrderTests
     }
 
     [Fact]
+    public void Ship_ConfirmedOrder_ShipsAndRecordsTheHistory()
+    {
+        var order = Placed();
+        order.Confirm(Later);
+
+        order.Ship(Later).IsSuccess.ShouldBeTrue();
+
+        order.Status.ShouldBe(OrderStatus.Shipped);
+        order.History.Select(change => change.Status).ShouldBe([OrderStatus.Placed, OrderStatus.Confirmed, OrderStatus.Shipped]);
+    }
+
+    [Fact]
+    public void Ship_PlacedOrder_ReturnsNotShippable()
+    {
+        var order = Placed();
+
+        order.Ship(Later).Error.Code.ShouldBe("ordering.order_not_shippable");
+        order.Status.ShouldBe(OrderStatus.Placed);
+    }
+
+    [Fact]
+    public void Ship_CancelledOrder_ReturnsNotShippable()
+    {
+        var order = Placed();
+        order.Confirm(Later);
+        order.Cancel(Later);
+
+        order.Ship(Later).Error.Code.ShouldBe("ordering.order_not_shippable");
+    }
+
+    [Fact]
+    public void Cancel_ShippedOrder_ReturnsNotCancellable()
+    {
+        var order = Placed();
+        order.Confirm(Later);
+        order.Ship(Later);
+
+        order.Cancel(Later).Error.Code.ShouldBe("ordering.order_not_cancellable");
+        order.Status.ShouldBe(OrderStatus.Shipped);
+    }
+
+    [Fact]
     public void FormatNumber_SmallSequence_PadsToSixDigits()
     {
         Order.FormatNumber(2026, 123).ShouldBe("2026-000123");

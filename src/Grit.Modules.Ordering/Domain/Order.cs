@@ -99,7 +99,7 @@ internal sealed class Order : AggregateRoot<OrderId>
         return Result.Success();
     }
 
-    // Only a confirmed order: while the saga runs, a customer cancel would race it. Nothing ships yet, so every confirmed order qualifies.
+    // Only a confirmed order: while the saga runs, a customer cancel would race it, and a shipped order has left the store (design §8).
     public Result Cancel(DateTimeOffset now)
     {
         if (Status != OrderStatus.Confirmed)
@@ -109,6 +109,17 @@ internal sealed class Order : AggregateRoot<OrderId>
 
         CancellationReason = OrderCancellationReasons.CustomerRequest;
         ChangeStatus(OrderStatus.Cancelled, now);
+        return Result.Success();
+    }
+
+    public Result Ship(DateTimeOffset now)
+    {
+        if (Status != OrderStatus.Confirmed)
+        {
+            return OrderingErrors.OrderNotShippable;
+        }
+
+        ChangeStatus(OrderStatus.Shipped, now);
         return Result.Success();
     }
 
