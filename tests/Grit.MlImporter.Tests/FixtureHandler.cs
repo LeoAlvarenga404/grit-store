@@ -8,6 +8,8 @@ internal sealed class FixtureHandler : HttpMessageHandler
 {
     private readonly Dictionary<string, Func<HttpResponseMessage>> _responses = [];
 
+    private readonly Dictionary<string, int> _throttledRequests = [];
+
     public List<(string Url, string? Authorization)> Requests { get; } = [];
 
     public FixtureHandler Json(string url, string fixture, HttpStatusCode status = HttpStatusCode.OK)
@@ -26,12 +28,33 @@ internal sealed class FixtureHandler : HttpMessageHandler
         return this;
     }
 
+    public FixtureHandler Throttled(string url, int times)
+    {
+        _throttledRequests[url] = times;
+        return this;
+    }
+
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var url = request.RequestUri!.AbsoluteUri;
         Requests.Add((url, request.Headers.Authorization?.ToString()));
-        return _responses.TryGetValue(url, out var response)
-            ? Task.FromResult(response())
-            : throw new InvalidOperationException($"No fixture for {url}");
+        if (_throttledRequests.TryGetValue(url, out var remaining) && remaining > 0)
+        {
+            _throttledRequests[url] = remaining - 1;
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.TooManyRequests)
+            {
+                RequestMessage = request,
+                Content = new StringContent("""{"message":"local_rate_limited","status":429}""", MediaTypeHeaderValue.Parse("application/json; charset=utf-8")),
+            });
+        }
+
+        if (!_responses.TryGetValue(url, out var response))
+        {
+            throw new InvalidOperationException($"No fixture for {url}");
+        }
+
+        var message = response();
+        message.RequestMessage = request;
+        return Task.FromResult(message);
     }
 }

@@ -5,10 +5,10 @@ public class ImportOptionsTests
     [Fact]
     public void Parse_EveryOption_ReadsThem()
     {
-        var options = ImportOptions.Parse(["--category", "Camping=barraca camping", "--category", "Trilha = bastão", "--count", "3", "--output", "out"]);
+        var options = ImportOptions.Parse(["--category", "Camping=barraca camping@MLB-TENTS", "--category", "Trilha = bastão", "--count", "3", "--output", "out"]);
 
         options.IsSuccess.ShouldBeTrue();
-        options.Value.Categories.ShouldBe([new ImportCategory("Camping", "barraca camping"), new ImportCategory("Trilha", "bastão")]);
+        options.Value.Categories.ShouldBe([new ImportCategory("Camping", "barraca camping", "MLB-TENTS"), new ImportCategory("Trilha", "bastão")]);
         options.Value.ProductsPerCategory.ShouldBe(3);
         options.Value.OutputDirectory.ShouldBe("out");
     }
@@ -35,6 +35,10 @@ public class ImportOptionsTests
     [InlineData("--category", "Camping=barraca", "--output")]
     [InlineData("--category", "Camping=barraca", "--token", "abc")]
     [InlineData("--category", "Calçados=tênis", "--category", "calcados=bota")]
+    [InlineData("--category", "Camping=barraca@")]
+    [InlineData("--category", "Camping=@MLB-TENTS")]
+    [InlineData("--category", "Camping=barraca@tents")]
+    [InlineData("--category", "Camping=barraca@MLB-TENTS X")]
     public void Parse_InvalidArguments_Fails(params string[] args)
     {
         var options = ImportOptions.Parse(args);

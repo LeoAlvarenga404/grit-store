@@ -6,10 +6,13 @@ using Grit.Modules.Catalog.Infrastructure.Seed;
 
 namespace Grit.MlImporter;
 
-// Sequential calls, no retry: a run fetches about a hundred resources, and a failed run is simply run again.
+// Calls are sequential; a 429 is retried by the client, any other failure ends the run.
 internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log, Func<string, byte[], CancellationToken, Task>? writeFile = null)
 {
     public const int MaxImagesPerProduct = 2;
+
+    // About a quarter of catalog products has a winning listing and variants repeat a name, so a wide page is searched once.
+    public const int SearchLimit = 50;
 
     // The seeder reads the web defaults; accents stay readable in the committed file.
     private static readonly JsonSerializerOptions SeedJsonOptions = new(JsonSerializerDefaults.Web)
@@ -21,6 +24,8 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log,
     };
 
     private readonly HashSet<Slug> _productSlugs = [];
+
+    private readonly HashSet<Slug> _triedSlugs = [];
 
     private readonly Dictionary<string, byte[]> _images = [];
 
@@ -42,18 +47,18 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log,
         await WriteAsync(options.OutputDirectory, catalog, cancellationToken);
     }
 
-    // Twice the wanted count is searched: products without a BRL listing or already imported are skipped.
+    // Products without a BRL listing or already imported are skipped, so the page is wider than the wanted count.
     private async Task<List<SeedProduct>> ImportCategoryAsync(ImportCategory category, int count, CancellationToken cancellationToken)
     {
         var products = new List<SeedProduct>();
-        foreach (var found in await client.SearchAsync(category.Query, count * 2, cancellationToken))
+        foreach (var found in await client.SearchAsync(category.Query, category.Domain, SearchLimit, cancellationToken))
         {
             if (products.Count == count)
             {
                 break;
             }
 
-            var product = await ImportProductAsync(found.Id, cancellationToken);
+            var product = await ImportProductAsync(found, cancellationToken);
             if (product is not null)
             {
                 products.Add(product);
@@ -63,8 +68,17 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log,
         return products;
     }
 
-    private async Task<SeedProduct?> ImportProductAsync(string id, CancellationToken cancellationToken)
+    private async Task<SeedProduct?> ImportProductAsync(MlProduct found, CancellationToken cancellationToken)
     {
+        var searchSlug = Slug.FromName(SeedMapper.Clean(found.Name, SeedMapper.MaxNameLength));
+        if (searchSlug.IsFailure || _triedSlugs.Contains(searchSlug.Value))
+        {
+            await log.WriteLineAsync($"  skipped {found.Id}: no name or already tried");
+            return null;
+        }
+
+        _triedSlugs.Add(searchSlug.Value);
+        var id = found.Id;
         var product = await client.ProductAsync(id, cancellationToken);
         var slug = Slug.FromName(SeedMapper.Clean(product.Name, SeedMapper.MaxNameLength));
         if (slug.IsFailure || _productSlugs.Contains(slug.Value))
