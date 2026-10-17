@@ -11,9 +11,6 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log,
 {
     public const int MaxImagesPerProduct = 2;
 
-    // About a quarter of catalog products has a winning listing and variants repeat a name, so a wide page is searched once.
-    public const int SearchLimit = 50;
-
     // The seeder reads the web defaults; accents stay readable in the committed file.
     private static readonly JsonSerializerOptions SeedJsonOptions = new(JsonSerializerDefaults.Web)
     {
@@ -51,7 +48,7 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log,
     private async Task<List<SeedProduct>> ImportCategoryAsync(ImportCategory category, int count, CancellationToken cancellationToken)
     {
         var products = new List<SeedProduct>();
-        foreach (var found in await client.SearchAsync(category.Query, category.Domain, SearchLimit, cancellationToken))
+        foreach (var found in (await client.SearchAsync(category.Query, category.Domain, 0, cancellationToken)).Results)
         {
             if (products.Count == count)
             {
@@ -80,6 +77,12 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log,
         _triedSlugs.Add(searchSlug.Value);
         var id = found.Id;
         var product = await client.ProductAsync(id, cancellationToken);
+        if (product is null)
+        {
+            await log.WriteLineAsync($"  skipped {id}: not found");
+            return null;
+        }
+
         var slug = Slug.FromName(SeedMapper.Clean(product.Name, SeedMapper.MaxNameLength));
         if (slug.IsFailure || _productSlugs.Contains(slug.Value))
         {

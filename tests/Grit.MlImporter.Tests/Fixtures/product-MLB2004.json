@@ -1,0 +1,64 @@
+{
+  "id": "MLB2004",
+  "status": "active",
+  "domain_id": "MLB-T_SHIRTS",
+  "name": "Camiseta Dry Fit Grit Azul G",
+  "family_name": "Camiseta Dry Fit Grit",
+  "parent_id": "MLB2000",
+  "children_ids": [],
+  "pickers": null,
+  "buy_box_winner": {
+    "item_id": "MLB3300000004",
+    "price": 89.9,
+    "currency_id": "BRL"
+  },
+  "pictures": [
+    {
+      "id": "700005-MLA2004",
+      "url": "https://http2.mlstatic.com/D_NQ_NP_700005-MLA2004-F.jpg"
+    }
+  ],
+  "attributes": [
+    {
+      "id": "BRAND",
+      "name": "Marca",
+      "value_id": null,
+      "value_name": "Grit",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "GENDER",
+      "name": "Gênero",
+      "value_id": null,
+      "value_name": "Sem gênero",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "MAIN_COLOR",
+      "name": "Cor principal",
+      "value_id": null,
+      "value_name": "Azul",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "COLOR",
+      "name": "Cor",
+      "value_id": null,
+      "value_name": "Azul",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "SIZE",
+      "name": "Tamanho",
+      "value_id": null,
+      "value_name": "G",
+      "values": [],
+      "meta": null
+    }
+  ],
+  "short_description": null
+}

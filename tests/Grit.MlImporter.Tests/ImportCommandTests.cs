@@ -179,7 +179,7 @@ public sealed class ImportCommandTests : IDisposable
         }
     }
 
-    private static string SearchUrl => $"{Api}products/search?status=active&site_id=MLB&q=barraca%20camping&limit=50";
+    private static string SearchUrl => $"{Api}products/search?status=active&site_id=MLB&q=barraca%20camping&limit=50&offset=0";
 
     // MLB1002 has no listing (404), MLB1003 repeats MLB1001's name, and MLB1004's picture is an error page.
     private static FixtureHandler RecordedCatalog() => new FixtureHandler()

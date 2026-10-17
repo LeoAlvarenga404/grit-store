@@ -9,25 +9,34 @@ internal sealed class MercadoLivreClient(HttpClient http, string accessToken, Ti
 {
     public const int MaxAttempts = 4;
 
+    // The widest page the search serves; offsets move by it.
+    public const int SearchLimit = 50;
+
     public static readonly Uri ApiAddress = new("https://api.mercadolibre.com/");
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-    public async Task<IReadOnlyList<MlProduct>> SearchAsync(string query, string? domain, int limit, CancellationToken cancellationToken)
+    public async Task<MlPage<MlProduct>> SearchAsync(string query, string? domain, int offset, CancellationToken cancellationToken)
     {
-        var path = $"products/search?status=active&site_id=MLB&q={Uri.EscapeDataString(query)}&limit={limit}";
+        var path = $"products/search?status=active&site_id=MLB&q={Uri.EscapeDataString(query)}&limit={SearchLimit}&offset={offset}";
         if (domain is not null)
         {
             path += $"&domain_id={Uri.EscapeDataString(domain)}";
         }
 
         using var response = await SendAsync(path, cancellationToken);
-        return (await ReadAsync<MlPage<MlProduct>>(response, cancellationToken)).Results;
+        return await ReadAsync<MlPage<MlProduct>>(response, cancellationToken);
     }
 
-    public async Task<MlProduct> ProductAsync(string id, CancellationToken cancellationToken)
+    // Null on 404: a parent or a picker can point at a product the catalog no longer serves.
+    public async Task<MlProduct?> ProductAsync(string id, CancellationToken cancellationToken)
     {
         using var response = await SendAsync($"products/{Uri.EscapeDataString(id)}", cancellationToken);
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
         return await ReadAsync<MlProduct>(response, cancellationToken);
     }
 
