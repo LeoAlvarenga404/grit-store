@@ -61,7 +61,8 @@ public class StripePaymentGatewayTests
         form.ShouldContain("payment_method=pm_card_visa");
         form.ShouldContain("confirm=true");
         form.ShouldContain("error_on_requires_action=true");
-        form.ShouldContain("automatic_payment_methods[allow_redirects]=never");
+        form.ShouldContain("allowed_payment_method_types[0]=card");
+        form.ShouldNotContain(field => field.StartsWith("automatic_payment_methods", StringComparison.Ordinal));
         form.ShouldContain($"metadata[order_id]={orderId}");
         stub.Header("Idempotency-Key").ShouldBe($"authorize-{orderId}");
     }
