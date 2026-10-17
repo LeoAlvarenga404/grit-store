@@ -40,7 +40,7 @@ public class ProductSuggestionTests(SearchCorpus corpus, ApiFactory api)
     {
         var connectionString = await api.CreateDatabaseAsync("suggestion_limit");
         await using var host = api.WithWebHostBuilder(builder => builder.UseSetting("ConnectionStrings:grit", connectionString));
-        var client = host.CreateClient();
+        var client = AdminClient.Create(host);
         var categoryId = await CatalogAdminApi.CreateCategoryAsync(client);
         for (var number = 10; number >= 1; number--)
         {

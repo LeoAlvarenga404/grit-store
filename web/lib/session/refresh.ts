@@ -1,4 +1,4 @@
-import { apiUrl } from "@/lib/api/client";
+import { api } from "@/lib/api/client";
 import type { Tokens } from "./session";
 
 // The API revokes the whole session family when a refresh token is used twice (no grace window), so requests
@@ -21,13 +21,7 @@ export function refreshTokens(refreshToken: string): Promise<Tokens | null> {
   return refresh;
 }
 
-// Plain fetch: the refresh route is not in the generated types until 2a Task 2 regenerates them.
 async function requestRefresh(refreshToken: string): Promise<Tokens | null> {
-  const response = await fetch(`${apiUrl}/api/v1/identity/refresh`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ refreshToken }),
-    cache: "no-store",
-  });
-  return response.ok ? ((await response.json()) as Tokens) : null;
+  const { data } = await api.POST("/api/v1/identity/refresh", { body: { refreshToken }, cache: "no-store" });
+  return data ?? null;
 }

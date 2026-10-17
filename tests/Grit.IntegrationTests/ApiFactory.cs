@@ -62,6 +62,10 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.UseSetting("Identity:Jwt:SigningKey", JwtSigningKey);
         builder.UseSetting("Identity:LoginAttemptsPerMinute", "1000");
 
+        // Every host here shares one Redis, so a read cached from one test database would answer another;
+        // CatalogReadCacheTests turns the cache on in a host of its own.
+        builder.UseSetting("Caching:Enabled", "false");
+
         // No outbox delivery in this host, so tests read OutboxMessage rows before anything delivers them;
         // OutboxTests turns delivery back on in a host of its own.
         builder.ConfigureTestServices(services =>

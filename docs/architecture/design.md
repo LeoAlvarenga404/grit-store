@@ -87,8 +87,8 @@ E-commerce de esportes e outdoor para portfolio: backend .NET maduro, rápido e 
 
 ## 9. Performance
 
-- **HybridCache** (L1 memória + L2 Redis) com proteção contra stampede e **invalidação por tag**, disparada por eventos (`ProductUpdated` → remove a tag). **Estoque nunca vai para o cache.**
-- **Output caching** nos endpoints públicos do catálogo, invalidado por tag.
+- **HybridCache** (L1 memória + L2 Redis) com proteção contra stampede e **invalidação por tag** (`catalog`), disparada por um filtro no grupo admin do Catalog depois do commit (emenda 2026-10-17, ADR 0017). **Estoque nunca vai para o cache.**
+- **Sem output caching** (emenda 2026-10-17, ADR 0017): redundante com o HybridCache e congelaria as URLs pré-assinadas das imagens.
 - Compiled queries no EF Core onde o perfil mostrar ganho.
 - **k6** em `bench/`: carga no catálogo e no checkout, números (p95, req/s, com e sem cache) publicados no README.
 - **Fora:** CDN, réplicas de leitura (uma linha no README diz onde entrariam), AOT.

@@ -87,6 +87,38 @@ public class BasketTests
         _basket.Lines.ShouldHaveSingleItem().SkuId.ShouldBe(other);
     }
 
+    [Fact]
+    public void RemovePurchased_PartOfTheQuantity_KeepsTheRest()
+    {
+        _basket.Add(Line(_sku, 3, 99.90m));
+
+        _basket.RemovePurchased(_sku, 2);
+
+        _basket.Lines.ShouldHaveSingleItem().Quantity.ShouldBe(1);
+    }
+
+    [Theory]
+    [InlineData(2)]
+    [InlineData(3)]
+    public void RemovePurchased_AllOrMoreThanTheQuantity_RemovesTheLine(int purchased)
+    {
+        _basket.Add(Line(_sku, 2, 99.90m));
+
+        _basket.RemovePurchased(_sku, purchased);
+
+        _basket.Lines.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void RemovePurchased_SkuNotInTheBasket_ChangesNothing()
+    {
+        _basket.Add(Line(_sku, 2, 99.90m));
+
+        _basket.RemovePurchased(Guid.NewGuid(), 2);
+
+        _basket.Lines.ShouldHaveSingleItem().Quantity.ShouldBe(2);
+    }
+
     private static BasketLine Line(Guid skuId, int quantity, decimal price) =>
         new(skuId, quantity, Money.Create(price, "BRL").Value, "Camiseta Dry Fit", "camiseta-dry-fit");
 }

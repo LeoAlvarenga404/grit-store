@@ -5,6 +5,7 @@ obj/
 .idea/
 .vscode/
 TestResults/
+bench/results/
 
 node_modules/
 .next/

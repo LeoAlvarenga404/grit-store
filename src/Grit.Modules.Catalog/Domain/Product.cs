@@ -7,6 +7,8 @@ internal sealed class Product : AggregateRoot<ProductId>
     // v1 sells in reais only, so basket and order totals always add up (Money.Add rejects mixed currencies).
     public const string StoreCurrency = "BRL";
 
+    public const int MaxImages = 8;
+
     private readonly List<Sku> _skus = [];
 
     private Product(
@@ -36,6 +38,9 @@ internal sealed class Product : AggregateRoot<ProductId>
 
     public IReadOnlyList<Sku> Skus => _skus;
 
+    // Storage keys in display order; the first image is the cover.
+    public IReadOnlyList<string> ImageKeys { get; private set; } = [];
+
     public static Result<Product> Create(
         CategoryId categoryId,
         string name,
@@ -50,6 +55,9 @@ internal sealed class Product : AggregateRoot<ProductId>
 
         return new Product(ProductId.New(), categoryId, name, slug.Value, description, new Dictionary<string, string>(attributes));
     }
+
+    // Confirmed uploads are copied under this prefix, so a key from another product is never attached here.
+    public static string ImageKeyPrefix(ProductId id) => $"products/{id.Value}/";
 
     // The slug is kept on rename so links already published keep working.
     public void Update(CategoryId categoryId, string name, string description, IReadOnlyDictionary<string, string> attributes)
@@ -96,6 +104,42 @@ internal sealed class Product : AggregateRoot<ProductId>
         }
 
         sku.ChangePrice(price);
+        return Result.Success();
+    }
+
+    public Result AddImage(string key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        var prefix = ImageKeyPrefix(Id);
+        if (!key.StartsWith(prefix, StringComparison.Ordinal) || key.Length == prefix.Length)
+        {
+            return CatalogErrors.InvalidImageKey;
+        }
+
+        // A repeated confirm of the same upload changes nothing.
+        if (ImageKeys.Contains(key))
+        {
+            return Result.Success();
+        }
+
+        if (ImageKeys.Count >= MaxImages)
+        {
+            return CatalogErrors.ImageLimit;
+        }
+
+        ImageKeys = [.. ImageKeys, key];
+        return Result.Success();
+    }
+
+    public Result RemoveImage(string key)
+    {
+        if (!ImageKeys.Contains(key))
+        {
+            return CatalogErrors.ImageNotFound;
+        }
+
+        ImageKeys = [.. ImageKeys.Where(existing => existing != key)];
         return Result.Success();
     }
 }

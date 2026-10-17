@@ -5,7 +5,7 @@ namespace Grit.IntegrationTests;
 
 public class CatalogSkuTests(ApiFactory factory)
 {
-    private readonly HttpClient _client = factory.CreateClient();
+    private readonly HttpClient _client = AdminClient.Create(factory);
 
     public static TheoryData<decimal, string, string> InvalidPrices => new()
     {

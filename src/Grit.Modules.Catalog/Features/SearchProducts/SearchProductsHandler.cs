@@ -1,13 +1,14 @@
 using System.Text.Json;
 using Dapper;
 using Grit.Modules.Catalog.Domain;
+using Grit.Modules.Catalog.Infrastructure;
 using Grit.SharedKernel;
 using MediatR;
 using Npgsql;
 
 namespace Grit.Modules.Catalog.Features.SearchProducts;
 
-internal sealed class SearchProductsHandler(NpgsqlDataSource dataSource)
+internal sealed class SearchProductsHandler(NpgsqlDataSource dataSource, CatalogCache cache)
     : IRequestHandler<SearchProductsQuery, Result<SearchProductsResponse>>
 {
     // Without text every rank is 0, so the order falls back to the id: UUIDv7, newest first.
@@ -32,7 +33,10 @@ internal sealed class SearchProductsHandler(NpgsqlDataSource dataSource)
         LIMIT @Limit
         """;
 
-    public async Task<Result<SearchProductsResponse>> Handle(SearchProductsQuery query, CancellationToken cancellationToken)
+    public async Task<Result<SearchProductsResponse>> Handle(SearchProductsQuery query, CancellationToken cancellationToken) =>
+        await cache.GetOrCreateAsync(CatalogCache.KeyOf("search", query), token => SearchAsync(query, token), cancellationToken);
+
+    private async ValueTask<SearchProductsResponse> SearchAsync(SearchProductsQuery query, CancellationToken cancellationToken)
     {
         var after = ProductCursor.TryParse(query.After, out var cursor) ? cursor : null;
         var parameters = new

@@ -21,10 +21,12 @@ Finalizar uma compra envolve três módulos que não compartilham transação: O
 - **Reserva de estoque** com `SELECT … ORDER BY sku_id FOR UPDATE`: reserva todas as linhas ou nenhuma. Dois compradores disputando a última unidade nunca levam os dois. A reserva vale 15 minutos e expira por consulta de horário, sem agendador (o agendamento em memória não é durável).
 - **Pagamento** pela porta `IPaymentGateway`. Hoje existe só o `FakePaymentGateway`, que recusa o token `tok_decline`. O Stripe entra depois como segunda implementação.
 - **Frete fixo** de R$ 19,90, sem ViaCEP.
+- **Limpeza do carrinho (emenda 2026-10-16, endurecimento):** o `OrderPlaced` traz as linhas compradas e o carrinho perde só essas quantidades, uma vez por pedido (marca `basket-cleared:{orderId}` no Redis). Um evento atrasado ou repetido não apaga itens adicionados depois do checkout.
 
 ## Consequências
 
 - A confirmação ignora a expiração: um pagamento que chegue depois de 15 minutos pode vender além do estoque. A correção vem com um gateway lento (Stripe), num ramo `StockCommitFailed`.
+- O cancelamento trava a linha do pedido (`SELECT … FOR UPDATE`): dois cancelamentos simultâneos não passam os dois.
 - Carrinho sem `WATCH`: duas abas editando ao mesmo tempo podem perder uma alteração.
 - "Meus pedidos" não tem paginação.
 - Uma coleção owned cuja chave composta inclui um valor definido no código precisa de `ValueGeneratedNever()` nessa parte; sem isso, o EF grava a reserva nova como UPDATE e falha. O teste de corrida pegou o erro.

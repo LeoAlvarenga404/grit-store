@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Grit.Modules.Catalog.Features.GetProductBySlug;
 
-internal sealed class GetProductBySlugHandler(CatalogDbContext db) : IRequestHandler<GetProductBySlugQuery, Result<GetProductBySlugResponse>>
+internal sealed class GetProductBySlugHandler(CatalogDbContext db, ProductImageStorage storage, CatalogCache cache)
+    : IRequestHandler<GetProductBySlugQuery, Result<GetProductBySlugResponse>>
 {
     public async Task<Result<GetProductBySlugResponse>> Handle(GetProductBySlugQuery query, CancellationToken cancellationToken)
     {
@@ -23,25 +24,39 @@ internal sealed class GetProductBySlugHandler(CatalogDbContext db) : IRequestHan
             return CatalogErrors.ProductNotFound;
         }
 
-        var product = await db.Products
-            .AsNoTracking()
-            .Where(product => product.Slug == slug.Value && product.Skus.Any())
-            .Join(db.Categories, product => product.CategoryId, category => category.Id, (product, category) => new GetProductBySlugResponse(
-                product.Id.Value,
-                product.Slug.Value,
-                product.Name,
-                product.Description,
-                product.Attributes,
-                category.Slug.Value,
-                category.Name,
-                product.Skus
-                    .OrderBy(sku => sku.Id)
-                    .Select(sku => new GetProductBySlugSkuResponse(sku.Id.Value, sku.Attributes, sku.Price.Amount, sku.Price.Currency))
-                    .ToList()))
-            .SingleOrDefaultAsync(cancellationToken);
+        // A missing product is cached too (as null); the write that adds its first SKU clears it with everything else.
+        var row = await cache.GetOrCreateAsync($"catalog:product:{query.Slug}", token => FindAsync(slug.Value, token), cancellationToken);
+        if (row is null)
+        {
+            return CatalogErrors.ProductNotFound;
+        }
 
-        return product is null ? CatalogErrors.ProductNotFound : product;
+        // The cache holds keys, never URLs: each response signs its own, so no entry outlives a URL's hour.
+        return row.Product with { ImageUrls = await storage.DownloadUrlsAsync(row.ImageKeys) };
     }
+
+    // ponytail: a miss reads with this request's DbContext; if this request aborts while another waits on the same
+    // key, the waiter fails too. Load with a context of its own if that ever shows up.
+    private async ValueTask<GetProductBySlugRow?> FindAsync(Slug slug, CancellationToken cancellationToken) =>
+        await db.Products
+            .AsNoTracking()
+            .Where(product => product.Slug == slug && product.Skus.Any())
+            .Join(db.Categories, product => product.CategoryId, category => category.Id, (product, category) => new GetProductBySlugRow(
+                new GetProductBySlugResponse(
+                    product.Id.Value,
+                    product.Slug.Value,
+                    product.Name,
+                    product.Description,
+                    product.Attributes,
+                    category.Slug.Value,
+                    category.Name,
+                    product.Skus
+                        .OrderBy(sku => sku.Id)
+                        .Select(sku => new GetProductBySlugSkuResponse(sku.Id.Value, sku.Attributes, sku.Price.Amount, sku.Price.Currency))
+                        .ToList(),
+                    Array.Empty<string>()),
+                product.ImageKeys))
+            .SingleOrDefaultAsync(cancellationToken);
 
     private static bool HasSlugShape(string text) =>
         text.Length is > 0 and <= Slug.MaxLength

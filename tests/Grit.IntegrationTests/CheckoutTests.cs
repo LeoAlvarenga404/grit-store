@@ -4,13 +4,13 @@ namespace Grit.IntegrationTests;
 
 public class CheckoutTests(ApiFactory factory)
 {
-    private readonly HttpClient _admin = factory.CreateClient();
+    private readonly HttpClient _admin = AdminClient.Create(factory);
     private readonly HttpClient _customer = CustomerClient.Create(factory, Guid.NewGuid());
 
     [Fact]
     public async Task PlaceOrder_WithoutToken_Returns401()
     {
-        var response = await CheckoutApi.PlaceOrderAsync(_admin, "key", "tok_visa", 0m);
+        var response = await CheckoutApi.PlaceOrderAsync(factory.CreateClient(), "key", "tok_visa", 0m);
 
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }

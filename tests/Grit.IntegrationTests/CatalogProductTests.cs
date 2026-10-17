@@ -5,7 +5,7 @@ namespace Grit.IntegrationTests;
 
 public class CatalogProductTests(ApiFactory factory)
 {
-    private readonly HttpClient _client = factory.CreateClient();
+    private readonly HttpClient _client = AdminClient.Create(factory);
 
     [Fact]
     public async Task CreateCategory_NewName_Returns201WithSlug()

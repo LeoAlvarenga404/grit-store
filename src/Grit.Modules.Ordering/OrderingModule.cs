@@ -3,8 +3,10 @@ using Grit.BuildingBlocks;
 using Grit.Modules.Ordering.Features.CancelOrder;
 using Grit.Modules.Ordering.Features.Checkout;
 using Grit.Modules.Ordering.Features.GetOrder;
+using Grit.Modules.Ordering.Features.ListAllOrders;
 using Grit.Modules.Ordering.Features.ListOrders;
 using Grit.Modules.Ordering.Features.PlaceOrder;
+using Grit.Modules.Ordering.Features.ShipOrder;
 using Grit.Modules.Ordering.Infrastructure;
 using MassTransit;
 using MassTransit.EntityFrameworkCoreIntegration;
@@ -71,5 +73,9 @@ public sealed class OrderingModule : IModule
         orders.MapListOrders();
         orders.MapGetOrder();
         orders.MapCancelOrder();
+
+        var admin = api.MapAdminGroup().WithTags("Ordering").MapGroup("/orders");
+        admin.MapListAllOrders();
+        admin.MapShipOrder();
     }
 }

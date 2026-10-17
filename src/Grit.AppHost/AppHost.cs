@@ -6,8 +6,7 @@ var database = builder.AddPostgres("postgres")
     .AddDatabase("grit");
 
 var redis = builder.AddRedis("redis").WithImageTag("8.10.2-alpine");
-// Declared now, referenced by the API when product images (S3) arrive.
-builder.AddSeaweedFS("storage").WithImageTag("4.46").WithS3();
+var storage = builder.AddSeaweedFS("storage").WithImageTag("4.46").WithS3();
 
 // The API seeds this file at start-up in Development; seeding is idempotent, so restarts are safe.
 var seedPath = Path.GetFullPath(Path.Combine(builder.AppHostDirectory, "..", "..", "seed", "catalog.json"));
@@ -15,13 +14,24 @@ var seedPath = Path.GetFullPath(Path.Combine(builder.AppHostDirectory, "..", "..
 // Generated on the first run and kept in the AppHost user secrets: a fresh clone needs no secret, and none is committed.
 var jwtSigningKey = builder.AddParameter("jwt-signing-key", new GenerateParameterDefault { MinLength = 64, Special = false }, secret: true, persist: true);
 
+// Same mechanism: read it with `dotnet user-secrets list --project src/Grit.AppHost` (Parameters:admin-password).
+var adminPassword = builder.AddParameter("admin-password", new GenerateParameterDefault { MinLength = 20, Special = false }, secret: true, persist: true);
+
 var api = builder.AddProject<Projects.Grit_Api>("api")
     .WithReference(database)
     .WithEnvironment("Identity__Jwt__SigningKey", jwtSigningKey)
+    .WithEnvironment("Identity__Admin__Email", "admin@grit.local")
+    .WithEnvironment("Identity__Admin__Password", adminPassword)
+    // k6 compares runs with and without the catalog cache: `dotnet run --project src/Grit.AppHost -- --Caching:Enabled=false`.
+    .WithEnvironment("Caching__Enabled", builder.Configuration["Caching:Enabled"] ?? "true")
     .WaitFor(database)
     .WithReference(redis)
     .WaitFor(redis)
+    .WithReference(storage)
+    .WaitFor(storage)
     .WithEnvironment("Seed__Path", seedPath)
+    // Generated products for k6, off unless asked: `dotnet run --project src/Grit.AppHost -- --Seed:VolumeProducts=50000`.
+    .WithEnvironment("Seed__VolumeProducts", builder.Configuration["Seed:VolumeProducts"] ?? "0")
     .WithHttpHealthCheck("/health");
 
 builder.AddJavaScriptApp("web", "../../web", "dev")

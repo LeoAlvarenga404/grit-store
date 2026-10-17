@@ -6,7 +6,7 @@ namespace Grit.IntegrationTests;
 // A stale write whose values already match the current row must still be rejected, not answered 200 with the old version.
 public class CatalogStaleWriteTests(ApiFactory factory)
 {
-    private readonly HttpClient _client = factory.CreateClient();
+    private readonly HttpClient _client = AdminClient.Create(factory);
 
     [Fact]
     public async Task UpdateProduct_SameValuesWithStaleVersion_Returns409ProductChanged()

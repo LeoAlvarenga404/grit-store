@@ -17,4 +17,6 @@ internal static class OrderingErrors
     public static readonly Error InvalidStatus = new("ordering.invalid_status", "The order status does not allow this change.", ErrorType.Conflict);
 
     public static readonly Error OrderNotCancellable = new("ordering.order_not_cancellable", "Only confirmed orders can be cancelled.", ErrorType.Conflict);
+
+    public static readonly Error OrderNotShippable = new("ordering.order_not_shippable", "Only confirmed orders can be shipped.", ErrorType.Conflict);
 }

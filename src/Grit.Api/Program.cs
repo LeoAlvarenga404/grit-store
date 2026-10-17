@@ -4,6 +4,7 @@ using Grit.Api;
 using Grit.BuildingBlocks.Behaviors;
 using Grit.ServiceDefaults;
 using MassTransit;
+using Microsoft.AspNetCore.HttpOverrides;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,17 @@ builder.Services.AddProblemDetails();
 builder.Services.ConfigureHttpJsonOptions(options => options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict);
 builder.Services.AddOpenApi();
 builder.Services.AddRateLimiter(options => options.RejectionStatusCode = StatusCodes.Status429TooManyRequests);
+
+// Only a known proxy (the Next.js BFF) may name the client of a request; ASP.NET Core already trusts loopback (ADR 0014).
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor;
+    foreach (var network in builder.Configuration.GetSection("ForwardedHeaders:KnownNetworks").Get<string[]>() ?? [])
+    {
+        options.KnownIPNetworks.Add(System.Net.IPNetwork.Parse(network));
+    }
+});
+
 builder.Services.AddValidatorsFromAssemblies(moduleAssemblies, includeInternalTypes: true);
 builder.Services.AddMediatR(mediatr =>
 {
@@ -51,6 +63,7 @@ if (app.Environment.IsDevelopment())
     }
 }
 
+app.UseForwardedHeaders();
 app.UseExceptionHandler(new ExceptionHandlerOptions
 {
     StatusCodeSelector = exception => exception is BadHttpRequestException badRequest

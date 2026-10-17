@@ -6,7 +6,7 @@ namespace Grit.IntegrationTests;
 
 public class CatalogSkuPriceTests(ApiFactory factory)
 {
-    private readonly HttpClient _client = factory.CreateClient();
+    private readonly HttpClient _client = AdminClient.Create(factory);
 
     [Fact]
     public async Task ChangeSkuPrice_CurrentVersion_ChangesOnlyThatSkuAndTheVersion()

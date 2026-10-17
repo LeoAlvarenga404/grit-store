@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Grit.Modules.Inventory.Infrastructure;
 
 internal sealed class StockConsumer(InventoryDbContext db, TimeProvider clock)
-    : IConsumer<ReserveStock>, IConsumer<CommitStock>, IConsumer<ReleaseStock>
+    : IConsumer<ReserveStock>, IConsumer<CommitStock>, IConsumer<ReleaseStock>, IConsumer<ShipStock>
 {
     public async Task Consume(ConsumeContext<ReserveStock> context)
     {
@@ -49,6 +49,23 @@ internal sealed class StockConsumer(InventoryDbContext db, TimeProvider clock)
         foreach (var item in await ItemsReservedFor(context.Message.OrderId, context.CancellationToken))
         {
             item.Release(context.Message.OrderId);
+        }
+
+        await db.SaveChangesAsync(context.CancellationToken);
+    }
+
+    // Locked like a reservation: an admin stock change in between would otherwise be overwritten by this on-hand update.
+    public async Task Consume(ConsumeContext<ShipStock> context)
+    {
+        var orderId = context.Message.OrderId;
+        var skuIds = await db.StockItems
+            .Where(item => item.Reservations.Any(reservation => reservation.OrderId == orderId))
+            .Select(item => item.Id)
+            .ToListAsync(context.CancellationToken);
+        await db.LockStockAsync(skuIds, context.CancellationToken);
+        foreach (var item in await db.StockItems.Where(item => skuIds.Contains(item.Id)).ToListAsync(context.CancellationToken))
+        {
+            item.Ship(orderId);
         }
 
         await db.SaveChangesAsync(context.CancellationToken);

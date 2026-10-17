@@ -106,4 +106,76 @@ public class StockItemTests
         item.CanReserve(_order, 1, Now).ShouldBeTrue();
         item.CanReserve(_otherOrder, 1, Now).ShouldBeFalse();
     }
+
+    [Fact]
+    public void SetOnHand_AboveHeldUnits_ChangesOnHand()
+    {
+        var item = StockItem.Create(Guid.NewGuid(), 5);
+        item.Reserve(_order, 2, Now);
+
+        item.SetOnHand(8, Now).IsSuccess.ShouldBeTrue();
+
+        item.OnHand.ShouldBe(8);
+        item.Available(Now).ShouldBe(6);
+    }
+
+    [Fact]
+    public void SetOnHand_EqualToHeldUnits_LeavesNoneAvailable()
+    {
+        var item = StockItem.Create(Guid.NewGuid(), 5);
+        item.Reserve(_order, 2, Now);
+
+        item.SetOnHand(2, Now).IsSuccess.ShouldBeTrue();
+
+        item.Available(Now).ShouldBe(0);
+    }
+
+    [Fact]
+    public void SetOnHand_BelowHeldUnits_ReturnsBelowHeldUnitsAndKeepsOnHand()
+    {
+        var item = StockItem.Create(Guid.NewGuid(), 5);
+        item.Reserve(_order, 2, Now);
+
+        item.SetOnHand(1, Now).Error.Code.ShouldBe("inventory.below_held_units");
+
+        item.OnHand.ShouldBe(5);
+    }
+
+    [Fact]
+    public void SetOnHand_ExpiredReservation_DoesNotCountAsHeld()
+    {
+        var item = StockItem.Create(Guid.NewGuid(), 5);
+        item.Reserve(_order, 2, Now);
+
+        item.SetOnHand(0, Now.AddMinutes(16)).IsSuccess.ShouldBeTrue();
+
+        item.OnHand.ShouldBe(0);
+    }
+
+    [Fact]
+    public void Ship_CommittedReservation_DropsOnHandAndRemovesTheReservation()
+    {
+        var item = StockItem.Create(Guid.NewGuid(), 5);
+        item.Reserve(_order, 2, Now);
+        item.Reserve(_otherOrder, 1, Now);
+        item.Commit(_order);
+
+        item.Ship(_order);
+
+        item.OnHand.ShouldBe(3);
+        item.Reservations.ShouldHaveSingleItem().OrderId.ShouldBe(_otherOrder);
+        item.Available(Now).ShouldBe(2);
+    }
+
+    [Fact]
+    public void Ship_UnknownOrder_ChangesNothing()
+    {
+        var item = StockItem.Create(Guid.NewGuid(), 5);
+        item.Reserve(_order, 2, Now);
+
+        item.Ship(_otherOrder);
+
+        item.OnHand.ShouldBe(5);
+        item.Reservations.ShouldHaveSingleItem();
+    }
 }

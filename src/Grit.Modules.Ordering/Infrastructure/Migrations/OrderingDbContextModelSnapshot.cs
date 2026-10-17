@@ -143,7 +143,8 @@ namespace Grit.Modules.Ordering.Infrastructure.Migrations
 
                     b.Property<string>("ProductName")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
                         .HasColumnName("product_name");
 
                     b.Property<int>("Quantity")

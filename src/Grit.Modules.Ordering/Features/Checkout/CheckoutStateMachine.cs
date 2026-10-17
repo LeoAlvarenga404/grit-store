@@ -20,6 +20,7 @@ internal sealed class CheckoutStateMachine : MassTransitStateMachine<CheckoutSta
         Event(() => PaymentAuthorized, e => e.CorrelateById(context => context.Message.OrderId));
         Event(() => PaymentDeclined, e => e.CorrelateById(context => context.Message.OrderId));
         Event(() => OrderCancelled, e => e.CorrelateById(context => context.Message.OrderId));
+        Event(() => OrderShipped, e => e.CorrelateById(context => context.Message.OrderId));
 
         Initially(
             When(OrderPlaced)
@@ -46,11 +47,14 @@ internal sealed class CheckoutStateMachine : MassTransitStateMachine<CheckoutSta
                 .ThenAsync(context => ChangeOrder(context, (order, now) => order.Reject(OrderCancellationReasons.PaymentDeclined, now)))
                 .Finalize());
 
-        // The cancel endpoint already moved the order to Cancelled; the saga only compensates.
+        // The cancel and ship endpoints already changed the order; the saga only moves the stock and refunds a cancel.
         During(Confirmed,
             When(OrderCancelled)
                 .Publish(context => new ReleaseStock(context.Saga.CorrelationId))
                 .Publish(context => new RefundPayment(context.Saga.CorrelationId, context.Saga.AuthorizationId!))
+                .Finalize(),
+            When(OrderShipped)
+                .Publish(context => new ShipStock(context.Saga.CorrelationId))
                 .Finalize());
 
         SetCompletedWhenFinalized();
@@ -73,6 +77,8 @@ internal sealed class CheckoutStateMachine : MassTransitStateMachine<CheckoutSta
     public Event<PaymentDeclined> PaymentDeclined { get; private set; } = null!;
 
     public Event<OrderCancelled> OrderCancelled { get; private set; } = null!;
+
+    public Event<OrderShipped> OrderShipped { get; private set; } = null!;
 
     private static void Start(CheckoutState saga, OrderPlaced message)
     {

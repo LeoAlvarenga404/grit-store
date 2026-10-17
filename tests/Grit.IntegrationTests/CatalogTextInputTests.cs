@@ -5,7 +5,7 @@ namespace Grit.IntegrationTests;
 
 public class CatalogTextInputTests(ApiFactory factory)
 {
-    private readonly HttpClient _client = factory.CreateClient();
+    private readonly HttpClient _client = AdminClient.Create(factory);
 
     [Fact]
     public async Task CreateProduct_NulInDescription_Returns400WithFieldError()

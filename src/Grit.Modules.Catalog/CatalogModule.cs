@@ -1,6 +1,7 @@
 using Grit.BuildingBlocks;
 using Grit.Modules.Catalog.Contracts;
 using Grit.Modules.Catalog.Features.AddSku;
+using Grit.Modules.Catalog.Features.AttachImage;
 using Grit.Modules.Catalog.Features.ChangeSkuPrice;
 using Grit.Modules.Catalog.Features.CreateCategory;
 using Grit.Modules.Catalog.Features.CreateProduct;
@@ -8,7 +9,10 @@ using Grit.Modules.Catalog.Features.GetProduct;
 using Grit.Modules.Catalog.Features.GetProductBySlug;
 using Grit.Modules.Catalog.Features.GetProductFacets;
 using Grit.Modules.Catalog.Features.GetProductSuggestions;
+using Grit.Modules.Catalog.Features.ListProducts;
+using Grit.Modules.Catalog.Features.RemoveImage;
 using Grit.Modules.Catalog.Features.SearchProducts;
+using Grit.Modules.Catalog.Features.StartImageUpload;
 using Grit.Modules.Catalog.Features.UpdateProduct;
 using Grit.Modules.Catalog.Infrastructure;
 using Grit.Modules.Catalog.Infrastructure.Seed;
@@ -17,6 +21,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
@@ -35,6 +41,7 @@ public sealed class CatalogModule : IModule
             CatalogDbContext.Configure(options, services.GetRequiredService<NpgsqlDataSource>()).AddInterceptors(Audit));
 
         builder.Services.AddScoped<CatalogSeeder>();
+        builder.Services.AddScoped<VolumeSeeder>();
 
         // Development only, like the migrations (ADR 0008): the AppHost points Seed:Path at seed/catalog.json.
         if (builder.Environment.IsDevelopment())
@@ -43,6 +50,15 @@ public sealed class CatalogModule : IModule
         }
 
         builder.Services.AddScoped<ICatalogReader, CatalogReader>();
+        builder.Services.AddSingleton<ProductImageStorage>();
+
+        // L2 is the Redis the basket uses, on a connection of its own; bound on first use because the build-time
+        // OpenAPI run has no connection string (ADR 0004).
+        builder.Services.AddStackExchangeRedisCache(_ => { });
+        builder.Services.AddOptions<RedisCacheOptions>()
+            .Configure<IConfiguration>((options, configuration) => options.Configuration = configuration.GetConnectionString("redis"));
+        builder.Services.AddHybridCache();
+        builder.Services.AddSingleton<CatalogCache>();
     }
 
     // Catalog publishes no integration event yet, and the single bus-outbox slot stays with the probe (ADR 0005).
@@ -54,12 +70,19 @@ public sealed class CatalogModule : IModule
     {
         await using var scope = services.CreateAsyncScope();
         await scope.ServiceProvider.GetRequiredService<CatalogDbContext>().Database.MigrateAsync(cancellationToken);
+
+        // Provisioned like the schema, in Development only (ADR 0008); hosts without the storage (most tests) skip it.
+        var images = scope.ServiceProvider.GetRequiredService<ProductImageStorage>();
+        if (images.IsConfigured)
+        {
+            await images.EnsureBucketAsync(cancellationToken);
+        }
     }
 
     public void MapEndpoints(IEndpointRouteBuilder api)
     {
-        // Open until Identity (2a) puts the admin policy on this group.
-        var admin = api.MapGroup("/admin").WithTags("Catalog");
+        // Every successful admin write empties the public catalog cache once its transaction has committed.
+        var admin = api.MapAdminGroup().WithTags("Catalog").AddEndpointFilter(CatalogCache.InvalidateAfterWrite);
         admin.MapCreateCategory();
 
         var products = admin.MapGroup("/products");
@@ -68,6 +91,10 @@ public sealed class CatalogModule : IModule
         products.MapUpdateProduct();
         products.MapAddSku();
         products.MapChangeSkuPrice();
+        products.MapListProducts();
+        products.MapStartImageUpload();
+        products.MapAttachImage();
+        products.MapRemoveImage();
 
         var catalog = api.MapGroup("/catalog").WithTags("Catalog");
         catalog.MapSearchProducts();

@@ -1,13 +1,14 @@
 using System.Globalization;
 using System.Text.Json;
 using Dapper;
+using Grit.Modules.Catalog.Infrastructure;
 using Grit.SharedKernel;
 using MediatR;
 using Npgsql;
 
 namespace Grit.Modules.Catalog.Features.GetProductFacets;
 
-internal sealed class GetProductFacetsHandler(NpgsqlDataSource dataSource)
+internal sealed class GetProductFacetsHandler(NpgsqlDataSource dataSource, CatalogCache cache)
     : IRequestHandler<GetProductFacetsQuery, Result<GetProductFacetsResponse>>
 {
     private const string CategoryKind = "category";
@@ -45,7 +46,10 @@ internal sealed class GetProductFacetsHandler(NpgsqlDataSource dataSource)
     // Ranges are [lower, upper): width_bucket answers 0 below the first bound and PriceBounds.Length from the last bound up.
     private static readonly decimal[] PriceBounds = [100m, 250m, 500m, 1000m];
 
-    public async Task<Result<GetProductFacetsResponse>> Handle(GetProductFacetsQuery query, CancellationToken cancellationToken)
+    public async Task<Result<GetProductFacetsResponse>> Handle(GetProductFacetsQuery query, CancellationToken cancellationToken) =>
+        await cache.GetOrCreateAsync(CatalogCache.KeyOf("facets", query), token => CountAsync(query, token), cancellationToken);
+
+    private async ValueTask<GetProductFacetsResponse> CountAsync(GetProductFacetsQuery query, CancellationToken cancellationToken)
     {
         var parameters = new
         {

@@ -23,7 +23,7 @@ public sealed class SearchCorpus(ApiFactory api) : IAsyncLifetime
     {
         var connectionString = await api.CreateDatabaseAsync("search_corpus");
         _factory = api.WithWebHostBuilder(builder => builder.UseSetting("ConnectionStrings:grit", connectionString));
-        Client = _factory.CreateClient();
+        Client = AdminClient.Create(_factory);
 
         var calcados = await CreateCategoryAsync("Calçados");
         var vestuario = await CreateCategoryAsync("Vestuário");

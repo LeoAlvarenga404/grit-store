@@ -12,7 +12,8 @@ internal sealed class OrderLineConfiguration : IEntityTypeConfiguration<OrderLin
         builder.Property<int>("Id");
         builder.HasKey("Id");
         builder.Property(line => line.SkuId);
-        builder.Property(line => line.ProductName);
+        // Same bound as the catalog's product name, which the line copies at checkout.
+        builder.Property(line => line.ProductName).HasMaxLength(200);
         builder.Property(line => line.Quantity);
         builder.ComplexProperty(line => line.UnitPrice, MoneyMapping.Configure);
         builder.Ignore(line => line.LineTotal);

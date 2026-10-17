@@ -41,6 +41,12 @@ public sealed class IdentityModule : IModule
         builder.Services.AddAuthorization();
 
         AddLogInRateLimit(builder);
+
+        // Development only, and only when the AppHost passes the generated password (ADR 0008 keeps seeds out of production).
+        if (builder.Environment.IsDevelopment() && !string.IsNullOrEmpty(builder.Configuration[DevelopmentAdminSeeder.PasswordKey]))
+        {
+            builder.Services.AddHostedService<DevelopmentAdminSeeder>();
+        }
     }
 
     // Identity publishes no integration event, and the single bus-outbox slot stays with the probe (ADR 0005).
@@ -79,7 +85,7 @@ public sealed class IdentityModule : IModule
         options.Lockout.AllowedForNewUsers = true;
     }
 
-    // Behind the Next.js BFF every request carries the BFF's address: sub-plan 2b adds forwarded headers.
+    // Behind the BFF the client address comes from X-Forwarded-For, which Program.cs accepts only from known proxies.
     private static void AddLogInRateLimit(IHostApplicationBuilder builder)
     {
         var attemptsPerMinute = builder.Configuration.GetValue("Identity:LoginAttemptsPerMinute", 10);

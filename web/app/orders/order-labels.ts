@@ -1,6 +1,7 @@
 const statusLabels: Record<string, string> = {
   Placed: "Processando",
   Confirmed: "Confirmado",
+  Shipped: "Enviado",
   Cancelled: "Cancelado",
 };
 

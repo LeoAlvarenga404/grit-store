@@ -62,6 +62,25 @@ internal sealed class CustomerBasket
 
     public void Remove(Guid skuId) => _lines.RemoveAll(line => line.SkuId == skuId);
 
+    // Only what the order bought leaves the basket: units added after the checkout stay.
+    public void RemovePurchased(Guid skuId, int quantity)
+    {
+        var index = _lines.FindIndex(existing => existing.SkuId == skuId);
+        if (index < 0)
+        {
+            return;
+        }
+
+        var remaining = _lines[index].Quantity - quantity;
+        if (remaining <= 0)
+        {
+            _lines.RemoveAt(index);
+            return;
+        }
+
+        _lines[index] = _lines[index] with { Quantity = remaining };
+    }
+
     private static bool IsAllowed(int quantity) => quantity is >= 1 and <= MaxQuantityPerLine;
 
     private Result AddNew(BasketLine line)
