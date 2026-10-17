@@ -16,9 +16,10 @@ internal sealed class StripePaymentGateway(StripeClient stripe) : IPaymentGatewa
             Currency = amount.Currency.ToLowerInvariant(),
             PaymentMethod = paymentToken,
             Confirm = true,
-            // The checkout cannot send the customer to a 3-D Secure page or a redirect, so Stripe declines those instead of waiting.
+            // The checkout cannot send the customer to a 3-D Secure page, so Stripe declines it instead of waiting. Stripe rejects
+            // error_on_requires_action on intents with dashboard-managed (automatic) payment methods, so the type is explicit.
             ErrorOnRequiresAction = true,
-            AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions { Enabled = true, AllowRedirects = "never" },
+            AllowedPaymentMethodTypes = ["card"],
             Metadata = new Dictionary<string, string> { ["order_id"] = orderId.ToString() },
         };
 
