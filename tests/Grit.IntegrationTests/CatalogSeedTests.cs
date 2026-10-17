@@ -11,9 +11,9 @@ namespace Grit.IntegrationTests;
 // Each test has a database of its own: the counts must see only what the seed wrote.
 public class CatalogSeedTests(ApiFactory api)
 {
-    private static readonly string SeedPath = Path.Combine(AppContext.BaseDirectory, "Seed", "catalog.json");
+    internal static readonly string SeedPath = Path.Combine(AppContext.BaseDirectory, "Seed", "catalog.json");
 
-    private static readonly (int Categories, int Products, int Skus) SeedCounts = (4, 16, 30);
+    internal static readonly (int Categories, int Products, int Skus) SeedCounts = (4, 16, 30);
 
     [Fact]
     public async Task DevelopmentStartup_TwiceWithSeedPath_SeedsTheCatalogOnce()
@@ -53,7 +53,7 @@ public class CatalogSeedTests(ApiFactory api)
             .UseSetting("Seed:Path", seedPath));
 
     // Reading Services starts the host, so every hosted service has finished StartAsync before the counts are read.
-    private static async Task<(int Categories, int Products, int Skus)> CountAsync(WebApplicationFactory<Program> host)
+    internal static async Task<(int Categories, int Products, int Skus)> CountAsync(WebApplicationFactory<Program> host)
     {
         await using var scope = host.Services.CreateAsyncScope();
         var db = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
