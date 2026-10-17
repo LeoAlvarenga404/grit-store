@@ -1,6 +1,6 @@
 # Grit Store
 
-**English summary.** Grit Store is a portfolio e-commerce for sports and outdoor gear: a **.NET 10 modular monolith** built with DDD (Identity, Catalog, Basket, Inventory, Ordering, Payments) and a minimal **Next.js** front (store + admin) behind a BFF. The checkout is a **MassTransit saga** with a transactional outbox: it reserves stock, authorizes payment through an `IPaymentGateway` port (fake gateway today, Stripe later) and compensates on failure. Search uses PostgreSQL full text + trigram with facets and keyset paging; public catalog reads go through HybridCache (memory + Redis) with post-commit tag invalidation, measured with k6 on 50k products. Product images live in S3-compatible storage (SeaweedFS) behind presigned URLs. Everything runs locally with `dotnet run --project src/Grit.AppHost` (.NET Aspire), with no secrets to configure. Tests run against real Postgres and Redis through Testcontainers.
+**English summary.** Grit Store is a portfolio e-commerce for sports and outdoor gear: a **.NET 10 modular monolith** built with DDD (Identity, Catalog, Basket, Inventory, Ordering, Payments) and a minimal **Next.js** front (store + admin) behind a BFF. The checkout is a **MassTransit saga** with a transactional outbox: it reserves stock, authorizes payment through an `IPaymentGateway` port (fake gateway by default, Stripe test mode by configuration, with a signed idempotent webhook) and compensates on failure. Search uses PostgreSQL full text + trigram with facets and keyset paging; public catalog reads go through HybridCache (memory + Redis) with post-commit tag invalidation, measured with k6 on 50k products. Product images live in S3-compatible storage (SeaweedFS) behind presigned URLs. Everything runs locally with `dotnet run --project src/Grit.AppHost` (.NET Aspire), with no secrets to configure. Tests run against real Postgres and Redis through Testcontainers.
 
 ---
 
@@ -19,7 +19,7 @@ dotnet run --project src/Grit.AppHost
 
 O AppHost sobe Postgres, Redis, a API e o Next.js, e abre o dashboard do Aspire. Em Development, a API aplica as migrations, carrega o catálogo de `seed/catalog.json` (4 categorias, 16 produtos, 30 SKUs) e dá 10 unidades de estoque para cada SKU. A chave de assinatura do JWT é gerada pelo próprio AppHost: não há segredo para configurar.
 
-Para testar o checkout: crie uma conta, adicione itens ao carrinho e finalize. O cartão `tok_decline` é recusado, a reserva de estoque é liberada e o pedido é cancelado; qualquer outro valor é aprovado.
+Para testar o checkout: crie uma conta, adicione itens ao carrinho e finalize. Com o gateway fake (padrão), o cartão `tok_decline` é recusado, a reserva de estoque é liberada e o pedido é cancelado; qualquer outro valor, como o `pm_card_visa` que vem preenchido, é aprovado.
 
 **Admin:** entre com `admin@grit.local`. A senha é gerada pelo AppHost na primeira execução e fica nos user secrets dele (`dotnet user-secrets list --project src/Grit.AppHost`, chave `Parameters:admin-password`), também visível nos parâmetros do dashboard do Aspire. Em `/admin` dá para:
 - ajustar o estoque por SKU;
@@ -50,6 +50,28 @@ A loja fica em http://localhost:3000, e o admin entra com `admin@grit.local` e o
 - não há volumes, então os dados somem no `down`;
 - as URLs das imagens apontam para `storage:8333`, que o navegador não alcança;
 - o cookie de sessão `Secure` só funciona em `localhost`.
+
+## Como ligar o Stripe
+
+O padrão é o gateway fake. Para usar o Stripe em modo de teste:
+
+1. Crie uma conta de teste no Stripe e instale o Stripe CLI (`stripe login`).
+2. Rode `stripe listen --forward-to localhost:5080/api/v1/payments/stripe/webhook` e copie o `whsec_…` que ele imprime.
+3. Grave as chaves nos user secrets do AppHost (nunca no repositório):
+   ```bash
+   dotnet user-secrets set --project src/Grit.AppHost "Payments:Provider" "Stripe"
+   dotnet user-secrets set --project src/Grit.AppHost "Payments:Stripe:SecretKey" "sk_test_..."
+   dotnet user-secrets set --project src/Grit.AppHost "Payments:Stripe:WebhookSecret" "whsec_..."
+   ```
+   Para voltar ao fake, basta `dotnet user-secrets remove --project src/Grit.AppHost "Payments:Provider"`.
+4. Rode `dotnet run --project src/Grit.AppHost`. No checkout:
+   - `pm_card_visa` aprova;
+   - `pm_card_chargeDeclined` recusa;
+   - `pm_card_visa_chargeDeclinedInsufficientFunds` mostra o motivo da recusa;
+   - `pm_card_threeDSecure2Required` é recusado, porque não há 3-D Secure.
+5. `stripe trigger payment_intent.succeeded` gera um evento no log da API. Reenviar o mesmo evento pelo dashboard responde 200 sem gravar nada de novo em `payments.stripe_events`.
+
+A API não sobe com `Payments:Provider=Stripe` sem as duas chaves. O compose sempre usa o gateway fake.
 
 ## Testes
 

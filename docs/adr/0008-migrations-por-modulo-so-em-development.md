@@ -30,3 +30,4 @@ A busca do catálogo precisa de objetos que o modelo do EF não representa: a co
 
 - O EF 9+ lança exceção em `Migrate` quando o modelo mudou sem migration: uma migration esquecida derruba a subida em Development e os testes.
 - Um módulo novo com persistência copia três peças: a configuração, a factory de design e o `MigrateDatabaseAsync`, com `HasDefaultSchema("<módulo>")` e a tabela de histórico no próprio schema.
+- O módulo Payments ganhou o schema `payments` com a migration `InitialPayments`, só para a trilha de eventos do webhook do Stripe (emenda 2026-10-17, ADR 0018).
