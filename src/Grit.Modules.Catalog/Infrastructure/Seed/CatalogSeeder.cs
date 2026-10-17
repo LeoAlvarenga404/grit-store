@@ -7,30 +7,53 @@ namespace Grit.Modules.Catalog.Infrastructure.Seed;
 
 // Idempotent by slug: an existing category or product is left as it is, so a restart adds only what is missing.
 // The whole file is checked before the database is read, so a bad file fails on an empty and on a seeded catalog alike;
-// one SaveChanges for the whole file, so nothing is written unless everything is (images uploaded before a failed save
+// one SaveChanges for both files, so nothing is written unless everything is (images uploaded before a failed save
 // stay in the storage as orphans, like an unconfirmed upload: ADR 0016).
 internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage images)
 {
+    // The store's own line (GRIT apparel) is hand-written in grit/ next to the imported seed: the importer replaces only
+    // catalog.json and images/, so neither file overwrites the other.
+    public const string OwnLineFolder = "grit";
+
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     public async Task<SeedReport> SeedAsync(string path, CancellationToken cancellationToken)
     {
-        var catalog = await ReadAsync(path, cancellationToken);
-        Validate(catalog);
-        var imagesDirectory = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(path))!, "images");
-
-        foreach (var seedCategory in catalog.Categories)
+        var files = new List<SeedFile>();
+        foreach (var file in FilesOf(path))
         {
-            var categoryId = await FindOrAddCategoryAsync(seedCategory.Name, cancellationToken);
-            foreach (var seedProduct in seedCategory.Products)
-            {
-                await AddProductIfMissingAsync(categoryId, seedProduct, imagesDirectory, cancellationToken);
-            }
+            files.Add(new SeedFile(await ReadAsync(file, cancellationToken), Path.Combine(Path.GetDirectoryName(file)!, "images")));
+        }
+
+        // Checked as one catalogue: a category or a product slug belongs to one file only.
+        Validate(new SeedCatalog([.. files.SelectMany(file => file.Catalog.Categories)]));
+        foreach (var file in files)
+        {
+            await AddCatalogAsync(file, cancellationToken);
         }
 
         var report = new SeedReport(CountAdded<Category>(), CountAdded<Product>());
         await db.SaveChangesAsync(cancellationToken);
         return report;
+    }
+
+    private static List<string> FilesOf(string path)
+    {
+        var fullPath = Path.GetFullPath(path);
+        var ownLine = Path.Combine(Path.GetDirectoryName(fullPath)!, OwnLineFolder, "catalog.json");
+        return File.Exists(ownLine) ? [fullPath, ownLine] : [fullPath];
+    }
+
+    private async Task AddCatalogAsync(SeedFile file, CancellationToken cancellationToken)
+    {
+        foreach (var seedCategory in file.Catalog.Categories)
+        {
+            var categoryId = await FindOrAddCategoryAsync(seedCategory.Name, cancellationToken);
+            foreach (var seedProduct in seedCategory.Products)
+            {
+                await AddProductIfMissingAsync(categoryId, seedProduct, file.ImagesDirectory, cancellationToken);
+            }
+        }
     }
 
     private static async Task<SeedCatalog> ReadAsync(string path, CancellationToken cancellationToken)

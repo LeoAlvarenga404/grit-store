@@ -25,3 +25,6 @@ Thumbs.db
 .claude/
 .superpowers/
 CLAUDE.local.md
+
+# Raw AI photo sheets for the GRIT own line; only the cut WebP files in seed/grit/images/ are committed.
+seed/grit/raw/

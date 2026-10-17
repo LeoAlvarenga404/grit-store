@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Grit.Modules.Catalog.Domain;
 using Grit.Modules.Catalog.Infrastructure.Seed;
 
 namespace Grit.Modules.Catalog.Tests.Infrastructure.Seed;
@@ -80,12 +81,51 @@ public class CatalogSeedValidationTests
     }
 
     [Fact]
-    public void Validate_CommittedSeed_Passes()
+    public void Validate_CommittedSeedAndOwnLine_PassAsOneCatalog()
     {
-        var path = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "seed", "catalog.json"));
-        var catalog = JsonSerializer.Deserialize<SeedCatalog>(File.ReadAllText(path), JsonSerializerOptions.Web)!;
+        var seed = Committed("seed", "catalog.json");
+        var ownLine = Committed("seed", "grit", "catalog.json");
 
-        Should.NotThrow(() => CatalogSeeder.Validate(catalog));
+        Should.NotThrow(() => CatalogSeeder.Validate(new SeedCatalog([.. seed.Categories, .. ownLine.Categories])));
+    }
+
+    [Fact]
+    public void OwnLine_EveryModel_ComesInThreeColorsAndEverySizeWithTwoPhotosPerColor()
+    {
+        var ownLine = Committed("seed", "grit", "catalog.json");
+
+        ownLine.Categories.Select(category => category.Name).ShouldBe(["Camisetas e regatas", "Shorts e bermudas", "Calças e leggings", "Moletons e jaquetas"]);
+        ownLine.Categories.ShouldAllBe(category => category.Products.Count == 3);
+        ownLine.Categories.SelectMany(category => category.Products).Sum(product => product.Skus.Count).ShouldBe(144);
+        foreach (var product in ownLine.Categories.SelectMany(category => category.Products))
+        {
+            product.Attributes["marca"].ShouldBe("GRIT");
+            product.Attributes["genero"].ShouldBeOneOf("Masculino", "Feminino", "Unissex");
+            product.Attributes.ShouldContainKey("material");
+            var colors = product.Skus.Select(sku => sku.Attributes["cor"]).Distinct().ToList();
+            colors.Count.ShouldBe(3);
+            foreach (var color in colors)
+            {
+                var skus = product.Skus.Where(sku => sku.Attributes["cor"] == color).ToList();
+                skus.Select(sku => sku.Attributes["tamanho"]).ShouldBe(["P", "M", "G", "GG"]);
+                skus.Select(sku => sku.PriceAmount).Distinct().ShouldHaveSingleItem();
+            }
+
+            var images = product.Images.ShouldNotBeNull();
+            images.Select(group => group.Color!).ShouldBe(colors);
+            var slug = Slug.FromName(product.Name).Value.Value;
+            foreach (var group in images)
+            {
+                var colorSlug = Slug.FromName(group.Color!).Value.Value;
+                group.Files.ShouldBe([$"{slug}-{colorSlug}-1.webp", $"{slug}-{colorSlug}-2.webp"]);
+            }
+        }
+    }
+
+    private static SeedCatalog Committed(params string[] segments)
+    {
+        var path = Path.GetFullPath(Path.Combine([AppContext.BaseDirectory, "..", "..", "..", "..", "..", .. segments]));
+        return JsonSerializer.Deserialize<SeedCatalog>(File.ReadAllText(path), JsonSerializerOptions.Web)!;
     }
 
     // One SKU per colour (null = a SKU without "cor"), each with its own size.

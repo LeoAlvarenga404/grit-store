@@ -14,6 +14,8 @@ public class CatalogSeedImageTests(ApiFactory api, ProductImageHost images) : IC
 
     private static readonly byte[] BlueBytes = [0x52, 0x49, 0x46, 0x46, 0x09];
 
+    private static readonly byte[] OwnLineBytes = [0x52, 0x49, 0x46, 0x46, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10];
+
     [Fact]
     public async Task SeedAsync_WithStorage_UploadsTheImageFilesThatExistAndAttachesThem()
     {
@@ -44,6 +46,46 @@ public class CatalogSeedImageTests(ApiFactory api, ProductImageHost images) : IC
         await SeedAsync(host, path);
 
         (await ProductAsync(host)).Images.ShouldBeEmpty();
+    }
+
+    // The same file name in both images folders with different bytes: each product must take the photo of its own folder,
+    // and land in its own category.
+    [Fact]
+    public async Task SeedAsync_OwnLineWithStorage_TakesItsPhotosFromItsOwnImagesFolder()
+    {
+        await using var host = await HostAsync(images.Host, "seed_images_own_line");
+        var folder = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), $"grit-seed-{Guid.NewGuid():N}"));
+        var ownLine = folder.CreateSubdirectory(CatalogSeeder.OwnLineFolder);
+        await File.WriteAllBytesAsync(Path.Combine(folder.CreateSubdirectory("images").FullName, "capa.webp"), CoverBytes, TestContext.Current.CancellationToken);
+        await File.WriteAllBytesAsync(Path.Combine(ownLine.CreateSubdirectory("images").FullName, "capa.webp"), OwnLineBytes, TestContext.Current.CancellationToken);
+        await File.WriteAllTextAsync(Path.Combine(folder.FullName, "catalog.json"), """
+            {"categories": [{"name": "Tênis", "products": [{"name": "Tênis Veloz", "description": "Leve.", "attributes": {},
+              "skus": [{"attributes": {"cor": "preto"}, "priceAmount": 299.90}], "images": [{"color": "preto", "files": ["capa.webp"]}]}]}]}
+            """, TestContext.Current.CancellationToken);
+        await File.WriteAllTextAsync(Path.Combine(ownLine.FullName, "catalog.json"), """
+            {"categories": [{"name": "Camisetas e regatas", "products": [{"name": "Camiseta GRIT Teste", "description": "Leve.",
+              "attributes": {"marca": "GRIT"}, "skus": [{"attributes": {"cor": "preto", "tamanho": "P"}, "priceAmount": 89.90}],
+              "images": [{"color": "preto", "files": ["capa.webp"]}]}]}]}
+            """, TestContext.Current.CancellationToken);
+
+        await SeedAsync(host, Path.Combine(folder.FullName, "catalog.json"));
+
+        await using var scope = host.Services.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
+        var rows = await db.Products.AsNoTracking()
+            .Join(db.Categories, product => product.CategoryId, category => category.Id, (product, category) => new { Product = product, CategoryName = category.Name })
+            .ToListAsync(TestContext.Current.CancellationToken);
+        var storage = host.Services.GetRequiredService<ProductImageStorage>();
+        foreach (var (name, categoryName, bytes) in new[] { ("Tênis Veloz", "Tênis", CoverBytes), ("Camiseta GRIT Teste", "Camisetas e regatas", OwnLineBytes) })
+        {
+            var row = rows.Single(row => row.Product.Name == name);
+            row.CategoryName.ShouldBe(categoryName);
+            var image = row.Product.Images.ShouldHaveSingleItem();
+            image.ShouldBe(new ProductImage(Product.ImageKeyPrefix(row.Product.Id) + "capa.webp", "preto"));
+            var stored = await storage.FindAsync(image.Key, TestContext.Current.CancellationToken);
+            stored.ShouldNotBeNull();
+            stored.Value.SizeInBytes.ShouldBe(bytes.LongLength);
+        }
     }
 
     // Reading Services starts the host: migrations run and, with the storage, the bucket is created.

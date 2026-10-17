@@ -1,0 +1,1440 @@
+{
+  "categories": [
+    {
+      "name": "Camisetas e regatas",
+      "products": [
+        {
+          "name": "Camiseta GRIT Dry Run",
+          "description": "Camiseta de corrida leve, que seca rápido e não marca o suor. Costuras planas para treinos longos.",
+          "attributes": {
+            "marca": "GRIT",
+            "genero": "Masculino",
+            "material": "Poliéster com acabamento dry"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "P"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "M"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "G"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "GG"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "branco",
+                "tamanho": "P"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "branco",
+                "tamanho": "M"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "branco",
+                "tamanho": "G"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "branco",
+                "tamanho": "GG"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "P"
+              },
+              "priceAmount": 94.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "M"
+              },
+              "priceAmount": 94.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "G"
+              },
+              "priceAmount": 94.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "GG"
+              },
+              "priceAmount": 94.9
+            }
+          ],
+          "images": [
+            {
+              "color": "preto",
+              "files": [
+                "camiseta-grit-dry-run-preto-1.webp",
+                "camiseta-grit-dry-run-preto-2.webp"
+              ]
+            },
+            {
+              "color": "branco",
+              "files": [
+                "camiseta-grit-dry-run-branco-1.webp",
+                "camiseta-grit-dry-run-branco-2.webp"
+              ]
+            },
+            {
+              "color": "azul marinho",
+              "files": [
+                "camiseta-grit-dry-run-azul-marinho-1.webp",
+                "camiseta-grit-dry-run-azul-marinho-2.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Regata GRIT Treino Feminina",
+          "description": "Regata de treino com costas nadador e tecido que acompanha o movimento. Leve e respirável.",
+          "attributes": {
+            "marca": "GRIT",
+            "genero": "Feminino",
+            "material": "Poliamida e elastano"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "P"
+              },
+              "priceAmount": 79.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "M"
+              },
+              "priceAmount": 79.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "G"
+              },
+              "priceAmount": 79.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "GG"
+              },
+              "priceAmount": 79.9
+            },
+            {
+              "attributes": {
+                "cor": "rosa",
+                "tamanho": "P"
+              },
+              "priceAmount": 79.9
+            },
+            {
+              "attributes": {
+                "cor": "rosa",
+                "tamanho": "M"
+              },
+              "priceAmount": 79.9
+            },
+            {
+              "attributes": {
+                "cor": "rosa",
+                "tamanho": "G"
+              },
+              "priceAmount": 79.9
+            },
+            {
+              "attributes": {
+                "cor": "rosa",
+                "tamanho": "GG"
+              },
+              "priceAmount": 79.9
+            },
+            {
+              "attributes": {
+                "cor": "verde oliva",
+                "tamanho": "P"
+              },
+              "priceAmount": 84.9
+            },
+            {
+              "attributes": {
+                "cor": "verde oliva",
+                "tamanho": "M"
+              },
+              "priceAmount": 84.9
+            },
+            {
+              "attributes": {
+                "cor": "verde oliva",
+                "tamanho": "G"
+              },
+              "priceAmount": 84.9
+            },
+            {
+              "attributes": {
+                "cor": "verde oliva",
+                "tamanho": "GG"
+              },
+              "priceAmount": 84.9
+            }
+          ],
+          "images": [
+            {
+              "color": "preto",
+              "files": [
+                "regata-grit-treino-feminina-preto-1.webp",
+                "regata-grit-treino-feminina-preto-2.webp"
+              ]
+            },
+            {
+              "color": "rosa",
+              "files": [
+                "regata-grit-treino-feminina-rosa-1.webp",
+                "regata-grit-treino-feminina-rosa-2.webp"
+              ]
+            },
+            {
+              "color": "verde oliva",
+              "files": [
+                "regata-grit-treino-feminina-verde-oliva-1.webp",
+                "regata-grit-treino-feminina-verde-oliva-2.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Camiseta GRIT Essencial Unissex",
+          "description": "Camiseta básica de algodão macio para o dia a dia e o pós-treino. Modelagem reta.",
+          "attributes": {
+            "marca": "GRIT",
+            "genero": "Unissex",
+            "material": "Algodão"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "P"
+              },
+              "priceAmount": 69.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "M"
+              },
+              "priceAmount": 69.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "G"
+              },
+              "priceAmount": 69.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "GG"
+              },
+              "priceAmount": 69.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "P"
+              },
+              "priceAmount": 69.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "M"
+              },
+              "priceAmount": 69.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "G"
+              },
+              "priceAmount": 69.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "GG"
+              },
+              "priceAmount": 69.9
+            },
+            {
+              "attributes": {
+                "cor": "off white",
+                "tamanho": "P"
+              },
+              "priceAmount": 74.9
+            },
+            {
+              "attributes": {
+                "cor": "off white",
+                "tamanho": "M"
+              },
+              "priceAmount": 74.9
+            },
+            {
+              "attributes": {
+                "cor": "off white",
+                "tamanho": "G"
+              },
+              "priceAmount": 74.9
+            },
+            {
+              "attributes": {
+                "cor": "off white",
+                "tamanho": "GG"
+              },
+              "priceAmount": 74.9
+            }
+          ],
+          "images": [
+            {
+              "color": "cinza mescla",
+              "files": [
+                "camiseta-grit-essencial-unissex-cinza-mescla-1.webp",
+                "camiseta-grit-essencial-unissex-cinza-mescla-2.webp"
+              ]
+            },
+            {
+              "color": "preto",
+              "files": [
+                "camiseta-grit-essencial-unissex-preto-1.webp",
+                "camiseta-grit-essencial-unissex-preto-2.webp"
+              ]
+            },
+            {
+              "color": "off white",
+              "files": [
+                "camiseta-grit-essencial-unissex-off-white-1.webp",
+                "camiseta-grit-essencial-unissex-off-white-2.webp"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shorts e bermudas",
+      "products": [
+        {
+          "name": "Short GRIT Corrida",
+          "description": "Short de corrida com cueca interna, cós de elástico com cordão e bolso traseiro com zíper.",
+          "attributes": {
+            "marca": "GRIT",
+            "genero": "Masculino",
+            "material": "Poliéster leve"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "P"
+              },
+              "priceAmount": 99.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "M"
+              },
+              "priceAmount": 99.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "G"
+              },
+              "priceAmount": 99.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "GG"
+              },
+              "priceAmount": 99.9
+            },
+            {
+              "attributes": {
+                "cor": "azul royal",
+                "tamanho": "P"
+              },
+              "priceAmount": 99.9
+            },
+            {
+              "attributes": {
+                "cor": "azul royal",
+                "tamanho": "M"
+              },
+              "priceAmount": 99.9
+            },
+            {
+              "attributes": {
+                "cor": "azul royal",
+                "tamanho": "G"
+              },
+              "priceAmount": 99.9
+            },
+            {
+              "attributes": {
+                "cor": "azul royal",
+                "tamanho": "GG"
+              },
+              "priceAmount": 99.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza",
+                "tamanho": "P"
+              },
+              "priceAmount": 104.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza",
+                "tamanho": "M"
+              },
+              "priceAmount": 104.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza",
+                "tamanho": "G"
+              },
+              "priceAmount": 104.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza",
+                "tamanho": "GG"
+              },
+              "priceAmount": 104.9
+            }
+          ],
+          "images": [
+            {
+              "color": "preto",
+              "files": [
+                "short-grit-corrida-preto-1.webp",
+                "short-grit-corrida-preto-2.webp"
+              ]
+            },
+            {
+              "color": "azul royal",
+              "files": [
+                "short-grit-corrida-azul-royal-1.webp",
+                "short-grit-corrida-azul-royal-2.webp"
+              ]
+            },
+            {
+              "color": "cinza",
+              "files": [
+                "short-grit-corrida-cinza-1.webp",
+                "short-grit-corrida-cinza-2.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Short GRIT Treino Feminino",
+          "description": "Short justo de treino com cós alto que não enrola. Ideal para academia e funcional.",
+          "attributes": {
+            "marca": "GRIT",
+            "genero": "Feminino",
+            "material": "Poliamida e elastano"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "P"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "M"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "G"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "GG"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "vinho",
+                "tamanho": "P"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "vinho",
+                "tamanho": "M"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "vinho",
+                "tamanho": "G"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "vinho",
+                "tamanho": "GG"
+              },
+              "priceAmount": 89.9
+            },
+            {
+              "attributes": {
+                "cor": "azul petróleo",
+                "tamanho": "P"
+              },
+              "priceAmount": 94.9
+            },
+            {
+              "attributes": {
+                "cor": "azul petróleo",
+                "tamanho": "M"
+              },
+              "priceAmount": 94.9
+            },
+            {
+              "attributes": {
+                "cor": "azul petróleo",
+                "tamanho": "G"
+              },
+              "priceAmount": 94.9
+            },
+            {
+              "attributes": {
+                "cor": "azul petróleo",
+                "tamanho": "GG"
+              },
+              "priceAmount": 94.9
+            }
+          ],
+          "images": [
+            {
+              "color": "preto",
+              "files": [
+                "short-grit-treino-feminino-preto-1.webp",
+                "short-grit-treino-feminino-preto-2.webp"
+              ]
+            },
+            {
+              "color": "vinho",
+              "files": [
+                "short-grit-treino-feminino-vinho-1.webp",
+                "short-grit-treino-feminino-vinho-2.webp"
+              ]
+            },
+            {
+              "color": "azul petróleo",
+              "files": [
+                "short-grit-treino-feminino-azul-petroleo-1.webp",
+                "short-grit-treino-feminino-azul-petroleo-2.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Bermuda GRIT Moletom",
+          "description": "Bermuda de moletom leve com bolsos laterais e cordão no cós. Conforto para o descanso.",
+          "attributes": {
+            "marca": "GRIT",
+            "genero": "Unissex",
+            "material": "Algodão e poliéster"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "P"
+              },
+              "priceAmount": 129.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "M"
+              },
+              "priceAmount": 129.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "G"
+              },
+              "priceAmount": 129.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "GG"
+              },
+              "priceAmount": 129.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "P"
+              },
+              "priceAmount": 129.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "M"
+              },
+              "priceAmount": 129.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "G"
+              },
+              "priceAmount": 129.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "GG"
+              },
+              "priceAmount": 129.9
+            },
+            {
+              "attributes": {
+                "cor": "verde militar",
+                "tamanho": "P"
+              },
+              "priceAmount": 134.9
+            },
+            {
+              "attributes": {
+                "cor": "verde militar",
+                "tamanho": "M"
+              },
+              "priceAmount": 134.9
+            },
+            {
+              "attributes": {
+                "cor": "verde militar",
+                "tamanho": "G"
+              },
+              "priceAmount": 134.9
+            },
+            {
+              "attributes": {
+                "cor": "verde militar",
+                "tamanho": "GG"
+              },
+              "priceAmount": 134.9
+            }
+          ],
+          "images": [
+            {
+              "color": "cinza mescla",
+              "files": [
+                "bermuda-grit-moletom-cinza-mescla-1.webp",
+                "bermuda-grit-moletom-cinza-mescla-2.webp"
+              ]
+            },
+            {
+              "color": "preto",
+              "files": [
+                "bermuda-grit-moletom-preto-1.webp",
+                "bermuda-grit-moletom-preto-2.webp"
+              ]
+            },
+            {
+              "color": "verde militar",
+              "files": [
+                "bermuda-grit-moletom-verde-militar-1.webp",
+                "bermuda-grit-moletom-verde-militar-2.webp"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Calças e leggings",
+      "products": [
+        {
+          "name": "Legging GRIT Compressão",
+          "description": "Legging de compressão com cós alto e tecido opaco. Firme no agachamento, macia no corpo.",
+          "attributes": {
+            "marca": "GRIT",
+            "genero": "Feminino",
+            "material": "Poliamida e elastano"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "P"
+              },
+              "priceAmount": 139.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "M"
+              },
+              "priceAmount": 139.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "G"
+              },
+              "priceAmount": 139.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "GG"
+              },
+              "priceAmount": 139.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "P"
+              },
+              "priceAmount": 139.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "M"
+              },
+              "priceAmount": 139.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "G"
+              },
+              "priceAmount": 139.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "GG"
+              },
+              "priceAmount": 139.9
+            },
+            {
+              "attributes": {
+                "cor": "vinho",
+                "tamanho": "P"
+              },
+              "priceAmount": 144.9
+            },
+            {
+              "attributes": {
+                "cor": "vinho",
+                "tamanho": "M"
+              },
+              "priceAmount": 144.9
+            },
+            {
+              "attributes": {
+                "cor": "vinho",
+                "tamanho": "G"
+              },
+              "priceAmount": 144.9
+            },
+            {
+              "attributes": {
+                "cor": "vinho",
+                "tamanho": "GG"
+              },
+              "priceAmount": 144.9
+            }
+          ],
+          "images": [
+            {
+              "color": "preto",
+              "files": [
+                "legging-grit-compressao-preto-1.webp",
+                "legging-grit-compressao-preto-2.webp"
+              ]
+            },
+            {
+              "color": "azul marinho",
+              "files": [
+                "legging-grit-compressao-azul-marinho-1.webp",
+                "legging-grit-compressao-azul-marinho-2.webp"
+              ]
+            },
+            {
+              "color": "vinho",
+              "files": [
+                "legging-grit-compressao-vinho-1.webp",
+                "legging-grit-compressao-vinho-2.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Calça GRIT Jogger Treino",
+          "description": "Calça jogger com punho na barra, bolsos com zíper e tecido com elasticidade para treinar.",
+          "attributes": {
+            "marca": "GRIT",
+            "genero": "Masculino",
+            "material": "Poliéster com elastano"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "P"
+              },
+              "priceAmount": 179.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "M"
+              },
+              "priceAmount": 179.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "G"
+              },
+              "priceAmount": 179.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "GG"
+              },
+              "priceAmount": 179.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza chumbo",
+                "tamanho": "P"
+              },
+              "priceAmount": 179.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza chumbo",
+                "tamanho": "M"
+              },
+              "priceAmount": 179.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza chumbo",
+                "tamanho": "G"
+              },
+              "priceAmount": 179.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza chumbo",
+                "tamanho": "GG"
+              },
+              "priceAmount": 179.9
+            },
+            {
+              "attributes": {
+                "cor": "verde militar",
+                "tamanho": "P"
+              },
+              "priceAmount": 189.9
+            },
+            {
+              "attributes": {
+                "cor": "verde militar",
+                "tamanho": "M"
+              },
+              "priceAmount": 189.9
+            },
+            {
+              "attributes": {
+                "cor": "verde militar",
+                "tamanho": "G"
+              },
+              "priceAmount": 189.9
+            },
+            {
+              "attributes": {
+                "cor": "verde militar",
+                "tamanho": "GG"
+              },
+              "priceAmount": 189.9
+            }
+          ],
+          "images": [
+            {
+              "color": "preto",
+              "files": [
+                "calca-grit-jogger-treino-preto-1.webp",
+                "calca-grit-jogger-treino-preto-2.webp"
+              ]
+            },
+            {
+              "color": "cinza chumbo",
+              "files": [
+                "calca-grit-jogger-treino-cinza-chumbo-1.webp",
+                "calca-grit-jogger-treino-cinza-chumbo-2.webp"
+              ]
+            },
+            {
+              "color": "verde militar",
+              "files": [
+                "calca-grit-jogger-treino-verde-militar-1.webp",
+                "calca-grit-jogger-treino-verde-militar-2.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Calça GRIT Moletom Unissex",
+          "description": "Calça de moletom felpada por dentro, com cordão no cós e bolsos laterais.",
+          "attributes": {
+            "marca": "GRIT",
+            "genero": "Unissex",
+            "material": "Algodão e poliéster"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "P"
+              },
+              "priceAmount": 159.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "M"
+              },
+              "priceAmount": 159.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "G"
+              },
+              "priceAmount": 159.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "GG"
+              },
+              "priceAmount": 159.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "P"
+              },
+              "priceAmount": 159.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "M"
+              },
+              "priceAmount": 159.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "G"
+              },
+              "priceAmount": 159.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "GG"
+              },
+              "priceAmount": 159.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "P"
+              },
+              "priceAmount": 164.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "M"
+              },
+              "priceAmount": 164.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "G"
+              },
+              "priceAmount": 164.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "GG"
+              },
+              "priceAmount": 164.9
+            }
+          ],
+          "images": [
+            {
+              "color": "cinza mescla",
+              "files": [
+                "calca-grit-moletom-unissex-cinza-mescla-1.webp",
+                "calca-grit-moletom-unissex-cinza-mescla-2.webp"
+              ]
+            },
+            {
+              "color": "preto",
+              "files": [
+                "calca-grit-moletom-unissex-preto-1.webp",
+                "calca-grit-moletom-unissex-preto-2.webp"
+              ]
+            },
+            {
+              "color": "azul marinho",
+              "files": [
+                "calca-grit-moletom-unissex-azul-marinho-1.webp",
+                "calca-grit-moletom-unissex-azul-marinho-2.webp"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Moletons e jaquetas",
+      "products": [
+        {
+          "name": "Moletom GRIT Canguru",
+          "description": "Moletom com capuz, bolso canguru e punhos com ribana. Quente sem pesar.",
+          "attributes": {
+            "marca": "GRIT",
+            "genero": "Unissex",
+            "material": "Algodão e poliéster felpado"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "P"
+              },
+              "priceAmount": 219.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "M"
+              },
+              "priceAmount": 219.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "G"
+              },
+              "priceAmount": 219.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "GG"
+              },
+              "priceAmount": 219.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "P"
+              },
+              "priceAmount": 219.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "M"
+              },
+              "priceAmount": 219.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "G"
+              },
+              "priceAmount": 219.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza mescla",
+                "tamanho": "GG"
+              },
+              "priceAmount": 219.9
+            },
+            {
+              "attributes": {
+                "cor": "off white",
+                "tamanho": "P"
+              },
+              "priceAmount": 229.9
+            },
+            {
+              "attributes": {
+                "cor": "off white",
+                "tamanho": "M"
+              },
+              "priceAmount": 229.9
+            },
+            {
+              "attributes": {
+                "cor": "off white",
+                "tamanho": "G"
+              },
+              "priceAmount": 229.9
+            },
+            {
+              "attributes": {
+                "cor": "off white",
+                "tamanho": "GG"
+              },
+              "priceAmount": 229.9
+            }
+          ],
+          "images": [
+            {
+              "color": "preto",
+              "files": [
+                "moletom-grit-canguru-preto-1.webp",
+                "moletom-grit-canguru-preto-2.webp"
+              ]
+            },
+            {
+              "color": "cinza mescla",
+              "files": [
+                "moletom-grit-canguru-cinza-mescla-1.webp",
+                "moletom-grit-canguru-cinza-mescla-2.webp"
+              ]
+            },
+            {
+              "color": "off white",
+              "files": [
+                "moletom-grit-canguru-off-white-1.webp",
+                "moletom-grit-canguru-off-white-2.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Jaqueta GRIT Corta-Vento",
+          "description": "Jaqueta corta-vento leve com capuz embutido na gola. Dobra dentro do próprio bolso.",
+          "attributes": {
+            "marca": "GRIT",
+            "genero": "Masculino",
+            "material": "Poliamida ripstop"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "P"
+              },
+              "priceAmount": 259.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "M"
+              },
+              "priceAmount": 259.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "G"
+              },
+              "priceAmount": 259.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "GG"
+              },
+              "priceAmount": 259.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "P"
+              },
+              "priceAmount": 259.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "M"
+              },
+              "priceAmount": 259.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "G"
+              },
+              "priceAmount": 259.9
+            },
+            {
+              "attributes": {
+                "cor": "azul marinho",
+                "tamanho": "GG"
+              },
+              "priceAmount": 259.9
+            },
+            {
+              "attributes": {
+                "cor": "verde oliva",
+                "tamanho": "P"
+              },
+              "priceAmount": 269.9
+            },
+            {
+              "attributes": {
+                "cor": "verde oliva",
+                "tamanho": "M"
+              },
+              "priceAmount": 269.9
+            },
+            {
+              "attributes": {
+                "cor": "verde oliva",
+                "tamanho": "G"
+              },
+              "priceAmount": 269.9
+            },
+            {
+              "attributes": {
+                "cor": "verde oliva",
+                "tamanho": "GG"
+              },
+              "priceAmount": 269.9
+            }
+          ],
+          "images": [
+            {
+              "color": "preto",
+              "files": [
+                "jaqueta-grit-corta-vento-preto-1.webp",
+                "jaqueta-grit-corta-vento-preto-2.webp"
+              ]
+            },
+            {
+              "color": "azul marinho",
+              "files": [
+                "jaqueta-grit-corta-vento-azul-marinho-1.webp",
+                "jaqueta-grit-corta-vento-azul-marinho-2.webp"
+              ]
+            },
+            {
+              "color": "verde oliva",
+              "files": [
+                "jaqueta-grit-corta-vento-verde-oliva-1.webp",
+                "jaqueta-grit-corta-vento-verde-oliva-2.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Jaqueta GRIT Térmica Feminina",
+          "description": "Jaqueta acolchoada leve com forro térmico e bolsos com zíper. Para manhãs frias e corridas no inverno.",
+          "attributes": {
+            "marca": "GRIT",
+            "genero": "Feminino",
+            "material": "Poliéster com forro térmico"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "P"
+              },
+              "priceAmount": 289.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "M"
+              },
+              "priceAmount": 289.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "G"
+              },
+              "priceAmount": 289.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "GG"
+              },
+              "priceAmount": 289.9
+            },
+            {
+              "attributes": {
+                "cor": "vinho",
+                "tamanho": "P"
+              },
+              "priceAmount": 289.9
+            },
+            {
+              "attributes": {
+                "cor": "vinho",
+                "tamanho": "M"
+              },
+              "priceAmount": 289.9
+            },
+            {
+              "attributes": {
+                "cor": "vinho",
+                "tamanho": "G"
+              },
+              "priceAmount": 289.9
+            },
+            {
+              "attributes": {
+                "cor": "vinho",
+                "tamanho": "GG"
+              },
+              "priceAmount": 289.9
+            },
+            {
+              "attributes": {
+                "cor": "bege",
+                "tamanho": "P"
+              },
+              "priceAmount": 299.9
+            },
+            {
+              "attributes": {
+                "cor": "bege",
+                "tamanho": "M"
+              },
+              "priceAmount": 299.9
+            },
+            {
+              "attributes": {
+                "cor": "bege",
+                "tamanho": "G"
+              },
+              "priceAmount": 299.9
+            },
+            {
+              "attributes": {
+                "cor": "bege",
+                "tamanho": "GG"
+              },
+              "priceAmount": 299.9
+            }
+          ],
+          "images": [
+            {
+              "color": "preto",
+              "files": [
+                "jaqueta-grit-termica-feminina-preto-1.webp",
+                "jaqueta-grit-termica-feminina-preto-2.webp"
+              ]
+            },
+            {
+              "color": "vinho",
+              "files": [
+                "jaqueta-grit-termica-feminina-vinho-1.webp",
+                "jaqueta-grit-termica-feminina-vinho-2.webp"
+              ]
+            },
+            {
+              "color": "bege",
+              "files": [
+                "jaqueta-grit-termica-feminina-bege-1.webp",
+                "jaqueta-grit-termica-feminina-bege-2.webp"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
