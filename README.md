@@ -56,7 +56,7 @@ A loja fica em http://localhost:3000, e o admin entra com `admin@grit.local` e o
 O padrão é o gateway fake. Para usar o Stripe em modo de teste:
 
 1. Crie uma conta de teste no Stripe e instale o Stripe CLI (`stripe login`).
-2. Rode `stripe listen --forward-to localhost:5080/api/v1/payments/stripe/webhook` e copie o `whsec_…` que ele imprime.
+2. Rode `stripe listen --events payment_intent.succeeded,payment_intent.payment_failed,payment_intent.canceled,charge.refunded --forward-to localhost:5080/api/v1/payments/stripe/webhook` (o CLI atual exige `--events`) e copie o `whsec_…` que ele imprime.
 3. Grave as chaves nos user secrets do AppHost (nunca no repositório):
    ```bash
    dotnet user-secrets set --project src/Grit.AppHost "Payments:Provider" "Stripe"
