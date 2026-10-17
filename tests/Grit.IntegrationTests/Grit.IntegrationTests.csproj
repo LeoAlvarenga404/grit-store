@@ -13,12 +13,15 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Shouldly" />
     <PackageReference Include="Testcontainers.PostgreSql" />
+    <PackageReference Include="Testcontainers.Redis" />
     <PackageReference Include="xunit.v3.mtp-v2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Grit.Api\Grit.Api.csproj" />
     <ProjectReference Include="..\..\src\Grit.Modules.Catalog\Grit.Modules.Catalog.csproj" />
+    <ProjectReference Include="..\..\src\Grit.Modules.Identity\Grit.Modules.Identity.csproj" />
+    <ProjectReference Include="..\..\src\Grit.Modules.Inventory\Grit.Modules.Inventory.csproj" />
     <ProjectReference Include="..\Grit.Modules.Probe\Grit.Modules.Probe.csproj" />
   </ItemGroup>
 

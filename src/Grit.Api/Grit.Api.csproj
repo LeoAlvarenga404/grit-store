@@ -17,7 +17,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Grit.BuildingBlocks\Grit.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\Grit.Modules.Basket\Grit.Modules.Basket.csproj" />
     <ProjectReference Include="..\Grit.Modules.Catalog\Grit.Modules.Catalog.csproj" />
+    <ProjectReference Include="..\Grit.Modules.Identity\Grit.Modules.Identity.csproj" />
+    <ProjectReference Include="..\Grit.Modules.Inventory\Grit.Modules.Inventory.csproj" />
+    <ProjectReference Include="..\Grit.Modules.Ordering\Grit.Modules.Ordering.csproj" />
+    <ProjectReference Include="..\Grit.Modules.Payments\Grit.Modules.Payments.csproj" />
     <ProjectReference Include="..\Grit.ServiceDefaults\Grit.ServiceDefaults.csproj" />
   </ItemGroup>
 

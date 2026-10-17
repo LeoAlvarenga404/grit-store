@@ -29,7 +29,9 @@ public sealed class ProbeModule : IModule
         bus.AddEntityFrameworkOutbox<ProbeDbContext>(outbox =>
         {
             outbox.QueryDelay = TimeSpan.FromSeconds(1);
-            outbox.UsePostgres();
+            // MassTransit caches lock-statement table names per entity type for the whole process, so with caching on
+            // every module would lock against the schema of the first DbContext that resolved OutboxState or InboxState.
+            outbox.UsePostgres(enableSchemaCaching: false);
             outbox.UseBusOutbox();
         });
 

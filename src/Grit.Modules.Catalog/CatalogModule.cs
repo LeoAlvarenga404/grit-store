@@ -1,4 +1,5 @@
 using Grit.BuildingBlocks;
+using Grit.Modules.Catalog.Contracts;
 using Grit.Modules.Catalog.Features.AddSku;
 using Grit.Modules.Catalog.Features.ChangeSkuPrice;
 using Grit.Modules.Catalog.Features.CreateCategory;
@@ -40,6 +41,8 @@ public sealed class CatalogModule : IModule
         {
             builder.Services.AddHostedService<CatalogSeedService>();
         }
+
+        builder.Services.AddScoped<ICatalogReader, CatalogReader>();
     }
 
     // Catalog publishes no integration event yet, and the single bus-outbox slot stays with the probe (ADR 0005).

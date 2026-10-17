@@ -16,7 +16,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Grit.Modules.Basket.Contracts\Grit.Modules.Basket.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Grit.Modules.Basket\Grit.Modules.Basket.csproj" />
+    <ProjectReference Include="..\..\src\Grit.Modules.Catalog.Contracts\Grit.Modules.Catalog.Contracts.csproj" />
     <ProjectReference Include="..\..\src\Grit.Modules.Catalog\Grit.Modules.Catalog.csproj" />
+    <ProjectReference Include="..\..\src\Grit.Modules.Identity\Grit.Modules.Identity.csproj" />
+    <ProjectReference Include="..\..\src\Grit.Modules.Inventory.Contracts\Grit.Modules.Inventory.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Grit.Modules.Inventory\Grit.Modules.Inventory.csproj" />
+    <ProjectReference Include="..\..\src\Grit.Modules.Ordering.Contracts\Grit.Modules.Ordering.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Grit.Modules.Ordering\Grit.Modules.Ordering.csproj" />
+    <ProjectReference Include="..\..\src\Grit.Modules.Payments.Contracts\Grit.Modules.Payments.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Grit.Modules.Payments\Grit.Modules.Payments.csproj" />
     <ProjectReference Include="..\..\src\Grit.SharedKernel\Grit.SharedKernel.csproj" />
     <ProjectReference Include="..\Grit.Modules.Probe\Grit.Modules.Probe.csproj" />
   </ItemGroup>

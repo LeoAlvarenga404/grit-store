@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Testcontainers.PostgreSql;
+using Testcontainers.Redis;
 
 [assembly: AssemblyFixture(typeof(Grit.IntegrationTests.ApiFactory))]
 
@@ -15,14 +16,19 @@ namespace Grit.IntegrationTests;
 
 public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
+    // Test-only key, never used outside the test host.
+    public const string JwtSigningKey = "test-only-signing-key-0123456789abcdef";
+
     // Same image as the AppHost (one download); tmpfs keeps the throwaway data off the WSL disk.
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:18.6-alpine")
         .WithTmpfsMount("/var/lib/postgresql")
         .Build();
 
+    private readonly RedisContainer _redis = new RedisBuilder("redis:8.10.2-alpine").Build();
+
     public async ValueTask InitializeAsync()
     {
-        await _postgres.StartAsync();
+        await Task.WhenAll(_postgres.StartAsync(), _redis.StartAsync());
         await CreateProbeSchemaAsync(_postgres.GetConnectionString());
         _ = Server;
     }
@@ -31,6 +37,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         await base.DisposeAsync();
         await _postgres.DisposeAsync();
+        await _redis.DisposeAsync();
     }
 
     // A database of its own on the same container, for tests that count rows no other test may add to.
@@ -50,7 +57,10 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting("ConnectionStrings:grit", _postgres.GetConnectionString());
+        builder.UseSetting("ConnectionStrings:redis", _redis.GetConnectionString());
         builder.UseSetting("Modules:Additional:0", typeof(ProbeModule).AssemblyQualifiedName);
+        builder.UseSetting("Identity:Jwt:SigningKey", JwtSigningKey);
+        builder.UseSetting("Identity:LoginAttemptsPerMinute", "1000");
 
         // No outbox delivery in this host, so tests read OutboxMessage rows before anything delivers them;
         // OutboxTests turns delivery back on in a host of its own.
