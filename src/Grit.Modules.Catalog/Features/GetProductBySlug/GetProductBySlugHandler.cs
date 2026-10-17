@@ -31,8 +31,21 @@ internal sealed class GetProductBySlugHandler(CatalogDbContext db, ProductImageS
             return CatalogErrors.ProductNotFound;
         }
 
-        // The cache holds keys, never URLs: each response signs its own, so no entry outlives a URL's hour.
-        return row.Product with { ImageUrls = await storage.DownloadUrlsAsync([.. row.Images.Select(image => image.Key)]) };
+        return await SignAsync(row);
+    }
+
+    // The cache holds keys, never URLs: each response signs its own, so no entry outlives a URL's hour.
+    private async Task<GetProductBySlugResponse> SignAsync(GetProductBySlugRow row)
+    {
+        var keys = row.Images.Select(image => image.Key).ToList();
+        var urls = await storage.DownloadUrlsAsync(keys);
+        var urlByKey = keys.Zip(urls).ToDictionary(pair => pair.First, pair => pair.Second);
+        var colors = ProductColors.Group(row.Product.Skus.Select(sku => sku.Attributes.GetValueOrDefault(Sku.ColorAttribute)), row.Images);
+        return row.Product with
+        {
+            ImageUrls = urls,
+            Colors = [.. colors.Select(color => new GetProductBySlugColorResponse(color.Name, [.. color.ImageKeys.Select(key => urlByKey[key])]))],
+        };
     }
 
     // ponytail: a miss reads with this request's DbContext; if this request aborts while another waits on the same
@@ -54,7 +67,7 @@ internal sealed class GetProductBySlugHandler(CatalogDbContext db, ProductImageS
                         .OrderBy(sku => sku.Id)
                         .Select(sku => new GetProductBySlugSkuResponse(sku.Id.Value, sku.Attributes, sku.Price.Amount, sku.Price.Currency))
                         .ToList(),
-                    Array.Empty<string>()),
+                    Array.Empty<string>(), Array.Empty<GetProductBySlugColorResponse>()),
                 product.Images))
             .SingleOrDefaultAsync(cancellationToken);
 
