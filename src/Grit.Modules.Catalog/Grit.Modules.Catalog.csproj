@@ -3,6 +3,8 @@
   <ItemGroup>
     <InternalsVisibleTo Include="Grit.IntegrationTests" />
     <InternalsVisibleTo Include="Grit.Modules.Catalog.Tests" />
+    <InternalsVisibleTo Include="Grit.MlImporter" />
+    <InternalsVisibleTo Include="Grit.MlImporter.Tests" />
   </ItemGroup>
 
   <ItemGroup>
