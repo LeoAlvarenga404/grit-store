@@ -16,7 +16,7 @@ builder.AddNpgsqlDataSource("grit");
 builder.Services.AddProblemDetails();
 // The web defaults also read numbers from strings, which types every number as integer-or-string in OpenAPI and the web client.
 builder.Services.ConfigureHttpJsonOptions(options => options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict);
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(OpenApiDocumentation.Configure);
 builder.Services.AddRateLimiter(options => options.RejectionStatusCode = StatusCodes.Status429TooManyRequests);
 
 // Only a known proxy (the Next.js BFF) may name the client of a request; ASP.NET Core already trusts loopback (ADR 0014).

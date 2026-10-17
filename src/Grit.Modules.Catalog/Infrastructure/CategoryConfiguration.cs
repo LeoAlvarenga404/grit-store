@@ -20,5 +20,7 @@ internal sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.HasIndex(category => category.Slug).IsUnique();
         builder.Property<DateTimeOffset>(AuditInterceptor.CreatedAt);
         builder.Property<DateTimeOffset>(AuditInterceptor.UpdatedAt);
+        builder.Property<Guid?>(AuditInterceptor.CreatedBy);
+        builder.Property<Guid?>(AuditInterceptor.UpdatedBy);
     }
 }

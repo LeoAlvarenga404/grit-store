@@ -23,4 +23,5 @@ O front (Next.js) precisa autenticar clientes, e os outros módulos precisam sab
 
 - **IP do cliente atrás do BFF (emenda 2026-10-16, endurecimento):** a API usa `UseForwardedHeaders` só com `X-Forwarded-For` e confia apenas em loopback e nas redes de `ForwardedHeaders:KnownNetworks`; o cabeçalho de quem chama de fora é ignorado. O BFF repassa o último salto do `x-forwarded-for` no login. Em produção, o Next.js precisa de um proxy na frente que defina esse cabeçalho, porque o Next 16 só o preenche quando ele não existe.
 - Dois logins errados simultâneos podem contar como uma falha só. O limite de tentativas restringe a perda.
-- Logout por enquanto só limpa os cookies no BFF. Um endpoint que revogue a família e o botão de autenticação no OpenAPI ainda ficam para depois (a política de admin já existe desde o 5a).
+- **Logout (emenda 2026-10-17):** `POST /api/v1/identity/logout { refreshToken }` revoga a família do token sob o mesmo lock de família do refresh e responde 204 também para token desconhecido ou já revogado, para não servir de oráculo. O BFF chama a rota antes de limpar os cookies, sem bloquear o logout se a API falhar.
+- O OpenAPI declara o esquema `Bearer`, e só as operações que exigem autorização carregam `security` (emenda 2026-10-17).

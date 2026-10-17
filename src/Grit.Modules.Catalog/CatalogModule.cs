@@ -31,14 +31,15 @@ namespace Grit.Modules.Catalog;
 
 public sealed class CatalogModule : IModule
 {
-    private static readonly AuditInterceptor Audit = new();
-
     public void AddServices(IHostApplicationBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddSingleton<AuditInterceptor>();
         builder.Services.AddDbContext<CatalogDbContext>((services, options) =>
-            CatalogDbContext.Configure(options, services.GetRequiredService<NpgsqlDataSource>()).AddInterceptors(Audit));
+            CatalogDbContext.Configure(options, services.GetRequiredService<NpgsqlDataSource>())
+                .AddInterceptors(services.GetRequiredService<AuditInterceptor>()));
 
         builder.Services.AddScoped<CatalogSeeder>();
         builder.Services.AddScoped<VolumeSeeder>();

@@ -17,6 +17,11 @@ internal sealed class UsersDbContext(DbContextOptions<UsersDbContext> options)
 
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
+    // Every writer of a family (refresh, logout) takes this lock first: a revocation UPDATE cannot see the successor
+    // that a rotation in flight has not committed yet, so the lock makes them run one after the other (ADR 0014).
+    public async Task LockFamilyAsync(Guid familyId, CancellationToken cancellationToken) =>
+        await Database.ExecuteSqlAsync($"SELECT pg_advisory_xact_lock(hashtextextended({familyId.ToString()}, 0))", cancellationToken);
+
     public static DbContextOptionsBuilder Configure(DbContextOptionsBuilder options, NpgsqlDataSource dataSource) =>
         options
             .UseNpgsql(dataSource, npgsql => npgsql.MigrationsHistoryTable("__EFMigrationsHistory", Schema))

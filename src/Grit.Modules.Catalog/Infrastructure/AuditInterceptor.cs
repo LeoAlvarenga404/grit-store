@@ -1,3 +1,5 @@
+using Grit.BuildingBlocks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -5,11 +7,16 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 namespace Grit.Modules.Catalog.Infrastructure;
 
 // Audit columns live only on aggregate roots: a changed child stamps its root, which also bumps the root's xmin.
-internal sealed class AuditInterceptor : SaveChangesInterceptor
+// The user comes from the current request; writes outside one (the seed) leave created_by/updated_by null.
+internal sealed class AuditInterceptor(IHttpContextAccessor httpContextAccessor) : SaveChangesInterceptor
 {
     public const string CreatedAt = "CreatedAt";
 
     public const string UpdatedAt = "UpdatedAt";
+
+    public const string CreatedBy = "CreatedBy";
+
+    public const string UpdatedBy = "UpdatedBy";
 
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
@@ -26,7 +33,7 @@ internal sealed class AuditInterceptor : SaveChangesInterceptor
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private static void Stamp(DbContextEventData eventData)
+    private void Stamp(DbContextEventData eventData)
     {
         var changeTracker = eventData.Context?.ChangeTracker;
         if (changeTracker is null)
@@ -35,6 +42,7 @@ internal sealed class AuditInterceptor : SaveChangesInterceptor
         }
 
         var now = DateTimeOffset.UtcNow;
+        var userId = httpContextAccessor.HttpContext?.User.GetUserId();
 
         // Entries() detects changes first, so a SKU just added to a product is already tracked as Added.
         foreach (var root in changeTracker.Entries().Where(entry => entry.Metadata.FindProperty(UpdatedAt) is not null).ToList())
@@ -42,13 +50,16 @@ internal sealed class AuditInterceptor : SaveChangesInterceptor
             if (root.State == EntityState.Added)
             {
                 root.Property(CreatedAt).CurrentValue = now;
+                root.Property(CreatedBy).CurrentValue = userId;
                 root.Property(UpdatedAt).CurrentValue = now;
+                root.Property(UpdatedBy).CurrentValue = userId;
                 continue;
             }
 
             if (root.State == EntityState.Modified || HasChangedChild(root))
             {
                 root.Property(UpdatedAt).CurrentValue = now;
+                root.Property(UpdatedBy).CurrentValue = userId;
             }
         }
     }

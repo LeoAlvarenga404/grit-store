@@ -109,7 +109,7 @@ public class IdentityRefreshTests(ApiFactory factory)
         var (id, email) = await IdentityApi.RegisterAsync(_client);
         var first = IdentityApi.RefreshTokenOf(await IdentityApi.LogInAsync(_client, email));
         var second = IdentityApi.RefreshTokenOf(await IdentityApi.ReadOkAsync(await IdentityApi.RefreshAsync(_client, first)));
-        var familyId = await FamilyIdOfAsync(second);
+        var familyId = await IdentityApi.FamilyIdOfAsync(factory.Services, second);
         var secondHash = RefreshToken.Hash(second);
 
         await using var rotation = factory.Services.CreateAsyncScope();
@@ -134,15 +134,6 @@ public class IdentityRefreshTests(ApiFactory factory)
         var stored = await check.ServiceProvider.GetRequiredService<UsersDbContext>().RefreshTokens
             .SingleAsync(row => row.Id == successor.Id, cancellationToken);
         stored.RevokedAt.ShouldNotBeNull();
-    }
-
-    private async Task<Guid> FamilyIdOfAsync(string refreshToken)
-    {
-        var hash = RefreshToken.Hash(refreshToken);
-        await using var scope = factory.Services.CreateAsyncScope();
-        var stored = await scope.ServiceProvider.GetRequiredService<UsersDbContext>().RefreshTokens
-            .SingleAsync(row => row.TokenHash == hash, TestContext.Current.CancellationToken);
-        return stored.FamilyId;
     }
 
     [Fact]

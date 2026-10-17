@@ -1,4 +1,6 @@
 using System.Net;
+using System.Net.Http.Json;
+using System.Text.Json;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Grit.IntegrationTests;
@@ -25,7 +27,26 @@ public class OpenApiTests(ApiFactory factory)
         document.ShouldContain("\"/api/v1/identity/register\"");
         document.ShouldContain("\"/api/v1/identity/login\"");
         document.ShouldContain("\"/api/v1/identity/refresh\"");
+        document.ShouldContain("\"/api/v1/identity/logout\"");
         document.ShouldContain("\"/api/v1/identity/me\"");
+    }
+
+    [Fact]
+    public async Task OpenApiDocument_Development_DeclaresTheErrorCodeAndTheBearerScheme()
+    {
+        var document = await factory.CreateClient().GetFromJsonAsync<JsonElement>("/openapi/v1.json", TestContext.Current.CancellationToken);
+
+        var components = document.GetProperty("components");
+        var problem = components.GetProperty("schemas").GetProperty("ProblemDetails").GetProperty("properties");
+        problem.GetProperty("code").GetProperty("type").GetString().ShouldBe("string");
+        problem.GetProperty("errors").GetProperty("additionalProperties").GetProperty("items").GetProperty("type").GetString().ShouldBe("string");
+        var bearer = components.GetProperty("securitySchemes").GetProperty("Bearer");
+        bearer.GetProperty("type").GetString().ShouldBe("http");
+        bearer.GetProperty("scheme").GetString().ShouldBe("bearer");
+        var paths = document.GetProperty("paths");
+        SecuritySchemeOf(paths, "/api/v1/identity/me", "get").ShouldBe("Bearer");
+        SecuritySchemeOf(paths, "/api/v1/admin/products", "post").ShouldBe("Bearer");
+        paths.GetProperty("/api/v1/catalog/products").GetProperty("get").TryGetProperty("security", out _).ShouldBeFalse();
     }
 
     [Theory]
@@ -39,4 +60,7 @@ public class OpenApiTests(ApiFactory factory)
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
+
+    private static string SecuritySchemeOf(JsonElement paths, string path, string method) =>
+        paths.GetProperty(path).GetProperty(method).GetProperty("security")[0].EnumerateObject().Single().Name;
 }

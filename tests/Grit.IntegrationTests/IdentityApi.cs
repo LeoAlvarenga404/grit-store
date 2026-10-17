@@ -2,6 +2,10 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Grit.Modules.Identity.Domain;
+using Grit.Modules.Identity.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Grit.IntegrationTests;
 
@@ -12,6 +16,8 @@ internal static class IdentityApi
     public const string LogInPath = "/api/v1/identity/login";
 
     public const string RefreshPath = "/api/v1/identity/refresh";
+
+    public const string LogOutPath = "/api/v1/identity/logout";
 
     public const string MePath = "/api/v1/identity/me";
 
@@ -56,6 +62,18 @@ internal static class IdentityApi
 
     public static Task<HttpResponseMessage> RefreshAsync(HttpClient client, string refreshToken) =>
         client.PostAsJsonAsync(RefreshPath, new { refreshToken }, TestContext.Current.CancellationToken);
+
+    public static Task<HttpResponseMessage> LogOutAsync(HttpClient client, string refreshToken) =>
+        client.PostAsJsonAsync(LogOutPath, new { refreshToken }, TestContext.Current.CancellationToken);
+
+    public static async Task<Guid> FamilyIdOfAsync(IServiceProvider services, string refreshToken)
+    {
+        var hash = RefreshToken.Hash(refreshToken);
+        await using var scope = services.CreateAsyncScope();
+        var stored = await scope.ServiceProvider.GetRequiredService<UsersDbContext>().RefreshTokens
+            .SingleAsync(row => row.TokenHash == hash, TestContext.Current.CancellationToken);
+        return stored.FamilyId;
+    }
 
     public static async Task<HttpResponseMessage> GetMeAsync(HttpClient client, string accessToken)
     {

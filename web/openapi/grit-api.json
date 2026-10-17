@@ -103,7 +103,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/admin/products": {
@@ -174,7 +179,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -233,7 +243,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/admin/products/{id}": {
@@ -294,7 +309,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -384,7 +404,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/admin/products/{id}/skus": {
@@ -476,7 +501,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/admin/products/{id}/skus/{skuId}/price": {
@@ -577,7 +607,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/admin/products/{id}/images/uploads": {
@@ -659,7 +694,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/admin/products/{id}/images": {
@@ -751,7 +791,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/admin/products/{id}/images/{fileName}": {
@@ -850,7 +895,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/catalog/products": {
@@ -1261,6 +1311,40 @@
         }
       }
     },
+    "/api/v1/identity/logout": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Ends the session of a refresh token.",
+        "description": "Revokes the refresh token and every token rotated from the same login; other logins of the user keep working. Answers 204 for unknown or already revoked tokens too. An access token already issued stays valid until it expires (15 minutes).",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogOutRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/identity/me": {
       "get": {
         "tags": [
@@ -1289,7 +1373,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/basket": {
@@ -1320,7 +1409,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/basket/lines": {
@@ -1374,7 +1468,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/basket/lines/{skuId}": {
@@ -1439,7 +1538,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -1472,7 +1576,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/admin/stock": {
@@ -1536,7 +1645,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/admin/stock/{skuId}": {
@@ -1621,7 +1735,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/orders": {
@@ -1691,7 +1810,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -1722,7 +1846,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/orders/{id}": {
@@ -1774,7 +1903,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/orders/{id}/cancel": {
@@ -1829,7 +1963,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/admin/orders": {
@@ -1904,7 +2043,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/api/v1/admin/orders/{id}/ship": {
@@ -1969,7 +2113,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     }
   },
@@ -2588,6 +2737,17 @@
           }
         }
       },
+      "LogOutRequest": {
+        "required": [
+          "refreshToken"
+        ],
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string"
+          }
+        }
+      },
       "OrderLineResponse": {
         "required": [
           "skuId",
@@ -2863,6 +3023,18 @@
               "null",
               "string"
             ]
+          },
+          "code": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -3152,6 +3324,14 @@
             }
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "The access token from POST /api/v1/identity/login.",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   },

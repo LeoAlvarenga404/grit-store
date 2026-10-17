@@ -25,8 +25,7 @@ internal sealed class RefreshSessionHandler(UsersDbContext db, TokenIssuer token
             return IdentityErrors.InvalidRefreshToken;
         }
 
-        // The revocation UPDATE cannot see a successor inserted by a rotation that has not committed; the family lock orders them.
-        await db.Database.ExecuteSqlAsync($"SELECT pg_advisory_xact_lock(hashtextextended({familyId.Value.ToString()}, 0))", cancellationToken);
+        await db.LockFamilyAsync(familyId.Value, cancellationToken);
 
         // The conditional UPDATE takes the row lock: of two concurrent refreshes with one token only one changes the row;
         // the other waits, re-reads the row as replaced (READ COMMITTED) and is handled as reuse.

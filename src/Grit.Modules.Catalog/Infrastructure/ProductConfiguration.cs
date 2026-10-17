@@ -27,5 +27,7 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property<uint>(CatalogDbContext.Version).IsRowVersion();
         builder.Property<DateTimeOffset>(AuditInterceptor.CreatedAt);
         builder.Property<DateTimeOffset>(AuditInterceptor.UpdatedAt);
+        builder.Property<Guid?>(AuditInterceptor.CreatedBy);
+        builder.Property<Guid?>(AuditInterceptor.UpdatedBy);
     }
 }
