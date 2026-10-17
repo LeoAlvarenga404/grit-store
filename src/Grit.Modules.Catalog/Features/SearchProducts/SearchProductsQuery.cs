@@ -9,5 +9,6 @@ internal sealed record SearchProductsQuery(
     decimal? MinPrice,
     decimal? MaxPrice,
     IReadOnlyList<string> Attributes,
+    string Sort,
     string? After,
     int Limit) : IRequest<Result<SearchProductsResponse>>, IProductFilter;

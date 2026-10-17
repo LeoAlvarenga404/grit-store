@@ -25,11 +25,12 @@ public class CatalogCacheTests
     [Fact]
     public void KeyOf_QueriesThatDiffer_GiveDifferentKeys()
     {
-        var query = new SearchProductsQuery("tenis", null, null, null, [], null, 20);
+        var query = new SearchProductsQuery("tenis", null, null, null, [], ProductSort.Relevance, null, 20);
 
         CatalogCache.KeyOf("search", query).ShouldBe(CatalogCache.KeyOf("search", query with { }));
         CatalogCache.KeyOf("search", query).ShouldNotBe(CatalogCache.KeyOf("search", query with { Limit = 21 }));
         CatalogCache.KeyOf("search", query).ShouldNotBe(CatalogCache.KeyOf("search", query with { Attributes = ["cor:azul"] }));
+        CatalogCache.KeyOf("search", query).ShouldNotBe(CatalogCache.KeyOf("search", query with { Sort = ProductSort.PriceAscending }));
         CatalogCache.KeyOf("search", query).ShouldNotBe(CatalogCache.KeyOf("facets", query));
     }
 

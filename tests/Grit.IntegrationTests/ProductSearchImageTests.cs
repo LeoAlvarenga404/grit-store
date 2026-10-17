@@ -1,5 +1,8 @@
 using System.Net.Http.Json;
 using System.Text.Json;
+using Grit.Modules.Catalog.Features.SearchProducts;
+using Grit.Modules.Catalog.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Grit.IntegrationTests;
 
@@ -64,6 +67,51 @@ public class ProductSearchImageTests(ProductImageHost images) : IClassFixture<Pr
         var olderImageUrl = items[1].GetProperty("imageUrl").GetString();
         (await ProductImageApi.Storage.GetByteArrayAsync(olderImageUrl, TestContext.Current.CancellationToken)).Length.ShouldBe(100);
     }
+
+    [Fact]
+    public async Task Search_ColorsWithImages_ShowTheFirstImageOfEachColorInImageOrder()
+    {
+        var (productId, version, _) = await ProductImageApi.ProductWithSkuAsync(_admin);
+        var black = await CatalogAdminApi.AddSkuAsync(_admin, productId, version, "preto");
+        version = await ProductImageApi.AttachImageAsync(_admin, productId, black.Version, 100, "preto");
+        version = await ProductImageApi.AttachImageAsync(_admin, productId, version, 200, "azul");
+        await ProductImageApi.AttachImageAsync(_admin, productId, version, 300, "preto");
+
+        var item = await SearchItemAsync(productId);
+
+        var colors = item.GetProperty("colors").EnumerateArray().ToList();
+        colors.Select(color => color.GetProperty("name").GetString()).ShouldBe(["preto", "azul"]);
+        (await SizeOfAsync(colors[0].GetProperty("imageUrl"))).ShouldBe(100);
+        (await SizeOfAsync(colors[1].GetProperty("imageUrl"))).ShouldBe(200);
+        (await SizeOfAsync(item.GetProperty("imageUrl"))).ShouldBe(100);
+    }
+
+    // The cache holds keys only (ADR 0017): a warmed entry has no URL, and every response signs its own.
+    [Fact]
+    public async Task Search_CachedPage_HoldsImageKeysAndNoUrls()
+    {
+        var (productId, version, _) = await ProductImageApi.ProductWithSkuAsync(_admin);
+        await ProductImageApi.AttachImageAsync(_admin, productId, version, 100);
+        var name = (await CatalogAdminApi.GetProductAsync(_admin, productId)).GetProperty("name").GetString()!;
+        await SearchItemAsync(productId);
+
+        var cache = images.Host.Services.GetRequiredService<CatalogCache>();
+        var query = new SearchProductsQuery(name, null, null, null, [], ProductSort.Relevance, null, 50);
+        var page = await cache.GetOrCreateAsync<SearchProductsPage>(
+            CatalogCache.KeyOf("search-page-v2", query),
+            _ => throw new InvalidOperationException("The page was not cached."),
+            TestContext.Current.CancellationToken);
+
+        var index = page.Response.Items.ToList().FindIndex(item => item.Id == productId);
+        page.Response.Items[index].ImageUrl.ShouldBeNull();
+        page.Response.Items[index].Colors.ShouldAllBe(color => color.ImageUrl == null);
+        page.ImageKeys[index].Cover.ShouldNotBeNull().ShouldStartWith($"products/{productId}/");
+        page.ImageKeys[index].Colors.ShouldBe([page.ImageKeys[index].Cover]);
+        (await SizeOfAsync((await SearchItemAsync(productId)).GetProperty("imageUrl"))).ShouldBe(100);
+    }
+
+    private static async Task<int> SizeOfAsync(JsonElement url) =>
+        (await ProductImageApi.Storage.GetByteArrayAsync(url.GetString(), TestContext.Current.CancellationToken)).Length;
 
     private async Task<JsonElement> SearchItemAsync(Guid productId)
     {

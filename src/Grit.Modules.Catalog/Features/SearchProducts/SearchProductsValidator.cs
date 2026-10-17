@@ -9,6 +9,7 @@ internal sealed class SearchProductsValidator : AbstractValidator<SearchProducts
     public SearchProductsValidator()
     {
         Include(new ProductFilterValidator());
+        RuleFor(query => query.Sort).Must(ProductSort.All.Contains).WithMessage(ProductSort.Message);
         RuleFor(query => query.After)
             .Must(after => after is null || ProductCursor.TryParse(after, out _))
             .WithMessage("Use the nextCursor of the previous page.");
