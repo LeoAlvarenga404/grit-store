@@ -5,5 +5,5 @@ namespace Grit.Modules.Basket.Infrastructure;
 
 internal sealed class ClearBasketConsumer(BasketStore store) : IConsumer<OrderPlaced>
 {
-    public Task Consume(ConsumeContext<OrderPlaced> context) => store.DeleteAsync(context.Message.CustomerId);
+    public Task Consume(ConsumeContext<OrderPlaced> context) => store.RemovePurchasedAsync(context.Message);
 }

@@ -83,8 +83,6 @@ public class CheckoutSagaTests(ApiFactory factory)
             await StockedBasketAsync(onHand: 3, quantity: 2);
             var orderId = await CheckoutApi.PlaceOrderIdAsync(_customer, "tok_visa", 199.80m);
             await WaitForStatusAsync(orderId, "Confirmed");
-            // The clear of this round's basket must finish before the next round adds a line, or the clear deletes that line.
-            await Eventually.UntilAsync(() => BasketApi.GetAsync(_customer), value => value.GetProperty("lines").GetArrayLength() == 0);
 
             var responses = await Task.WhenAll(
                 _customer.PostAsync($"{CheckoutApi.OrdersPath}/{orderId}/cancel", null, TestContext.Current.CancellationToken),
