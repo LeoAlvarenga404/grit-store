@@ -73,7 +73,7 @@ public sealed class ImportCommandTests : IDisposable
         var handler = new FixtureHandler();
         var error = new StringWriter();
 
-        var exitCode = await ImportCommand.RunAsync([.. Arguments, _output], " ", handler, TextWriter.Null, error);
+        var exitCode = await ImportCommand.RunAsync([.. Arguments, _output], " ", handler, TextWriter.Null, error, retryDelay: TimeSpan.Zero);
 
         exitCode.ShouldBe(ImportCommand.MissingToken);
         error.ToString().ShouldContain("dotnet user-secrets set \"MercadoLivre:AccessToken\"");
@@ -86,7 +86,7 @@ public sealed class ImportCommandTests : IDisposable
     {
         var error = new StringWriter();
 
-        var exitCode = await ImportCommand.RunAsync(["--count", "3"], "test-token", new FixtureHandler(), TextWriter.Null, error);
+        var exitCode = await ImportCommand.RunAsync(["--count", "3"], "test-token", new FixtureHandler(), TextWriter.Null, error, retryDelay: TimeSpan.Zero);
 
         exitCode.ShouldBe(ImportCommand.InvalidArguments);
         error.ToString().ShouldContain("Usage: dotnet run --project tools/Grit.MlImporter");
@@ -98,11 +98,60 @@ public sealed class ImportCommandTests : IDisposable
         var handler = new FixtureHandler().Json(SearchUrl, "items-not-found.json", HttpStatusCode.Unauthorized);
         var error = new StringWriter();
 
-        var exitCode = await ImportCommand.RunAsync([.. Arguments, _output], "expired-token", handler, TextWriter.Null, error);
+        var exitCode = await ImportCommand.RunAsync([.. Arguments, _output], "expired-token", handler, TextWriter.Null, error, retryDelay: TimeSpan.Zero);
 
         exitCode.ShouldBe(ImportCommand.RequestFailed);
         error.ToString().ShouldContain("401");
+        error.ToString().ShouldContain("/products/search?");
         Directory.Exists(_output).ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task RunAsync_ThrottledTwice_RetriesAndSucceeds()
+    {
+        var handler = RecordedCatalog().Throttled(SearchUrl, 2);
+
+        var exitCode = await RunAsync(handler, "test-token");
+
+        exitCode.ShouldBe(ImportCommand.Succeeded);
+        handler.Requests.Count(request => request.Url == SearchUrl).ShouldBe(3);
+    }
+
+    [Fact]
+    public async Task RunAsync_ThrottledEveryTime_Returns3NamingTheUrl()
+    {
+        var handler = RecordedCatalog().Throttled(SearchUrl, 10);
+        var error = new StringWriter();
+
+        var exitCode = await ImportCommand.RunAsync([.. Arguments, _output], "test-token", handler, TextWriter.Null, error, retryDelay: TimeSpan.Zero);
+
+        exitCode.ShouldBe(ImportCommand.RequestFailed);
+        handler.Requests.Count(request => request.Url == SearchUrl).ShouldBe(MercadoLivreClient.MaxAttempts);
+        error.ToString().ShouldContain("429");
+        error.ToString().ShouldContain("/products/search?");
+        Directory.Exists(_output).ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task RunAsync_RepeatedNameInTheSearch_SkipsItWithoutFetchingIt()
+    {
+        var handler = RecordedCatalog();
+
+        await RunAsync(handler, "test-token");
+
+        handler.Requests.Select(request => request.Url).ShouldNotContain($"{Api}products/MLB1003");
+    }
+
+    [Fact]
+    public async Task RunAsync_Domain_SearchesInsideIt()
+    {
+        var handler = RecordedCatalog().Json($"{SearchUrl}&domain_id=MLB-TENTS", "search-barraca.json");
+        string[] arguments = ["--category", "Camping=barraca camping@MLB-TENTS", "--count", "2", "--output", _output];
+
+        var exitCode = await ImportCommand.RunAsync(arguments, "test-token", handler, TextWriter.Null, TextWriter.Null, retryDelay: TimeSpan.Zero);
+
+        exitCode.ShouldBe(ImportCommand.Succeeded);
+        handler.Requests.Select(request => request.Url).ShouldContain($"{SearchUrl}&domain_id=MLB-TENTS");
     }
 
     [Fact]
@@ -113,7 +162,7 @@ public sealed class ImportCommandTests : IDisposable
         await File.WriteAllBytesAsync(Path.Combine(_output, "images", "old.webp"), [1], TestContext.Current.CancellationToken);
         var options = ImportOptions.Parse([.. Arguments, _output]).Value;
         using var http = new HttpClient(RecordedCatalog(), disposeHandler: false);
-        var importer = new CatalogImporter(new MercadoLivreClient(http, "test-token"), TextWriter.Null, (_, _, _) => throw new IOException("No space left on device."));
+        var importer = new CatalogImporter(new MercadoLivreClient(http, "test-token", TimeSpan.Zero), TextWriter.Null, (_, _, _) => throw new IOException("No space left on device."));
 
         await Should.ThrowAsync<IOException>(() => importer.ImportAsync(options, TestContext.Current.CancellationToken));
 
@@ -130,7 +179,7 @@ public sealed class ImportCommandTests : IDisposable
         }
     }
 
-    private static string SearchUrl => $"{Api}products/search?status=active&site_id=MLB&q=barraca%20camping&limit=4";
+    private static string SearchUrl => $"{Api}products/search?status=active&site_id=MLB&q=barraca%20camping&limit=50";
 
     // MLB1002 has no listing (404), MLB1003 repeats MLB1001's name, and MLB1004's picture is an error page.
     private static FixtureHandler RecordedCatalog() => new FixtureHandler()
@@ -139,7 +188,6 @@ public sealed class ImportCommandTests : IDisposable
         .Json($"{Api}products/MLB1001/items", "items-MLB1001.json")
         .Json($"{Api}products/MLB1002", "product-MLB1002.json")
         .Json($"{Api}products/MLB1002/items", "items-not-found.json", HttpStatusCode.NotFound)
-        .Json($"{Api}products/MLB1003", "product-MLB1003.json")
         .Json($"{Api}products/MLB1004", "product-MLB1004.json")
         .Json($"{Api}products/MLB1004/items", "items-MLB1004.json")
         .Bytes($"{Picture}612345-MLA1001-F.jpg", TestImages.Jpeg(1200, 750))
@@ -147,7 +195,7 @@ public sealed class ImportCommandTests : IDisposable
         .Bytes($"{Picture}800001-MLA1004-F.jpg", Encoding.UTF8.GetBytes("<html>Erro 503</html>"));
 
     private Task<int> RunAsync(FixtureHandler handler, string token) =>
-        ImportCommand.RunAsync([.. Arguments, _output], token, handler, TextWriter.Null, TextWriter.Null);
+        ImportCommand.RunAsync([.. Arguments, _output], token, handler, TextWriter.Null, TextWriter.Null, retryDelay: TimeSpan.Zero);
 
     private async Task<SeedCatalog> ReadSeedAsync()
     {

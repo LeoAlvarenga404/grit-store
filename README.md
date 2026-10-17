@@ -56,7 +56,7 @@ A loja fica em http://localhost:3000, e o admin entra com `admin@grit.local` e o
 O padrão é o gateway fake. Para usar o Stripe em modo de teste:
 
 1. Crie uma conta de teste no Stripe e instale o Stripe CLI (`stripe login`).
-2. Rode `stripe listen --forward-to localhost:5080/api/v1/payments/stripe/webhook` e copie o `whsec_…` que ele imprime.
+2. Rode `stripe listen --events payment_intent.succeeded,payment_intent.payment_failed,payment_intent.canceled,charge.refunded --forward-to localhost:5080/api/v1/payments/stripe/webhook` (o CLI atual exige `--events`) e copie o `whsec_…` que ele imprime.
 3. Grave as chaves nos user secrets do AppHost (nunca no repositório):
    ```bash
    dotnet user-secrets set --project src/Grit.AppHost "Payments:Provider" "Stripe"
@@ -75,14 +75,14 @@ A API não sobe com `Payments:Provider=Stripe` sem as duas chaves. O compose sem
 
 ## Como regerar o seed
 
-O `seed/catalog.json` versionado foi escrito à mão. O importador `tools/Grit.MlImporter` gera um novo a partir da API de catálogo do Mercado Livre, com até 2 imagens WebP por produto em `seed/images/`. Ele precisa do token OAuth do app, que vale 6 horas:
+O `seed/catalog.json` versionado foi gerado pelo importador `tools/Grit.MlImporter` a partir da API de catálogo do Mercado Livre (37 produtos em 5 categorias, com até 2 imagens WebP por produto em `seed/images/`). A busca do catálogo é por palavra-chave e traz itens de outros ramos ("legging fitness" devolve lancheiras), então cada categoria leva um domínio do Mercado Livre depois do `@`. O domínio de um termo sai de `/sites/MLB/domain_discovery/search?q=<termo>`. Roupas quase não existem no catálogo, por isso não há categoria de vestuário. O token precisa ser de usuário (fluxo authorization code), porque o de aplicação recebe 403, e vale 6 horas:
 
 ```bash
 dotnet user-secrets set "MercadoLivre:AccessToken" "<token>" --project tools/Grit.MlImporter
-dotnet run --project tools/Grit.MlImporter -- --category "Calçados=tênis corrida" --category "Vestuário=camiseta dry fit" --category "Camping=barraca camping" --category "Ciclismo=capacete ciclismo" --count 5 --output seed
+dotnet run --project tools/Grit.MlImporter -- --category "Calçados=tenis olympikus@MLB-SNEAKERS" --category "Camping=barraca camping@MLB-TENTS" --category "Ciclismo=capacete ciclismo@MLB-CYCLING_SKATEBOARDING_AND_SKATING_HELMETS" --category "Trilha=mochila trilha@MLB-BACKPACKS" --category "Natação=oculos de natacao@MLB-SWIMMING_GOGGLES" --count 10 --output seed
 ```
 
-Códigos de saída: 0 ok, 1 argumentos inválidos, 2 sem token, 3 falha HTTP. O arquivo só é gravado se passar na mesma validação do seeder. As imagens aparecem quando o AppHost sobe com o armazenamento; o compose publica só o `catalog.json`.
+Códigos de saída: 0 ok, 1 argumentos inválidos, 2 sem token, 3 falha HTTP (a mensagem traz a URL que falhou; um 429 é repetido até 4 vezes). O arquivo só é gravado se passar na mesma validação do seeder. As imagens aparecem quando o AppHost sobe com o armazenamento; o compose publica só o `catalog.json`.
 
 ## Testes
 
@@ -90,7 +90,7 @@ Códigos de saída: 0 ok, 1 argumentos inválidos, 2 sem token, 3 falha HTTP. O 
 dotnet test
 ```
 
-Os testes de integração usam Testcontainers (Postgres e Redis reais, nunca mocks do banco), então o Docker precisa estar rodando. Hoje são 625 testes. O teste vitrine é `tests/Grit.IntegrationTests/CheckoutSagaTests.cs`: caminho feliz do checkout e pagamento recusado que libera a reserva. `StockReservationRaceTests.cs` prova que dois compradores não levam a última unidade.
+Os testes de integração usam Testcontainers (Postgres e Redis reais, nunca mocks do banco), então o Docker precisa estar rodando. Hoje são 634 testes. O teste vitrine é `tests/Grit.IntegrationTests/CheckoutSagaTests.cs`: caminho feliz do checkout e pagamento recusado que libera a reserva. `StockReservationRaceTests.cs` prova que dois compradores não levam a última unidade.
 
 ## Arquitetura
 
@@ -141,4 +141,4 @@ Os resultados ficam em `bench/results/`, que não é versionado.
 
 ## Fora do escopo por enquanto
 
-Rodar o importador com o token real, ligar o Stripe com uma conta de teste (o código e os testes já existem; ver as seções acima) e um GIF do trace no Aspire.
+Um GIF do trace no Aspire.

@@ -5,15 +5,22 @@ using System.Text.Json;
 
 namespace Grit.MlImporter;
 
-internal sealed class MercadoLivreClient(HttpClient http, string accessToken)
+internal sealed class MercadoLivreClient(HttpClient http, string accessToken, TimeSpan retryDelay)
 {
+    public const int MaxAttempts = 4;
+
     public static readonly Uri ApiAddress = new("https://api.mercadolibre.com/");
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-    public async Task<IReadOnlyList<MlProduct>> SearchAsync(string query, int limit, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<MlProduct>> SearchAsync(string query, string? domain, int limit, CancellationToken cancellationToken)
     {
         var path = $"products/search?status=active&site_id=MLB&q={Uri.EscapeDataString(query)}&limit={limit}";
+        if (domain is not null)
+        {
+            path += $"&domain_id={Uri.EscapeDataString(domain)}";
+        }
+
         using var response = await SendAsync(path, cancellationToken);
         return (await ReadAsync<MlPage<MlProduct>>(response, cancellationToken)).Results;
     }
@@ -41,6 +48,21 @@ internal sealed class MercadoLivreClient(HttpClient http, string accessToken)
 
     private async Task<HttpResponseMessage> SendAsync(string path, CancellationToken cancellationToken)
     {
+        for (var attempt = 1; ; attempt++)
+        {
+            var response = await SendOnceAsync(path, cancellationToken);
+            if (response.StatusCode != HttpStatusCode.TooManyRequests || attempt == MaxAttempts)
+            {
+                return response;
+            }
+
+            response.Dispose();
+            await Task.Delay(retryDelay * attempt, cancellationToken);
+        }
+    }
+
+    private async Task<HttpResponseMessage> SendOnceAsync(string path, CancellationToken cancellationToken)
+    {
         using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(ApiAddress, path));
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         return await http.SendAsync(request, cancellationToken);
@@ -48,7 +70,11 @@ internal sealed class MercadoLivreClient(HttpClient http, string accessToken)
 
     private static async Task<T> ReadAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
     {
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new HttpRequestException($"{(int)response.StatusCode} ({response.StatusCode}) for {response.RequestMessage?.RequestUri?.PathAndQuery}", null, response.StatusCode);
+        }
+
         return await response.Content.ReadFromJsonAsync<T>(JsonOptions, cancellationToken)
             ?? throw new HttpRequestException($"Mercado Livre answered an empty body for {response.RequestMessage?.RequestUri}.");
     }

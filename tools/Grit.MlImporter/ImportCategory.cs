@@ -1,10 +1,11 @@
+using System.Text.RegularExpressions;
 using Grit.Modules.Catalog.Domain;
 
 namespace Grit.MlImporter;
 
-internal sealed record ImportCategory(string StoreName, string Query)
+internal sealed partial record ImportCategory(string StoreName, string Query, string? Domain = null)
 {
-    // "Camping=barraca camping": the store category, then the Mercado Livre search terms.
+    // "Camping=barraca camping@MLB-TENTS": the store category, then the Mercado Livre search terms and an optional domain.
     public static ImportCategory? Parse(string value)
     {
         var parts = value.Split('=', 2, StringSplitOptions.TrimEntries);
@@ -13,6 +14,17 @@ internal sealed record ImportCategory(string StoreName, string Query)
             return null;
         }
 
-        return new ImportCategory(parts[0], parts[1]);
+        var atIndex = parts[1].LastIndexOf('@');
+        if (atIndex < 0)
+        {
+            return new ImportCategory(parts[0], parts[1]);
+        }
+
+        var query = parts[1][..atIndex].Trim();
+        var domain = parts[1][(atIndex + 1)..].Trim();
+        return query.Length == 0 || !DomainPattern().IsMatch(domain) ? null : new ImportCategory(parts[0], query, domain);
     }
+
+    [GeneratedRegex("^MLB-[A-Z0-9_]+$")]
+    private static partial Regex DomainPattern();
 }

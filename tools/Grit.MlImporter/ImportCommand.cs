@@ -10,7 +10,7 @@ internal static class ImportCommand
 
     public const int RequestFailed = 3;
 
-    public static async Task<int> RunAsync(string[] args, string? accessToken, HttpMessageHandler handler, TextWriter output, TextWriter error)
+    public static async Task<int> RunAsync(string[] args, string? accessToken, HttpMessageHandler handler, TextWriter output, TextWriter error, TimeSpan? retryDelay = null)
     {
         var options = ImportOptions.Parse(args);
         if (options.IsFailure)
@@ -31,7 +31,7 @@ internal static class ImportCommand
         using var http = new HttpClient(handler, disposeHandler: false);
         try
         {
-            await new CatalogImporter(new MercadoLivreClient(http, accessToken), output).ImportAsync(options.Value, CancellationToken.None);
+            await new CatalogImporter(new MercadoLivreClient(http, accessToken, retryDelay ?? TimeSpan.FromSeconds(2)), output).ImportAsync(options.Value, CancellationToken.None);
             return Succeeded;
         }
         catch (HttpRequestException exception)

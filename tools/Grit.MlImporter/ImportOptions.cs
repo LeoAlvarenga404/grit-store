@@ -12,8 +12,9 @@ internal sealed record ImportOptions(IReadOnlyList<ImportCategory> Categories, i
     public const int MaxProductsPerCategory = 20;
 
     public const string Usage = """
-        Usage: dotnet run --project tools/Grit.MlImporter -- --category "<store category>=<search terms>" [--category ...] [--count 5] [--output seed]
+        Usage: dotnet run --project tools/Grit.MlImporter -- --category "<store category>=<search terms>[@<MLB domain id>]" [--category ...] [--count 5] [--output seed]
           --category  repeatable; the store category (existing like "Camping" or new) and the Mercado Livre search terms
+                      the optional domain (e.g. MLB-TENTS) keeps the search inside one Mercado Livre domain
           --count     products per category, 1 to 20 (default 5)
           --output    folder that receives catalog.json and images/ (default seed)
         The access token comes from: dotnet user-secrets set "MercadoLivre:AccessToken" "<token>" --project tools/Grit.MlImporter
