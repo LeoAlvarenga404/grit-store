@@ -110,7 +110,7 @@ E-commerce de esportes e outdoor para portfolio: backend .NET maduro, rápido e 
 ## 12. Seed
 
 - Nicho **esportes e outdoor**, com variantes cor × tamanho (vestuário, calçados) e atributos técnicos por categoria (barraca: capacidade, peso; bike: aro, marchas; garrafa: litros).
-- **Seed atual (versão enxuta):** `seed/catalog.json` escrito à mão, com 4 categorias, 16 produtos e 30 SKUs, sem imagens. Quem clona roda sem token nenhum.
+- **Seed atual:** `seed/catalog.json` gerado pelo importador do Mercado Livre (2026-10-17), com 5 categorias, 37 produtos e 37 SKUs, com imagens versionadas em `seed/`. Quem clona roda sem token nenhum.
 - **Seeder idempotente** (`CatalogSeedService`, só em Development): o AppHost passa o caminho em `Seed:Path`; tudo passa pelo domínio, numa transação só, e o que já existe (por slug) é pulado.
 - **Importador** `tools/Grit.MlImporter` (emenda 2026-10-17, ADR 0019): busca por termo com a categoria da loja na linha de comando (`/products/search`, `/products/{id}`, `/products/{id}/items`), token por `dotnet user-secrets`, imagens WebP de até 800 px. O formato do seed ganha `images` (até 8 `.webp`), e o seeder de Development envia ao S3 as imagens que existirem. Os testes de integração usam uma cópia congelada do seed escrito à mão. Rodar o importador substitui o `seed/` versionado.
 - **Bogus** (pt_BR): volume de produtos para o k6 com `--Seed:VolumeProducts` (5b).
