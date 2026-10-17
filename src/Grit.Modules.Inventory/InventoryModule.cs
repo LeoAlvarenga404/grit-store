@@ -1,7 +1,11 @@
 using System.Data;
 using Grit.BuildingBlocks;
+using Grit.Modules.Inventory.Features.GetStockLevels;
+using Grit.Modules.Inventory.Features.SetStock;
 using Grit.Modules.Inventory.Infrastructure;
 using MassTransit;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,8 +53,10 @@ public sealed class InventoryModule : IModule
         await scope.ServiceProvider.GetRequiredService<InventoryDbContext>().Database.MigrateAsync(cancellationToken);
     }
 
-    // Stock adjustment endpoints arrive with the admin (5a).
     public void MapEndpoints(IEndpointRouteBuilder api)
     {
+        var stock = api.MapAdminGroup().WithTags("Inventory").MapGroup("/stock");
+        stock.MapGetStockLevels();
+        stock.MapSetStock();
     }
 }
