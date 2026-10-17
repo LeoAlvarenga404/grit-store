@@ -1,0 +1,16 @@
+{
+  "id": "MLB1004",
+  "status": "active",
+  "domain_id": "MLB-CAMPING_TENTS",
+  "name": "Barraca Trekking Ultraleve 1 Pessoa",
+  "buy_box_winner": null,
+  "pictures": [{ "id": "800001-MLA1004", "url": "https://http2.mlstatic.com/D_NQ_NP_800001-MLA1004-F.jpg" }],
+  "main_features": [],
+  "attributes": [
+    { "id": "BRAND", "name": "Marca", "value_id": "2", "value_name": "Azteq", "values": [], "meta": null },
+    { "id": "SIZE", "name": "Tamanho", "value_id": null, "value_name": "Único", "values": [], "meta": null }
+  ],
+  "short_description": null,
+  "parent_id": null,
+  "children_ids": []
+}

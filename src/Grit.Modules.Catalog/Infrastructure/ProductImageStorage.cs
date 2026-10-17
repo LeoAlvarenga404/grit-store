@@ -90,6 +90,9 @@ internal sealed class ProductImageStorage(IConfiguration configuration)
         }
     }
 
+    public Task PutFileAsync(string key, string filePath, string contentType, CancellationToken cancellationToken) =>
+        _client.Value.PutObjectAsync(new PutObjectRequest { BucketName = Bucket, Key = key, FilePath = filePath, ContentType = contentType }, cancellationToken);
+
     public Task DeleteAsync(string key, CancellationToken cancellationToken) =>
         _client.Value.DeleteObjectAsync(Bucket, key, cancellationToken);
 

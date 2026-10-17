@@ -48,10 +48,10 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
             <input type="hidden" name="expectedSubtotalAmount" value={basket.subtotalAmount} />
             <label>
               Token do cartão
-              <input name="paymentToken" defaultValue="tok_visa" required aria-describedby="token-hint" />
+              <input name="paymentToken" defaultValue="pm_card_visa" required aria-describedby="token-hint" />
             </label>
             <p id="token-hint" className="hint">
-              Pagamento simulado: qualquer token aprova, e <code>tok_decline</code> recusa.
+              Gateway simulado: qualquer token aprova e <code>tok_decline</code> recusa. Com o Stripe ligado, <code>pm_card_visa</code> aprova e <code>pm_card_chargeDeclined</code> recusa.
             </p>
             <button type="submit">Fazer pedido</button>
           </form>

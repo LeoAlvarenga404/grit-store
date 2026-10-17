@@ -43,6 +43,15 @@ var api = builder.AddProject<Projects.Grit_Api>("api")
     // Compose waits for PostgreSQL to start, not to accept connections: a start that fails on the migrations is retried.
     .PublishAsDockerComposeService((_, service) => service.Restart = "unless-stopped");
 
+// The fake gateway runs until Stripe test keys are stored in these user secrets (README, "Como ligar o Stripe").
+// Run mode only: the generated compose file never carries them.
+if (builder.ExecutionContext.IsRunMode && builder.Configuration["Payments:Provider"] is { } paymentsProvider)
+{
+    api.WithEnvironment("Payments__Provider", paymentsProvider)
+        .WithEnvironment("Payments__Stripe__SecretKey", builder.Configuration["Payments:Stripe:SecretKey"] ?? string.Empty)
+        .WithEnvironment("Payments__Stripe__WebhookSecret", builder.Configuration["Payments:Stripe:WebhookSecret"] ?? string.Empty);
+}
+
 builder.AddNextJsApp("web", "../../web")
     .WithNpm(installCommand: "ci")
     .WithEnvironment("API_URL", api.GetEndpoint("http"))

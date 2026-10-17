@@ -19,6 +19,9 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     // Test-only key, never used outside the test host.
     public const string JwtSigningKey = "test-only-signing-key-0123456789abcdef";
 
+    // Test-only webhook secret: StripeWebhookTests sign their events with it. The gateway stays the fake one.
+    public const string StripeWebhookSecret = "whsec_test_only_0123456789abcdef";
+
     // Same image as the AppHost (one download); tmpfs keeps the throwaway data off the WSL disk.
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:18.6-alpine")
         .WithTmpfsMount("/var/lib/postgresql")
@@ -61,6 +64,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.UseSetting("Modules:Additional:0", typeof(ProbeModule).AssemblyQualifiedName);
         builder.UseSetting("Identity:Jwt:SigningKey", JwtSigningKey);
         builder.UseSetting("Identity:LoginAttemptsPerMinute", "1000");
+        builder.UseSetting("Payments:Stripe:WebhookSecret", StripeWebhookSecret);
 
         // Every host here shares one Redis, so a read cached from one test database would answer another;
         // CatalogReadCacheTests turns the cache on in a host of its own.

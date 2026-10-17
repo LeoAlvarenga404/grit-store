@@ -23,7 +23,7 @@ A linguagem ubíqua do Grit Store. O termo em português é o usado na conversa 
 | Confirmar / liberar estoque | `CommitStock` / `ReleaseStock` | Tornar a reserva definitiva (pagamento aprovado) ou desfazê-la (recusa, cancelamento). |
 | Autorização de pagamento | `AuthorizePayment` / `AuthorizationId` | Pedido ao gateway para reservar o valor; o id permite o estorno. |
 | Estorno | `RefundPayment` | Devolução do valor autorizado quando o cliente cancela um pedido confirmado. |
-| Gateway de pagamento | `IPaymentGateway` | A porta para o provedor de pagamento; hoje `FakePaymentGateway` (`tok_decline` recusa). |
+| Gateway de pagamento | `IPaymentGateway` | A porta para o provedor de pagamento: `FakePaymentGateway` (padrão; `tok_decline` recusa) ou `StripePaymentGateway` (`Payments:Provider=Stripe`; `pm_card_visa` aprova, `pm_card_chargeDeclined` recusa). |
 | Saga de checkout | `CheckoutStateMachine` | Coordena reserva, pagamento e confirmação, e compensa as falhas. |
 | Compensação | — | A ação que desfaz um passo já feito quando um passo seguinte falha (liberar a reserva, estornar). |
 | Outbox | `OutboxMessage` / `OutboxState` | Tabela do módulo onde a mensagem é gravada na mesma transação da escrita e de onde é entregue depois. |

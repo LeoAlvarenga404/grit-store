@@ -11,7 +11,7 @@ internal sealed class PaymentConsumer(IPaymentGateway gateway) : IConsumer<Autho
     {
         var message = context.Message;
         var amount = Money.Create(message.Amount, message.Currency).Value;
-        var authorization = await gateway.AuthorizeAsync(amount, message.PaymentToken, context.CancellationToken);
+        var authorization = await gateway.AuthorizeAsync(message.OrderId, amount, message.PaymentToken, context.CancellationToken);
         if (authorization.IsFailure)
         {
             await context.Publish(new PaymentDeclined(message.OrderId, authorization.Error.Code), context.CancellationToken);

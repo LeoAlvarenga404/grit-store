@@ -26,7 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\seed\catalog.json" Link="Seed\catalog.json" CopyToOutputDirectory="PreserveNewest" />
+    <!-- A frozen copy of the hand-written seed: tools/Grit.MlImporter may replace seed/catalog.json, these counts must not move. -->
+    <None Update="Seed\catalog.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

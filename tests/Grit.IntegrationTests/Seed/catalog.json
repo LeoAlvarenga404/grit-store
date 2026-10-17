@@ -1,0 +1,166 @@
+{
+  "categories": [
+    {
+      "name": "Calçados",
+      "products": [
+        {
+          "name": "Tênis de Corrida Asfalto Leve",
+          "description": "Tênis de corrida com amortecimento macio e cabedal respirável para treinos no asfalto.",
+          "attributes": { "marca": "Grit", "drop": "8 mm" },
+          "skus": [
+            { "attributes": { "cor": "azul", "tamanho": "40" }, "priceAmount": 399.90 },
+            { "attributes": { "cor": "azul", "tamanho": "42" }, "priceAmount": 399.90 },
+            { "attributes": { "cor": "preto", "tamanho": "41" }, "priceAmount": 379.90 }
+          ]
+        },
+        {
+          "name": "Tênis de Trilha Garra",
+          "description": "Solado com cravos de 5 mm e biqueira reforçada para terra, pedra e lama.",
+          "attributes": { "marca": "Grit", "solado": "cravos 5 mm" },
+          "skus": [
+            { "attributes": { "cor": "preto", "tamanho": "40" }, "priceAmount": 549.90 },
+            { "attributes": { "cor": "preto", "tamanho": "42" }, "priceAmount": 549.90 }
+          ]
+        },
+        {
+          "name": "Bota de Caminhada Impermeável",
+          "description": "Bota de couro com membrana impermeável e cano médio para travessias longas.",
+          "attributes": { "marca": "Serra Alta", "membrana": "impermeável" },
+          "skus": [
+            { "attributes": { "cor": "marrom", "tamanho": "41" }, "priceAmount": 799.00 },
+            { "attributes": { "cor": "marrom", "tamanho": "43" }, "priceAmount": 799.00 }
+          ]
+        },
+        {
+          "name": "Sandália Esportiva Rio",
+          "description": "Sandália leve com tiras ajustáveis, boa para cachoeiras e pós-treino.",
+          "attributes": { "marca": "Grit" },
+          "skus": [
+            { "attributes": { "cor": "preto", "tamanho": "39" }, "priceAmount": 149.90 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vestuário",
+      "products": [
+        {
+          "name": "Camiseta Dry Fit Masculina",
+          "description": "Tecido leve que seca rápido e protege do sol.",
+          "attributes": { "material": "poliéster" },
+          "skus": [
+            { "attributes": { "cor": "azul", "tamanho": "M" }, "priceAmount": 79.90 },
+            { "attributes": { "cor": "azul", "tamanho": "G" }, "priceAmount": 79.90 },
+            { "attributes": { "cor": "vermelho", "tamanho": "M" }, "priceAmount": 89.90 }
+          ]
+        },
+        {
+          "name": "Jaqueta Corta-Vento Leve",
+          "description": "Proteção contra vento e garoa; dobra dentro do próprio bolso.",
+          "attributes": { "material": "nylon ripstop" },
+          "skus": [
+            { "attributes": { "cor": "verde", "tamanho": "M" }, "priceAmount": 259.90 },
+            { "attributes": { "cor": "preto", "tamanho": "G" }, "priceAmount": 259.90 }
+          ]
+        },
+        {
+          "name": "Calça de Trekking Conversível",
+          "description": "Vira bermuda com um zíper; tecido elástico com secagem rápida.",
+          "attributes": { "material": "poliamida" },
+          "skus": [
+            { "attributes": { "cor": "cinza", "tamanho": "40" }, "priceAmount": 299.90 },
+            { "attributes": { "cor": "cinza", "tamanho": "42" }, "priceAmount": 299.90 }
+          ]
+        },
+        {
+          "name": "Meia de Corrida Cano Curto Kit 3",
+          "description": "Três pares com reforço no calcanhar e na ponta.",
+          "attributes": {},
+          "skus": [
+            { "attributes": { "cor": "branco", "tamanho": "39-42" }, "priceAmount": 59.90 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Camping",
+      "products": [
+        {
+          "name": "Barraca Iglu 2 Pessoas",
+          "description": "Montagem rápida com duas varetas; sobreteto com coluna d'água de 2000 mm.",
+          "attributes": { "capacidade": "2", "peso": "2,1 kg" },
+          "skus": [
+            { "attributes": { "cor": "verde" }, "priceAmount": 449.00 }
+          ]
+        },
+        {
+          "name": "Barraca Familiar 4 Pessoas",
+          "description": "Dois quartos e avancê para guardar mochilas.",
+          "attributes": { "capacidade": "4", "peso": "5,8 kg" },
+          "skus": [
+            { "attributes": { "cor": "verde" }, "priceAmount": 899.00 },
+            { "attributes": { "cor": "laranja" }, "priceAmount": 899.00 }
+          ]
+        },
+        {
+          "name": "Saco de Dormir Conforto 5 Graus",
+          "description": "Formato sarcófago com capuz; compacta em saco de compressão.",
+          "attributes": { "temperatura-conforto": "5 °C" },
+          "skus": [
+            { "attributes": { "cor": "azul" }, "priceAmount": 329.90 }
+          ]
+        },
+        {
+          "name": "Lanterna de Cabeça 300 Lúmens",
+          "description": "Três modos de luz e bateria recarregável por USB.",
+          "attributes": { "lumens": "300", "bateria": "recarregável USB" },
+          "skus": [
+            { "attributes": { "cor": "preto" }, "priceAmount": 129.90 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ciclismo",
+      "products": [
+        {
+          "name": "Bicicleta Mountain Bike Aro 29",
+          "description": "Quadro de alumínio, suspensão dianteira e freios a disco hidráulicos.",
+          "attributes": { "aro": "29", "marchas": "21" },
+          "skus": [
+            { "attributes": { "cor": "preto", "tamanho": "M" }, "priceAmount": 2499.00 },
+            { "attributes": { "cor": "preto", "tamanho": "L" }, "priceAmount": 2499.00 },
+            { "attributes": { "cor": "vermelho", "tamanho": "M" }, "priceAmount": 2599.00 }
+          ]
+        },
+        {
+          "name": "Capacete de Ciclismo Ventilado",
+          "description": "Dezoito entradas de ar e regulagem fina na nuca.",
+          "attributes": {},
+          "skus": [
+            { "attributes": { "cor": "branco", "tamanho": "M" }, "priceAmount": 219.90 },
+            { "attributes": { "cor": "preto", "tamanho": "G" }, "priceAmount": 219.90 }
+          ]
+        },
+        {
+          "name": "Garrafa Térmica Esportiva 750 ml",
+          "description": "Aço inox de parede dupla: água gelada por 12 horas.",
+          "attributes": { "litros": "0,75" },
+          "skus": [
+            { "attributes": { "cor": "prata" }, "priceAmount": 119.90 },
+            { "attributes": { "cor": "preto" }, "priceAmount": 119.90 }
+          ]
+        },
+        {
+          "name": "Luva de Ciclismo Meio Dedo",
+          "description": "Palma com gel e dorso respirável.",
+          "attributes": {},
+          "skus": [
+            { "attributes": { "cor": "preto", "tamanho": "M" }, "priceAmount": 89.90 },
+            { "attributes": { "cor": "preto", "tamanho": "G" }, "priceAmount": 89.90 }
+          ]
+        }
+      ]
+    }
+  ]
+}

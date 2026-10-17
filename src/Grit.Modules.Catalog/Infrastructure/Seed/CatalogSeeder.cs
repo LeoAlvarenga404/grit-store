@@ -7,8 +7,9 @@ namespace Grit.Modules.Catalog.Infrastructure.Seed;
 
 // Idempotent by slug: an existing category or product is left as it is, so a restart adds only what is missing.
 // The whole file is checked before the database is read, so a bad file fails on an empty and on a seeded catalog alike;
-// one SaveChanges for the whole file, so nothing is written unless everything is.
-internal sealed class CatalogSeeder(CatalogDbContext db)
+// one SaveChanges for the whole file, so nothing is written unless everything is (images uploaded before a failed save
+// stay in the storage as orphans, like an unconfirmed upload: ADR 0016).
+internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage images)
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
@@ -16,13 +17,14 @@ internal sealed class CatalogSeeder(CatalogDbContext db)
     {
         var catalog = await ReadAsync(path, cancellationToken);
         Validate(catalog);
+        var imagesDirectory = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(path))!, "images");
 
         foreach (var seedCategory in catalog.Categories)
         {
             var categoryId = await FindOrAddCategoryAsync(seedCategory.Name, cancellationToken);
             foreach (var seedProduct in seedCategory.Products)
             {
-                await AddProductIfMissingAsync(categoryId, seedProduct, cancellationToken);
+                await AddProductIfMissingAsync(categoryId, seedProduct, imagesDirectory, cancellationToken);
             }
         }
 
@@ -39,7 +41,8 @@ internal sealed class CatalogSeeder(CatalogDbContext db)
     }
 
     // A slug repeated inside the file would otherwise be skipped silently once its first entry is stored.
-    private static void Validate(SeedCatalog catalog)
+    // Internal for tools/Grit.MlImporter, which checks its output with the same rules before writing it.
+    internal static void Validate(SeedCatalog catalog)
     {
         var categorySlugs = new HashSet<Slug>();
         var productSlugs = new HashSet<Slug>();
@@ -67,7 +70,7 @@ internal sealed class CatalogSeeder(CatalogDbContext db)
         return created.Id;
     }
 
-    private async Task AddProductIfMissingAsync(CategoryId categoryId, SeedProduct seed, CancellationToken cancellationToken)
+    private async Task AddProductIfMissingAsync(CategoryId categoryId, SeedProduct seed, string imagesDirectory, CancellationToken cancellationToken)
     {
         var product = Build(categoryId, seed);
         if (await db.Products.AnyAsync(existing => existing.Slug == product.Slug, cancellationToken))
@@ -75,12 +78,36 @@ internal sealed class CatalogSeeder(CatalogDbContext db)
             return;
         }
 
+        await AttachImagesAsync(product, seed, imagesDirectory, cancellationToken);
         db.Products.Add(product);
+    }
+
+    // Optional: without the storage (most tests) or the files (a hand-written seed, the compose image) a product has no images.
+    private async Task AttachImagesAsync(Product product, SeedProduct seed, string imagesDirectory, CancellationToken cancellationToken)
+    {
+        if (!images.IsConfigured)
+        {
+            return;
+        }
+
+        foreach (var fileName in seed.Images ?? [])
+        {
+            var file = Path.Combine(imagesDirectory, fileName);
+            if (!File.Exists(file))
+            {
+                continue;
+            }
+
+            var key = Product.ImageKeyPrefix(product.Id) + fileName;
+            await images.PutFileAsync(key, file, "image/webp", cancellationToken);
+            Valid(seed.Name, product.AddImage(key));
+        }
     }
 
     private static Product Build(CategoryId categoryId, SeedProduct seed)
     {
         var product = Valid(seed.Name, Product.Create(categoryId, seed.Name, seed.Description, seed.Attributes));
+        CheckImages(seed);
         foreach (var sku in seed.Skus)
         {
             var price = Valid(seed.Name, Money.Create(sku.PriceAmount, Product.StoreCurrency));
@@ -90,8 +117,29 @@ internal sealed class CatalogSeeder(CatalogDbContext db)
         return product;
     }
 
+    private static void CheckImages(SeedProduct seed)
+    {
+        var fileNames = seed.Images ?? [];
+        if (fileNames.Count > Product.MaxImages || !fileNames.All(IsWebpFileName))
+        {
+            throw new InvalidOperationException($"The seed entry '{seed.Name}' must list at most {Product.MaxImages} .webp file names.");
+        }
+    }
+
+    // A bare file name: the seed must not reach outside its images folder.
+    private static bool IsWebpFileName(string image) =>
+        image.Length > ".webp".Length && image.EndsWith(".webp", StringComparison.Ordinal) && Path.GetFileName(image) == image;
+
     private static T Valid<T>(string name, Result<T> result) =>
         result.IsSuccess ? result.Value : throw new InvalidOperationException($"The seed entry '{name}' is invalid: {result.Error.Code}.");
+
+    private static void Valid(string name, Result result)
+    {
+        if (result.IsFailure)
+        {
+            throw new InvalidOperationException($"The seed entry '{name}' is invalid: {result.Error.Code}.");
+        }
+    }
 
     private static void Unique(HashSet<Slug> slugs, Slug slug, string name)
     {

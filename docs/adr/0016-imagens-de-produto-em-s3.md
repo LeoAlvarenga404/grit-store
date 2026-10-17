@@ -20,5 +20,6 @@ O admin precisa anexar fotos aos produtos, e a vitrine precisa mostrá-las. O ar
 ## Consequências
 
 - As URLs de leitura mudam a cada resposta, então o navegador não reaproveita a imagem do cache. O cache de catálogo (5b) guarda só as chaves e gera as URLs na hora, o que mantém o prazo de 1 hora fora do TTL.
+- O seed de Development grava as imagens direto em `products/{productId}/`, sem staging, só na subida e só para produtos novos (ADR 0019).
 - Objetos órfãos (staging sem confirmação, produto apagado) ficam no armazenamento. Uma limpeza periódica fica para depois.
 - O SeaweedFS 4.46 aceita PUT, HEAD e GET pré-assinados mesmo sem o bucket existir, então a criação do bucket na subida não é coberta por teste.

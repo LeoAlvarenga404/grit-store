@@ -19,7 +19,7 @@ Finalizar uma compra envolve três módulos que não compartilham transação: O
   - Cancelamento pelo cliente (só a partir de `Confirmed`): a saga libera o estoque e estorna o pagamento.
   - O estado da saga, a mudança do pedido e o outbox são gravados na mesma transação.
 - **Reserva de estoque** com `SELECT … ORDER BY sku_id FOR UPDATE`: reserva todas as linhas ou nenhuma. Dois compradores disputando a última unidade nunca levam os dois. A reserva vale 15 minutos e expira por consulta de horário, sem agendador (o agendamento em memória não é durável).
-- **Pagamento** pela porta `IPaymentGateway`. Hoje existe só o `FakePaymentGateway`, que recusa o token `tok_decline`. O Stripe entra depois como segunda implementação.
+- **Pagamento** pela porta `IPaymentGateway`. O `FakePaymentGateway` (padrão) recusa o token `tok_decline`; o `StripePaymentGateway` é a segunda implementação, escolhida por configuração (emenda 2026-10-17, ADR 0018).
 - **Frete fixo** de R$ 19,90, sem ViaCEP.
 - **Limpeza do carrinho (emenda 2026-10-16, endurecimento):** o `OrderPlaced` traz as linhas compradas e o carrinho perde só essas quantidades, uma vez por pedido (marca `basket-cleared:{orderId}` no Redis). Um evento atrasado ou repetido não apaga itens adicionados depois do checkout.
 
