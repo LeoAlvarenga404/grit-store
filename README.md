@@ -17,9 +17,9 @@ cd web && npm ci && cd ..
 dotnet run --project src/Grit.AppHost
 ```
 
-O AppHost sobe Postgres, Redis, a API e o Next.js, e abre o dashboard do Aspire. Em Development, a API aplica as migrations, carrega o catálogo de `seed/catalog.json` (4 categorias, 16 produtos, 30 SKUs) e dá 10 unidades de estoque para cada SKU. A chave de assinatura do JWT é gerada pelo próprio AppHost: não há segredo para configurar.
+O AppHost sobe Postgres, Redis, a API e o Next.js, e abre o dashboard do Aspire. Em Development, a API aplica as migrations, carrega o catálogo de `seed/catalog.json` (5 categorias, 37 produtos e 37 SKUs, com imagens) e dá 10 unidades de estoque para cada SKU. A chave de assinatura do JWT é gerada pelo próprio AppHost: não há segredo para configurar.
 
-Para testar o checkout: crie uma conta, adicione itens ao carrinho e finalize. Com o gateway fake (padrão), o cartão `tok_decline` é recusado, a reserva de estoque é liberada e o pedido é cancelado; qualquer outro valor, como o `pm_card_visa` que vem preenchido, é aprovado.
+A loja abre pelo link do recurso `web` no dashboard (a porta muda a cada execução; a 3000 é a do compose). Para testar o checkout: crie uma conta, adicione itens ao carrinho e finalize. Com o gateway fake (padrão), o cartão `tok_decline` é recusado, a reserva de estoque é liberada e o pedido é cancelado; qualquer outro valor, como o `pm_card_visa` que vem preenchido, é aprovado.
 
 **Admin:** entre com `admin@grit.local`. A senha é gerada pelo AppHost na primeira execução e fica nos user secrets dele (`dotnet user-secrets list --project src/Grit.AppHost`, chave `Parameters:admin-password`), também visível nos parâmetros do dashboard do Aspire. Em `/admin` dá para:
 - ajustar o estoque por SKU;
@@ -100,6 +100,10 @@ Os testes de integração usam Testcontainers (Postgres e Redis reais, nunca moc
 - **Erros:** `Result`/`Result<T>` para falhas esperadas, ProblemDetails com `code` estável na API.
 - **Identidade:** JWT de 15 minutos, refresh com rotação e detecção de reuso (a família inteira é revogada), limite de tentativas no login.
 
+Trace de um checkout aprovado no dashboard do Aspire: o `POST /api/v1/orders` segue pelo outbox até a saga, a reserva de estoque e a chamada ao Stripe, num trace só (213 spans).
+
+![Trace do checkout no Aspire](docs/assets/aspire-checkout-trace.gif)
+
 Diagramas C4 e a sequência da saga: `docs/architecture/diagramas.md`. Linguagem ubíqua: `docs/glossary.md`. Decisões e seus motivos: `docs/architecture/design.md` e os ADRs em `docs/adr/`.
 
 ## Performance
@@ -138,7 +142,3 @@ Os resultados ficam em `bench/results/`, que não é versionado.
 5. `src/Grit.Modules.Inventory` (reserva com `SELECT … FOR UPDATE`)
 6. `tests/Grit.IntegrationTests/CheckoutSagaTests.cs` e `CheckoutTests.cs`
 7. `web/lib/session` (BFF, cookies e refresh)
-
-## Fora do escopo por enquanto
-
-Um GIF do trace no Aspire.

@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Grit.IntegrationTests;
 
-// The only host with the cache on (ApiFactory turns it off). A row changed behind the API tells a cached read from a
+// A host with the cache on (ApiFactory turns it off). A row changed behind the API tells a cached read from a
 // fresh one: the cached read still answers the old value.
 public sealed class CatalogReadCacheTests(ApiFactory api) : IAsyncLifetime
 {

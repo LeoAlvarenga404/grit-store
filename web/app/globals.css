@@ -165,6 +165,22 @@ fieldset {
   padding: 0.75rem;
 }
 
+.products img,
+.gallery img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

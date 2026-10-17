@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Grit.IntegrationTests;
 
-// SeaweedFS with one S3 identity, like the AppHost's: only the product image tests pay for its start (about 6 s).
+// SeaweedFS with one S3 identity, like the AppHost's, and the catalog cache on, as in production: only the product image tests pay for its start (about 6 s).
 public sealed class ProductImageHost(ApiFactory api) : IAsyncLifetime
 {
     private const string AccessKey = "grit-test";
@@ -32,7 +32,11 @@ public sealed class ProductImageHost(ApiFactory api) : IAsyncLifetime
     {
         await _storage.StartAsync();
         var endpoint = $"http://{_storage.Hostname}:{_storage.GetMappedPublicPort(S3Port)}";
-        _host = api.WithWebHostBuilder(builder => builder.UseSetting("ConnectionStrings:storage", $"Endpoint={endpoint};AccessKey={AccessKey};SecretKey={SecretKey}"));
+        _host = api.WithWebHostBuilder(builder =>
+        {
+            builder.UseSetting("ConnectionStrings:storage", $"Endpoint={endpoint};AccessKey={AccessKey};SecretKey={SecretKey}");
+            builder.UseSetting("Caching:Enabled", "true");
+        });
 
         // Starting the host runs the start-up provisioning, which creates the bucket.
         _ = _host.Services;
