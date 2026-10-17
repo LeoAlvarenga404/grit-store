@@ -31,6 +31,22 @@ public class PaymentsStartupTests(ApiFactory factory)
         exception.GetBaseException().ShouldBeOfType<InvalidOperationException>().Message.ShouldContain("Payments:Stripe:SecretKey");
     }
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task ApiStartup_StripeWithoutWebhookSecret_FailsNamingTheSetting(string? webhookSecret)
+    {
+        await using var stripe = factory.WithWebHostBuilder(builder => builder
+            .UseSetting("Payments:Provider", "Stripe")
+            .UseSetting("Payments:Stripe:SecretKey", "sk_test_placeholder")
+            .UseSetting("Payments:Stripe:WebhookSecret", webhookSecret));
+
+        var exception = Should.Throw<Exception>(() => stripe.Services);
+
+        exception.GetBaseException().ShouldBeOfType<InvalidOperationException>().Message.ShouldContain("Payments:Stripe:WebhookSecret");
+    }
+
     [Fact]
     public async Task ApiStartup_UnknownProvider_FailsNamingTheSetting()
     {

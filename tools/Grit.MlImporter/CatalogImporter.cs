@@ -7,7 +7,7 @@ using Grit.Modules.Catalog.Infrastructure.Seed;
 namespace Grit.MlImporter;
 
 // Sequential calls, no retry: a run fetches about a hundred resources, and a failed run is simply run again.
-internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log)
+internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log, Func<string, byte[], CancellationToken, Task>? writeFile = null)
 {
     public const int MaxImagesPerProduct = 2;
 
@@ -23,6 +23,9 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log)
     private readonly HashSet<Slug> _productSlugs = [];
 
     private readonly Dictionary<string, byte[]> _images = [];
+
+    // The seam lets a test fail an image write; the real run writes straight to disk.
+    private readonly Func<string, byte[], CancellationToken, Task> _writeFile = writeFile ?? ((path, bytes, cancellationToken) => File.WriteAllBytesAsync(path, bytes, cancellationToken));
 
     public async Task ImportAsync(ImportOptions options, CancellationToken cancellationToken)
     {
@@ -103,23 +106,36 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log)
         return fileNames;
     }
 
-    // Written only after every call succeeded, and the images folder is replaced whole, so no stale picture stays behind.
+    // A failed run leaves the previous seed intact: the new one is staged beside it and swapped in only when complete.
     private async Task WriteAsync(string outputDirectory, SeedCatalog catalog, CancellationToken cancellationToken)
     {
-        var imagesDirectory = Path.Combine(outputDirectory, "images");
-        if (Directory.Exists(imagesDirectory))
+        var staging = Path.Combine(outputDirectory, $".import-{Guid.NewGuid():N}");
+        try
         {
-            Directory.Delete(imagesDirectory, recursive: true);
+            await StageAsync(staging, catalog, cancellationToken);
+            SeedSwap.Replace(outputDirectory, staging);
+        }
+        finally
+        {
+            if (Directory.Exists(staging))
+            {
+                Directory.Delete(staging, recursive: true);
+            }
         }
 
+        await log.WriteLineAsync($"Wrote {Path.Combine(outputDirectory, "catalog.json")} and {_images.Count} images");
+    }
+
+    private async Task StageAsync(string stagingDirectory, SeedCatalog catalog, CancellationToken cancellationToken)
+    {
+        var imagesDirectory = Path.Combine(stagingDirectory, "images");
         Directory.CreateDirectory(imagesDirectory);
         foreach (var (fileName, bytes) in _images)
         {
-            await File.WriteAllBytesAsync(Path.Combine(imagesDirectory, fileName), bytes, cancellationToken);
+            await _writeFile(Path.Combine(imagesDirectory, fileName), bytes, cancellationToken);
         }
 
         var json = JsonSerializer.Serialize(catalog, SeedJsonOptions) + "\n";
-        await File.WriteAllTextAsync(Path.Combine(outputDirectory, "catalog.json"), json, cancellationToken);
-        await log.WriteLineAsync($"Wrote {Path.Combine(outputDirectory, "catalog.json")} and {_images.Count} images");
+        await File.WriteAllTextAsync(Path.Combine(stagingDirectory, "catalog.json"), json, cancellationToken);
     }
 }

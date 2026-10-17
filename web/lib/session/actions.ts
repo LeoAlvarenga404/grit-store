@@ -33,12 +33,21 @@ export async function register(formData: FormData) {
   await logIn(formData);
 }
 
+const logOutDeadlineInMilliseconds = 3_000;
+
 export async function logOut() {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get(refreshTokenCookie)?.value;
-  // Best effort: the cookies go even when the API cannot be reached; the session then ends when its refresh token expires.
+  // Best effort with a short deadline: the cookies go even when the API is slow or unreachable,
+  // and the session then ends when its refresh token expires.
   if (refreshToken) {
-    await api.POST("/api/v1/identity/logout", { body: { refreshToken }, cache: "no-store" }).catch(() => undefined);
+    await api
+      .POST("/api/v1/identity/logout", {
+        body: { refreshToken },
+        cache: "no-store",
+        signal: AbortSignal.timeout(logOutDeadlineInMilliseconds),
+      })
+      .catch(() => undefined);
   }
   clearSession(cookieStore);
   redirect("/login");
