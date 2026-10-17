@@ -1,0 +1,55 @@
+{
+  "keywords": "barraca camping",
+  "paging": { "total": 312, "offset": 0, "limit": 4 },
+  "results": [
+    {
+      "id": "MLB1001",
+      "status": "active",
+      "domain_id": "MLB-CAMPING_TENTS",
+      "settings": { "listing_strategy": "catalog_required" },
+      "name": "Barraca Camping Iglu 4 Pessoas Falcon",
+      "main_features": [],
+      "attributes": [{ "id": "BRAND", "name": "Marca", "value_id": "9344", "value_name": "Nautika" }],
+      "pictures": [{ "id": "612345-MLA1001", "url": "https://http2.mlstatic.com/D_NQ_NP_612345-MLA1001-F.jpg" }],
+      "parent_id": null,
+      "children_ids": []
+    },
+    {
+      "id": "MLB1002",
+      "status": "active",
+      "domain_id": "MLB-CAMPING_TENTS",
+      "settings": { "listing_strategy": "catalog_required" },
+      "name": "Barraca Toca 2 Pessoas",
+      "main_features": [],
+      "attributes": [],
+      "pictures": [],
+      "parent_id": null,
+      "children_ids": []
+    },
+    {
+      "id": "MLB1003",
+      "status": "active",
+      "domain_id": "MLB-CAMPING_TENTS",
+      "settings": { "listing_strategy": "catalog_required" },
+      "name": "Barraca Camping Iglu 4 Pessoas Falcon",
+      "main_features": [],
+      "attributes": [],
+      "pictures": [],
+      "parent_id": "MLB1001",
+      "children_ids": []
+    },
+    {
+      "id": "MLB1004",
+      "status": "active",
+      "domain_id": "MLB-CAMPING_TENTS",
+      "settings": { "listing_strategy": "catalog_required" },
+      "name": "Barraca Trekking Ultraleve 1 Pessoa",
+      "main_features": [],
+      "attributes": [],
+      "pictures": [],
+      "parent_id": null,
+      "children_ids": []
+    }
+  ],
+  "used_attributes": []
+}

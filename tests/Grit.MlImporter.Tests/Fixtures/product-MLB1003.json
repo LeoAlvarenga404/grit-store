@@ -1,0 +1,13 @@
+{
+  "id": "MLB1003",
+  "status": "active",
+  "domain_id": "MLB-CAMPING_TENTS",
+  "name": "Barraca Camping Iglu 4 Pessoas Falcon",
+  "buy_box_winner": null,
+  "pictures": [],
+  "main_features": [],
+  "attributes": [{ "id": "COLOR", "name": "Cor", "value_id": "52028", "value_name": "Azul", "values": [], "meta": null }],
+  "short_description": null,
+  "parent_id": "MLB1001",
+  "children_ids": []
+}

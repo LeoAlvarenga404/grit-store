@@ -1,0 +1,35 @@
+{
+  "id": "MLB1001",
+  "status": "active",
+  "domain_id": "MLB-CAMPING_TENTS",
+  "permalink": "https://www.mercadolivre.com.br/barraca-camping-iglu-4-pessoas-falcon/p/MLB1001",
+  "name": "Barraca Camping Iglu 4 Pessoas Falcon",
+  "family_name": "Barraca Camping Iglu Falcon",
+  "buy_box_winner": null,
+  "pickers": null,
+  "pictures": [
+    { "id": "612345-MLA1001", "url": "https://http2.mlstatic.com/D_NQ_NP_612345-MLA1001-F.jpg", "suggested_for_picker": [], "max_width": 1200, "max_height": 750 },
+    { "id": "612346-MLA1001", "url": "https://http2.mlstatic.com/D_NQ_NP_612346-MLA1001-F.jpg", "suggested_for_picker": [], "max_width": 1200, "max_height": 750 },
+    { "id": "612347-MLA1001", "url": "https://http2.mlstatic.com/D_NQ_NP_612347-MLA1001-F.jpg", "suggested_for_picker": [], "max_width": 1200, "max_height": 750 }
+  ],
+  "main_features": [{ "text": "Capacidade para 4 pessoas.", "type": "key_value", "metadata": {} }],
+  "attributes": [
+    { "id": "BRAND", "name": "Marca", "value_id": "9344", "value_name": "Nautika", "values": [{ "id": "9344", "name": "Nautika", "meta": null }], "meta": null },
+    { "id": "MODEL", "name": "Modelo", "value_id": null, "value_name": "Falcon", "values": [{ "id": null, "name": "Falcon", "meta": null }], "meta": null },
+    { "id": "COLOR", "name": "Cor", "value_id": "52049", "value_name": "Verde", "values": [{ "id": "52049", "name": "Verde", "meta": null }], "meta": null },
+    { "id": "CAPACITY", "name": "Capacidade de pessoas", "value_id": null, "value_name": "4", "values": [{ "id": null, "name": "4", "meta": null }], "meta": null },
+    { "id": "WEIGHT", "name": "Peso", "value_id": null, "value_name": "3.2 kg", "values": [{ "id": null, "name": "3.2 kg", "meta": { "value": 3.2, "unit": "kg" } }], "meta": null },
+    { "id": "GTIN", "name": "Código universal de produto", "value_id": null, "value_name": "7898950123456", "values": [], "meta": null },
+    { "id": "PACKAGE_WEIGHT", "name": "Peso da embalagem", "value_id": null, "value_name": "3500 g", "values": [], "meta": null },
+    { "id": "WATER_COLUMN", "name": "Coluna d'água", "value_id": null, "value_name": null, "values": [], "meta": null }
+  ],
+  "short_description": { "type": "plaintext", "content": "Barraca iglu para 4 pessoas com sobreteto impermeável e montagem rápida." },
+  "parent_id": null,
+  "children_ids": [],
+  "settings": { "listing_strategy": "catalog_required", "exclusive": false },
+  "description_pictures": [],
+  "date_created": "2022-03-14T17:51:59Z",
+  "catalog_product_id": "MLB1001",
+  "quality_type": "COMPLETE",
+  "tags": []
+}

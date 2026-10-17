@@ -1,0 +1,13 @@
+{
+  "id": "MLB1002",
+  "status": "active",
+  "domain_id": "MLB-CAMPING_TENTS",
+  "name": "Barraca Toca 2 Pessoas",
+  "buy_box_winner": null,
+  "pictures": [{ "id": "700001-MLA1002", "url": "https://http2.mlstatic.com/D_NQ_NP_700001-MLA1002-F.jpg" }],
+  "main_features": [],
+  "attributes": [{ "id": "BRAND", "name": "Marca", "value_id": "1", "value_name": "Mor", "values": [], "meta": null }],
+  "short_description": { "type": "plaintext", "content": "Barraca compacta para duas pessoas." },
+  "parent_id": null,
+  "children_ids": []
+}

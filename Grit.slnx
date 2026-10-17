@@ -21,6 +21,7 @@
     <Project Path="tests/Grit.ArchitectureTests/Grit.ArchitectureTests.csproj" />
     <Project Path="tests/Grit.BuildingBlocks.Tests/Grit.BuildingBlocks.Tests.csproj" />
     <Project Path="tests/Grit.IntegrationTests/Grit.IntegrationTests.csproj" />
+    <Project Path="tests/Grit.MlImporter.Tests/Grit.MlImporter.Tests.csproj" />
     <Project Path="tests/Grit.Modules.Basket.Tests/Grit.Modules.Basket.Tests.csproj" />
     <Project Path="tests/Grit.Modules.Catalog.Tests/Grit.Modules.Catalog.Tests.csproj" />
     <Project Path="tests/Grit.Modules.Inventory.Tests/Grit.Modules.Inventory.Tests.csproj" />
@@ -29,5 +30,8 @@
     <Project Path="tests/Grit.Modules.Probe.Contracts/Grit.Modules.Probe.Contracts.csproj" />
     <Project Path="tests/Grit.Modules.Probe/Grit.Modules.Probe.csproj" />
     <Project Path="tests/Grit.SharedKernel.Tests/Grit.SharedKernel.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/Grit.MlImporter/Grit.MlImporter.csproj" />
   </Folder>
 </Solution>
