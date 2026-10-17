@@ -194,3 +194,25 @@ td {
     grid-template-columns: 1fr;
   }
 }
+
+.admin-nav {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0.75rem 1rem 0;
+  display: flex;
+  gap: 1rem;
+}
+
+.thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  list-style: none;
+  padding: 0;
+}
+
+.inline-form {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+}
