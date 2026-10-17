@@ -8,4 +8,5 @@ internal sealed record GetProductResponse(
     string Description,
     IReadOnlyDictionary<string, string> Attributes,
     uint Version,
-    IReadOnlyList<GetProductSkuResponse> Skus);
+    IReadOnlyList<GetProductSkuResponse> Skus,
+    IReadOnlyList<ProductImageResponse> Images);

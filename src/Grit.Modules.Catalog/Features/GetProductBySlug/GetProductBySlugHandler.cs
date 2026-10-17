@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Grit.Modules.Catalog.Features.GetProductBySlug;
 
-internal sealed class GetProductBySlugHandler(CatalogDbContext db) : IRequestHandler<GetProductBySlugQuery, Result<GetProductBySlugResponse>>
+internal sealed class GetProductBySlugHandler(CatalogDbContext db, ProductImageStorage storage) : IRequestHandler<GetProductBySlugQuery, Result<GetProductBySlugResponse>>
 {
     public async Task<Result<GetProductBySlugResponse>> Handle(GetProductBySlugQuery query, CancellationToken cancellationToken)
     {
@@ -23,24 +23,33 @@ internal sealed class GetProductBySlugHandler(CatalogDbContext db) : IRequestHan
             return CatalogErrors.ProductNotFound;
         }
 
-        var product = await db.Products
+        var row = await db.Products
             .AsNoTracking()
             .Where(product => product.Slug == slug.Value && product.Skus.Any())
-            .Join(db.Categories, product => product.CategoryId, category => category.Id, (product, category) => new GetProductBySlugResponse(
-                product.Id.Value,
-                product.Slug.Value,
-                product.Name,
-                product.Description,
-                product.Attributes,
-                category.Slug.Value,
-                category.Name,
-                product.Skus
-                    .OrderBy(sku => sku.Id)
-                    .Select(sku => new GetProductBySlugSkuResponse(sku.Id.Value, sku.Attributes, sku.Price.Amount, sku.Price.Currency))
-                    .ToList()))
+            .Join(db.Categories, product => product.CategoryId, category => category.Id, (product, category) => new
+            {
+                product.ImageKeys,
+                Product = new GetProductBySlugResponse(
+                    product.Id.Value,
+                    product.Slug.Value,
+                    product.Name,
+                    product.Description,
+                    product.Attributes,
+                    category.Slug.Value,
+                    category.Name,
+                    product.Skus
+                        .OrderBy(sku => sku.Id)
+                        .Select(sku => new GetProductBySlugSkuResponse(sku.Id.Value, sku.Attributes, sku.Price.Amount, sku.Price.Currency))
+                        .ToList(),
+                    Array.Empty<string>()),
+            })
             .SingleOrDefaultAsync(cancellationToken);
+        if (row is null)
+        {
+            return CatalogErrors.ProductNotFound;
+        }
 
-        return product is null ? CatalogErrors.ProductNotFound : product;
+        return row.Product with { ImageUrls = await storage.DownloadUrlsAsync(row.ImageKeys) };
     }
 
     private static bool HasSlugShape(string text) =>

@@ -1,0 +1,34 @@
+using Grit.BuildingBlocks;
+using MediatR;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Routing;
+
+namespace Grit.Modules.Catalog.Features.AttachImage;
+
+internal static class AttachImageEndpoint
+{
+    public static void MapAttachImage(this IEndpointRouteBuilder products) =>
+        products.MapPost("/{id:guid}/images", AttachImage)
+            .WithSummary("Attaches an uploaded image to the product, after its other images.")
+            .WithDescription("Send the key from /images/uploads and the product version last read. The stored file is checked again: a wrong type or a file over 2 MB is deleted (400 catalog.invalid_image). At most 8 images.")
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict);
+
+    private static async Task<Results<Ok<ProductVersionResponse>, ProblemHttpResult>> AttachImage(
+        Guid id,
+        AttachImageRequest request,
+        ISender sender,
+        CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(new AttachImageCommand(id, request.Key, request.Version), cancellationToken);
+        if (result.IsFailure)
+        {
+            return result.Error.ToProblem();
+        }
+
+        return TypedResults.Ok(result.Value);
+    }
+}

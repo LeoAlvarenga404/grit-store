@@ -6,8 +6,7 @@ var database = builder.AddPostgres("postgres")
     .AddDatabase("grit");
 
 var redis = builder.AddRedis("redis").WithImageTag("8.10.2-alpine");
-// Declared now, referenced by the API when product images (S3) arrive.
-builder.AddSeaweedFS("storage").WithImageTag("4.46").WithS3();
+var storage = builder.AddSeaweedFS("storage").WithImageTag("4.46").WithS3();
 
 // The API seeds this file at start-up in Development; seeding is idempotent, so restarts are safe.
 var seedPath = Path.GetFullPath(Path.Combine(builder.AppHostDirectory, "..", "..", "seed", "catalog.json"));
@@ -26,6 +25,8 @@ var api = builder.AddProject<Projects.Grit_Api>("api")
     .WaitFor(database)
     .WithReference(redis)
     .WaitFor(redis)
+    .WithReference(storage)
+    .WaitFor(storage)
     .WithEnvironment("Seed__Path", seedPath)
     .WithHttpHealthCheck("/health");
 

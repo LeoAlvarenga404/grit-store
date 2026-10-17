@@ -1,6 +1,7 @@
 using Grit.BuildingBlocks;
 using Grit.Modules.Catalog.Contracts;
 using Grit.Modules.Catalog.Features.AddSku;
+using Grit.Modules.Catalog.Features.AttachImage;
 using Grit.Modules.Catalog.Features.ChangeSkuPrice;
 using Grit.Modules.Catalog.Features.CreateCategory;
 using Grit.Modules.Catalog.Features.CreateProduct;
@@ -8,7 +9,10 @@ using Grit.Modules.Catalog.Features.GetProduct;
 using Grit.Modules.Catalog.Features.GetProductBySlug;
 using Grit.Modules.Catalog.Features.GetProductFacets;
 using Grit.Modules.Catalog.Features.GetProductSuggestions;
+using Grit.Modules.Catalog.Features.ListProducts;
+using Grit.Modules.Catalog.Features.RemoveImage;
 using Grit.Modules.Catalog.Features.SearchProducts;
+using Grit.Modules.Catalog.Features.StartImageUpload;
 using Grit.Modules.Catalog.Features.UpdateProduct;
 using Grit.Modules.Catalog.Infrastructure;
 using Grit.Modules.Catalog.Infrastructure.Seed;
@@ -43,6 +47,7 @@ public sealed class CatalogModule : IModule
         }
 
         builder.Services.AddScoped<ICatalogReader, CatalogReader>();
+        builder.Services.AddSingleton<ProductImageStorage>();
     }
 
     // Catalog publishes no integration event yet, and the single bus-outbox slot stays with the probe (ADR 0005).
@@ -54,6 +59,13 @@ public sealed class CatalogModule : IModule
     {
         await using var scope = services.CreateAsyncScope();
         await scope.ServiceProvider.GetRequiredService<CatalogDbContext>().Database.MigrateAsync(cancellationToken);
+
+        // Provisioned like the schema, in Development only (ADR 0008); hosts without the storage (most tests) skip it.
+        var images = scope.ServiceProvider.GetRequiredService<ProductImageStorage>();
+        if (images.IsConfigured)
+        {
+            await images.EnsureBucketAsync(cancellationToken);
+        }
     }
 
     public void MapEndpoints(IEndpointRouteBuilder api)
@@ -67,6 +79,10 @@ public sealed class CatalogModule : IModule
         products.MapUpdateProduct();
         products.MapAddSku();
         products.MapChangeSkuPrice();
+        products.MapListProducts();
+        products.MapStartImageUpload();
+        products.MapAttachImage();
+        products.MapRemoveImage();
 
         var catalog = api.MapGroup("/catalog").WithTags("Catalog");
         catalog.MapSearchProducts();

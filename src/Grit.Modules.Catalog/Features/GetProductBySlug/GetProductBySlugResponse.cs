@@ -8,4 +8,5 @@ internal sealed record GetProductBySlugResponse(
     IReadOnlyDictionary<string, string> Attributes,
     string CategorySlug,
     string CategoryName,
-    IReadOnlyList<GetProductBySlugSkuResponse> Skus);
+    IReadOnlyList<GetProductBySlugSkuResponse> Skus,
+    IReadOnlyList<string> ImageUrls);
