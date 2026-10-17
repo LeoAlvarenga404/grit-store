@@ -1,5 +1,9 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
+// Publish mode writes deploy/compose (README, "Como subir com Docker Compose"); a fixed dashboard port lets the README link it.
+builder.AddDockerComposeEnvironment("compose")
+    .WithDashboard(dashboard => dashboard.WithHostPort(18888));
+
 // Tags already in the local Docker cache (shared with the integration tests), to spare the Docker disk budget.
 var database = builder.AddPostgres("postgres")
     .WithImageTag("18.6-alpine")
@@ -29,15 +33,21 @@ var api = builder.AddProject<Projects.Grit_Api>("api")
     .WaitFor(redis)
     .WithReference(storage)
     .WaitFor(storage)
-    .WithEnvironment("Seed__Path", seedPath)
+    // The compose image has no checkout: Grit.Api.csproj publishes the seed next to the API, in the image's /app.
+    .WithEnvironment("Seed__Path", builder.ExecutionContext.IsPublishMode ? "/app/seed/catalog.json" : seedPath)
     // Generated products for k6, off unless asked: `dotnet run --project src/Grit.AppHost -- --Seed:VolumeProducts=50000`.
     .WithEnvironment("Seed__VolumeProducts", builder.Configuration["Seed:VolumeProducts"] ?? "0")
-    .WithHttpHealthCheck("/health");
+    // Compose runs the API in Development too: migrations and seeds only run there (ADR 0008); a real deploy would not.
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
+    .WithHttpHealthCheck("/health")
+    // Compose waits for PostgreSQL to start, not to accept connections: a start that fails on the migrations is retried.
+    .PublishAsDockerComposeService((_, service) => service.Restart = "unless-stopped");
 
-builder.AddJavaScriptApp("web", "../../web", "dev")
+builder.AddNextJsApp("web", "../../web")
     .WithNpm(installCommand: "ci")
-    .WithHttpEndpoint(env: "PORT")
     .WithEnvironment("API_URL", api.GetEndpoint("http"))
-    .WaitFor(api);
+    .WaitFor(api)
+    // A fixed host port for the browser; 8000 is the container port Aspire gives the Next.js server (PORT).
+    .PublishAsDockerComposeService((_, service) => service.Ports = ["3000:8000"]);
 
 builder.Build().Run();

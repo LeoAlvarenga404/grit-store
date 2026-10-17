@@ -16,6 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Published only (not copied to bin): the compose image seeds from /app/seed/catalog.json (AppHost Seed__Path). -->
+    <Content Include="../../seed/catalog.json" Link="seed/catalog.json" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Grit.BuildingBlocks\Grit.BuildingBlocks.csproj" />
     <ProjectReference Include="..\Grit.Modules.Basket\Grit.Modules.Basket.csproj" />
     <ProjectReference Include="..\Grit.Modules.Catalog\Grit.Modules.Catalog.csproj" />

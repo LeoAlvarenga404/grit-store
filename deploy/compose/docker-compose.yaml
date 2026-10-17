@@ -1,0 +1,123 @@
+services:
+  compose-dashboard:
+    image: "mcr.microsoft.com/dotnet/nightly/aspire-dashboard:13.6"
+    ports:
+      - "18888:18888"
+    expose:
+      - "18889"
+      - "18890"
+    networks:
+      - "aspire"
+    restart: "always"
+  postgres:
+    image: "docker.io/library/postgres:18.6-alpine"
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    expose:
+      - "5432"
+    networks:
+      - "aspire"
+  redis:
+    image: "docker.io/library/redis:8.10.2-alpine"
+    command:
+      - "-c"
+      - "redis-server --requirepass $$REDIS_PASSWORD"
+    entrypoint:
+      - "/bin/sh"
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+    expose:
+      - "6379"
+    networks:
+      - "aspire"
+  storage:
+    image: "docker.io/chrislusf/seaweedfs:4.46"
+    command:
+      - "-c"
+      - "cat << EOF > /tmp/s3.json\n{\"identities\":[{\"name\":\"aspire-user\",\"credentials\":[{\"accessKey\":\"$$S3_ACCESS_KEY\",\"secretKey\":\"$$S3_SECRET_KEY\"}],\"actions\":[\"Admin\",\"Read\",\"Write\",\"List\",\"Tagging\"]}]}\nEOF\nexec weed server -dir=\"/data\" -filer -s3 -s3.config=\"/tmp/s3.json\""
+    entrypoint:
+      - "sh"
+    environment:
+      S3_ACCESS_KEY: "${STORAGE_ACCESSKEY}"
+      S3_SECRET_KEY: "${STORAGE_SECRETKEY}"
+    expose:
+      - "9333"
+      - "8080"
+      - "8888"
+      - "8333"
+    networks:
+      - "aspire"
+  api:
+    image: "${API_IMAGE}"
+    environment:
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
+      ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+      HTTP_PORTS: "${API_PORT}"
+      ConnectionStrings__grit: "Host=postgres;Port=5432;Username=postgres;Password=${POSTGRES_PASSWORD};Database=grit"
+      GRIT_HOST: "postgres"
+      GRIT_PORT: "5432"
+      GRIT_USERNAME: "postgres"
+      GRIT_PASSWORD: "${POSTGRES_PASSWORD}"
+      GRIT_URI: "postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/grit"
+      GRIT_JDBCCONNECTIONSTRING: "jdbc:postgresql://postgres:5432/grit"
+      GRIT_DATABASENAME: "grit"
+      Identity__Jwt__SigningKey: "${JWT_SIGNING_KEY}"
+      Identity__Admin__Email: "admin@grit.local"
+      Identity__Admin__Password: "${ADMIN_PASSWORD}"
+      Caching__Enabled: "true"
+      ConnectionStrings__redis: "redis:6379,password=${REDIS_PASSWORD}"
+      REDIS_HOST: "redis"
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+      REDIS_URI: "redis://:${REDIS_PASSWORD}@redis:6379"
+      ConnectionStrings__storage: "Endpoint=http://storage:8333;AccessKey=${STORAGE_ACCESSKEY};SecretKey=${STORAGE_SECRETKEY};FilerEndpoint=http://storage:8888"
+      STORAGE_HOST: "storage"
+      STORAGE_PORT: "8333"
+      STORAGE_MASTERURL: "http://storage:9333"
+      STORAGE_ACCESSKEY: "${STORAGE_ACCESSKEY}"
+      STORAGE_SECRETKEY: "${STORAGE_SECRETKEY}"
+      STORAGE_S3URL: "http://storage:8333"
+      STORAGE_FILERURL: "http://storage:8888"
+      Seed__Path: "/app/seed/catalog.json"
+      Seed__VolumeProducts: "0"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://compose-dashboard:18889"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+      OTEL_SERVICE_NAME: "api"
+    expose:
+      - "${API_PORT}"
+    depends_on:
+      postgres:
+        condition: "service_started"
+      redis:
+        condition: "service_started"
+      storage:
+        condition: "service_started"
+    networks:
+      - "aspire"
+    restart: "unless-stopped"
+  web:
+    image: "${WEB_IMAGE}"
+    environment:
+      NODE_ENV: "development"
+      PORT: "8000"
+      HOSTNAME: "0.0.0.0"
+      API_URL: "http://api:${API_PORT}"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://compose-dashboard:18889"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+      OTEL_SERVICE_NAME: "web"
+    ports:
+      - "3000:8000"
+    expose:
+      - "8000"
+    depends_on:
+      api:
+        condition: "service_started"
+    networks:
+      - "aspire"
+networks:
+  aspire:
+    driver: "bridge"
