@@ -38,6 +38,7 @@ public class ImportOptionsTests
     [InlineData("--category", "Camping=barraca@")]
     [InlineData("--category", "Camping=@MLB-TENTS")]
     [InlineData("--category", "Camping=barraca@tents")]
+    [InlineData("--category", "Camping=barraca@mlb-tents")]
     [InlineData("--category", "Camping=barraca@MLB-TENTS X")]
     public void Parse_InvalidArguments_Fails(params string[] args)
     {
