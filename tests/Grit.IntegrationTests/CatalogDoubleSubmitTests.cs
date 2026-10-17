@@ -8,7 +8,7 @@ public class CatalogDoubleSubmitTests(ApiFactory factory)
 {
     private const int Rounds = 5;
 
-    private readonly HttpClient _client = factory.CreateClient();
+    private readonly HttpClient _client = AdminClient.Create(factory);
 
     [Fact]
     public async Task CreateCategory_SameNameTwiceAtOnce_Returns201And409()

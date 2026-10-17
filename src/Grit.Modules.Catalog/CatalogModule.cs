@@ -58,8 +58,7 @@ public sealed class CatalogModule : IModule
 
     public void MapEndpoints(IEndpointRouteBuilder api)
     {
-        // Open until Identity (2a) puts the admin policy on this group.
-        var admin = api.MapGroup("/admin").WithTags("Catalog");
+        var admin = api.MapAdminGroup().WithTags("Catalog");
         admin.MapCreateCategory();
 
         var products = admin.MapGroup("/products");

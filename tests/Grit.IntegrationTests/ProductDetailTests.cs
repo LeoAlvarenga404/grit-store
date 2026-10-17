@@ -8,7 +8,7 @@ public class ProductDetailTests(ApiFactory factory)
 {
     private const string ProductsPath = "/api/v1/catalog/products";
 
-    private readonly HttpClient _client = factory.CreateClient();
+    private readonly HttpClient _client = AdminClient.Create(factory);
 
     [Fact]
     public async Task GetProductBySlug_ProductWithSkus_ReturnsCategoryAttributesAndEachSku()

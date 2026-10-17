@@ -9,7 +9,7 @@ namespace Grit.IntegrationTests;
 // OrderPlaced reaches the basket after checkout answers, so the customer may already have added lines by then.
 public class BasketClearTests(ApiFactory factory)
 {
-    private readonly HttpClient _admin = factory.CreateClient();
+    private readonly HttpClient _admin = AdminClient.Create(factory);
 
     [Fact]
     public async Task OrderPlaced_DeliveredAfterNewLinesWereAdded_RemovesOnlyThePurchasedQuantities()

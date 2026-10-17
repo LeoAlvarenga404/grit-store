@@ -15,9 +15,14 @@ var seedPath = Path.GetFullPath(Path.Combine(builder.AppHostDirectory, "..", "..
 // Generated on the first run and kept in the AppHost user secrets: a fresh clone needs no secret, and none is committed.
 var jwtSigningKey = builder.AddParameter("jwt-signing-key", new GenerateParameterDefault { MinLength = 64, Special = false }, secret: true, persist: true);
 
+// Same mechanism: read it with `dotnet user-secrets list --project src/Grit.AppHost` (Parameters:admin-password).
+var adminPassword = builder.AddParameter("admin-password", new GenerateParameterDefault { MinLength = 20, Special = false }, secret: true, persist: true);
+
 var api = builder.AddProject<Projects.Grit_Api>("api")
     .WithReference(database)
     .WithEnvironment("Identity__Jwt__SigningKey", jwtSigningKey)
+    .WithEnvironment("Identity__Admin__Email", "admin@grit.local")
+    .WithEnvironment("Identity__Admin__Password", adminPassword)
     .WaitFor(database)
     .WithReference(redis)
     .WaitFor(redis)

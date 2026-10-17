@@ -8,8 +8,8 @@ public class CatalogReaderTests(ApiFactory factory)
     [Fact]
     public async Task GetSkusAsync_KnownAndUnknownIds_ReturnsOnlyTheKnownSnapshot()
     {
-        var (productId, _, skuId) = await BasketApi.CreateSkuAsync(factory.CreateClient());
-        var product = await CatalogAdminApi.GetProductAsync(factory.CreateClient(), productId);
+        var (productId, _, skuId) = await BasketApi.CreateSkuAsync(AdminClient.Create(factory));
+        var product = await CatalogAdminApi.GetProductAsync(AdminClient.Create(factory), productId);
         using var scope = factory.Services.CreateScope();
         var reader = scope.ServiceProvider.GetRequiredService<ICatalogReader>();
 
@@ -21,7 +21,7 @@ public class CatalogReaderTests(ApiFactory factory)
     [Fact]
     public async Task GetSkuIdsAsync_AfterAddingASku_ContainsIt()
     {
-        var (_, _, skuId) = await BasketApi.CreateSkuAsync(factory.CreateClient());
+        var (_, _, skuId) = await BasketApi.CreateSkuAsync(AdminClient.Create(factory));
         using var scope = factory.Services.CreateScope();
 
         var ids = await scope.ServiceProvider.GetRequiredService<ICatalogReader>().GetSkuIdsAsync(TestContext.Current.CancellationToken);

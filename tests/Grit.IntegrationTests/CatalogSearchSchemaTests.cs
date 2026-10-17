@@ -38,7 +38,7 @@ public class CatalogSearchSchemaTests(ApiFactory factory)
     [Fact]
     public async Task SearchVector_ProductCreatedThenRenamed_FollowsNameAndDescription()
     {
-        var (id, _) = await CatalogAdminApi.CreateProductAsync(factory.CreateClient());
+        var (id, _) = await CatalogAdminApi.CreateProductAsync(AdminClient.Create(factory));
 
         var created = await ScalarAsync<string>($"SELECT search_vector::text FROM catalog.products WHERE id = '{id}'");
         await ScalarAsync<int>($"UPDATE catalog.products SET name = 'Mochila Leve' WHERE id = '{id}' RETURNING 1");

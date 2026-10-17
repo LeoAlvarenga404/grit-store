@@ -11,7 +11,7 @@ public class ProductAttributePrecedenceTests(ApiFactory api)
     {
         var connectionString = await api.CreateDatabaseAsync("attribute_precedence");
         await using var host = api.WithWebHostBuilder(builder => builder.UseSetting("ConnectionStrings:grit", connectionString));
-        var client = host.CreateClient();
+        var client = AdminClient.Create(host);
         var categoryId = await CatalogAdminApi.CreateCategoryAsync(client);
         var body = new { categoryId, name = "Capacete Urbano", description = "", attributes = new { cor = "azul" } };
         var created = await CatalogAdminApi.ReadAsync(await client.PostAsJsonAsync(CatalogAdminApi.ProductsPath, body, TestContext.Current.CancellationToken));

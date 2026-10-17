@@ -41,6 +41,12 @@ public sealed class IdentityModule : IModule
         builder.Services.AddAuthorization();
 
         AddLogInRateLimit(builder);
+
+        // Development only, and only when the AppHost passes the generated password (ADR 0008 keeps seeds out of production).
+        if (builder.Environment.IsDevelopment() && !string.IsNullOrEmpty(builder.Configuration[DevelopmentAdminSeeder.PasswordKey]))
+        {
+            builder.Services.AddHostedService<DevelopmentAdminSeeder>();
+        }
     }
 
     // Identity publishes no integration event, and the single bus-outbox slot stays with the probe (ADR 0005).

@@ -6,7 +6,7 @@ namespace Grit.IntegrationTests;
 // Showcase (design §13): the whole checkout across Basket, Ordering, Inventory and Payments, through the outboxes.
 public class CheckoutSagaTests(ApiFactory factory)
 {
-    private readonly HttpClient _admin = factory.CreateClient();
+    private readonly HttpClient _admin = AdminClient.Create(factory);
     private readonly HttpClient _customer = CustomerClient.Create(factory, Guid.NewGuid());
 
     [Fact]

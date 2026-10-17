@@ -14,12 +14,12 @@ internal static class CustomerClient
     public static HttpClient Create(WebApplicationFactory<Program> factory, Guid customerId)
     {
         var client = factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token(customerId));
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token(customerId, "customer"));
         return client;
     }
 
     // Signed like Identity's tokens with the test host's key, so these requests take the production bearer path.
-    private static string Token(Guid customerId) =>
+    public static string Token(Guid userId, string role) =>
         Handler.CreateToken(new SecurityTokenDescriptor
         {
             Issuer = JwtOptions.Issuer,
@@ -27,8 +27,8 @@ internal static class CustomerClient
             Expires = DateTime.UtcNow.AddMinutes(15),
             Claims = new Dictionary<string, object>
             {
-                [JwtRegisteredClaimNames.Sub] = customerId.ToString(),
-                [JwtOptions.RoleClaim] = "customer",
+                [JwtRegisteredClaimNames.Sub] = userId.ToString(),
+                [JwtOptions.RoleClaim] = role,
             },
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ApiFactory.JwtSigningKey)),

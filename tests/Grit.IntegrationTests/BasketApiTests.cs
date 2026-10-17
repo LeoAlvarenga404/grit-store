@@ -5,13 +5,13 @@ namespace Grit.IntegrationTests;
 
 public class BasketApiTests(ApiFactory factory)
 {
-    private readonly HttpClient _admin = factory.CreateClient();
+    private readonly HttpClient _admin = AdminClient.Create(factory);
     private readonly HttpClient _customer = CustomerClient.Create(factory, Guid.NewGuid());
 
     [Fact]
     public async Task GetBasket_WithoutToken_Returns401()
     {
-        var response = await _admin.GetAsync(BasketApi.BasketPath, TestContext.Current.CancellationToken);
+        var response = await factory.CreateClient().GetAsync(BasketApi.BasketPath, TestContext.Current.CancellationToken);
 
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
