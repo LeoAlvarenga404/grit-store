@@ -1,0 +1,24 @@
+# 0016 — Imagens de produto em S3 com URL pré-assinada
+
+- **Status:** aceita
+- **Data:** 2026-10-17
+- **Sub-plano:** 5a (a parte de imagens que saiu da 1c)
+
+## Contexto
+
+O admin precisa anexar fotos aos produtos, e a vitrine precisa mostrá-las. O armazenamento é o SeaweedFS com API S3 (ADR 0003), declarado no AppHost. A API não deve trafegar os bytes da imagem, e nenhuma chave de acesso pode ir para o repositório.
+
+## Decisão
+
+- **Upload por PUT pré-assinado.** A API devolve uma URL válida por 5 minutos para a chave `products/{productId}/{guid-v7}.{ext}`, com o `Content-Type` assinado. Quem faz o PUT é a Server Action do Next.js: não precisa de CORS no SeaweedFS nem de JavaScript no navegador.
+- **Confirmação com HEAD.** Depois do upload, o admin confirma o anexo e a API confere o objeto guardado. Só aceita jpeg, png ou webp de até 2 MB, conferidos no valor declarado e de novo no arquivo gravado. Um arquivo fora da regra é apagado e a resposta é `catalog.invalid_image`.
+- **No domínio, o produto guarda só as chaves:** até 8 imagens, na ordem do upload, e a primeira é a capa. A remoção é feita pelo nome do arquivo.
+- **Leitura por GET pré-assinado de 1 hora, assinado a cada resposta,** em vez de bucket público. O SeaweedFS do toolkit não tem identidade anônima, e um bucket público exigiria versionar um `s3.json` com chaves literais.
+- **`ProductImageStorage` é uma classe concreta**, sem interface, porque não existe segunda implementação. Os testes usam um SeaweedFS real (Testcontainer) só nas classes de imagem. O cliente S3 é criado sob demanda, então hosts sem `ConnectionStrings:storage` nunca o tocam. O bucket é criado na subida em Development, junto com as migrations (ADR 0008).
+- **AWSSDK.S3** com endereçamento por caminho e `Protocol = HTTP` explícito, porque o SDK assina `https://` por padrão.
+
+## Consequências
+
+- As URLs de leitura mudam a cada resposta, então o navegador não reaproveita a imagem do cache. O cache de catálogo (5b) guarda só as chaves e gera as URLs na hora, o que mantém o prazo de 1 hora fora do TTL.
+- Objetos órfãos (upload sem confirmação, produto apagado) ficam no armazenamento. Uma limpeza periódica fica para depois.
+- O SeaweedFS 4.46 aceita PUT, HEAD e GET pré-assinados mesmo sem o bucket existir, então a criação do bucket na subida não é coberta por teste.
