@@ -41,7 +41,7 @@ internal sealed class GetProductHandler(CatalogDbContext db, ProductImageStorage
         var urls = await storage.DownloadUrlsAsync([.. row.Images.Select(image => image.Key)]);
         return row.Product with
         {
-            Images = [.. row.Images.Select((image, index) => new ProductImageResponse(image.Key, image.Key[(image.Key.LastIndexOf('/') + 1)..], urls[index]))],
+            Images = [.. row.Images.Select((image, index) => new ProductImageResponse(image.Key, image.Key[(image.Key.LastIndexOf('/') + 1)..], image.Color, urls[index]))],
         };
     }
 }

@@ -12,7 +12,7 @@ internal static class AttachImageEndpoint
     public static void MapAttachImage(this IEndpointRouteBuilder products) =>
         products.MapPost("/{id:guid}/images", AttachImage)
             .WithSummary("Attaches an uploaded image to the product, after its other images.")
-            .WithDescription("Send the key from /images/uploads and the product version last read. The stored file is checked again: a wrong type or a file over 2 MB is deleted (400 catalog.invalid_image). At most 8 images.")
+            .WithDescription("Send the key from /images/uploads, the colour the image shows (a value of the SKUs' cor attribute; leave it out only when the product's SKUs have no cor) and the product version last read. The stored file is checked again: a wrong type or a file over 2 MB is deleted (400 catalog.invalid_image). A colour no SKU has is 400 catalog.image_color_not_found; a colour has at most 8 images (409 catalog.image_limit).")
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status409Conflict);
@@ -23,7 +23,7 @@ internal static class AttachImageEndpoint
         ISender sender,
         CancellationToken cancellationToken)
     {
-        var result = await sender.Send(new AttachImageCommand(id, request.Key, request.Version), cancellationToken);
+        var result = await sender.Send(new AttachImageCommand(id, request.Key, request.Color, request.Version), cancellationToken);
         if (result.IsFailure)
         {
             return result.Error.ToProblem();

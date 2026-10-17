@@ -26,13 +26,13 @@ internal sealed class AttachImageHandler(CatalogDbContext db, ProductImageStorag
 
         var key = $"{Product.ImageKeyPrefix(id)}{command.Key[uploadPrefix.Length..]}";
 
-        // A repeated confirm changes nothing, not even the stored file.
-        if (product.Images.Any(image => image.Key == key))
+        // A repeated confirm (same key and colour) changes nothing, not even the stored file.
+        if (product.Images.Contains(new ProductImage(key, command.Color)))
         {
             return new ProductVersionResponse(db.VersionOf(product));
         }
 
-        var added = product.AddImage(key, product.Skus is [var first, ..] ? first.Color : null);
+        var added = product.AddImage(key, command.Color);
         if (added.IsFailure)
         {
             return added.Error;

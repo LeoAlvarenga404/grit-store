@@ -48,7 +48,7 @@ public class ProductSearchImageTests(ProductImageHost images) : IClassFixture<Pr
         var color = Guid.NewGuid().ToString("N");
         var (olderId, olderVersion) = await CatalogAdminApi.CreateProductAsync(_admin);
         var olderSku = await CatalogAdminApi.AddSkuAsync(_admin, olderId, olderVersion, color);
-        await ProductImageApi.AttachImageAsync(_admin, olderId, olderSku.Version, 100);
+        await ProductImageApi.AttachImageAsync(_admin, olderId, olderSku.Version, 100, color);
         var (newerId, newerVersion) = await CatalogAdminApi.CreateProductAsync(_admin);
         await CatalogAdminApi.AddSkuAsync(_admin, newerId, newerVersion, color);
 
