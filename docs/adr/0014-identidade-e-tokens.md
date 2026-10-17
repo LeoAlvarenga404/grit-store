@@ -21,6 +21,6 @@ O front (Next.js) precisa autenticar clientes, e os outros módulos precisam sab
 
 ## Consequências
 
-- Atrás do BFF, todo login chega com o IP do servidor Next.js. A API ainda não usa `UseForwardedHeaders`, então todos os logins pelo front dividem a mesma janela de 10 por minuto. Corrigir isso exige confiar só no proxy conhecido.
+- **IP do cliente atrás do BFF (emenda 2026-10-16, endurecimento):** a API usa `UseForwardedHeaders` só com `X-Forwarded-For` e confia apenas em loopback e nas redes de `ForwardedHeaders:KnownNetworks`; o cabeçalho de quem chama de fora é ignorado. O BFF repassa o último salto do `x-forwarded-for` no login. Em produção, o Next.js precisa de um proxy na frente que defina esse cabeçalho, porque o Next 16 só o preenche quando ele não existe.
 - Dois logins errados simultâneos podem contar como uma falha só. O limite de tentativas restringe a perda.
 - Logout por enquanto só limpa os cookies no BFF. Um endpoint que revogue a família fica para depois, junto com a política de admin (5a) e o botão de autenticação no OpenAPI.
