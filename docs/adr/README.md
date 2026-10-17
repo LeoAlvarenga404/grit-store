@@ -21,3 +21,5 @@ Cada ADR registra uma decisão no sub-plano em que ela apareceu no código. Toda
 | [0015](0015-checkout-com-saga.md) | Checkout com saga e compensação | 3–4d |
 | [0016](0016-imagens-de-produto-em-s3.md) | Imagens de produto em S3 com URL pré-assinada | 5a |
 | [0017](0017-cache-do-catalogo.md) | Cache do catálogo com HybridCache | 5b |
+| [0018](0018-pagamentos-com-stripe.md) | Pagamentos com Stripe (gateway por configuração, webhook idempotente) | 4c |
+| [0019](0019-importador-do-mercado-livre.md) | Importador do Mercado Livre para o seed | 1c |
