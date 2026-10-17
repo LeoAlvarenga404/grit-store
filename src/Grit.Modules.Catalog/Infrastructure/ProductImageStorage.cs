@@ -45,18 +45,21 @@ internal sealed class ProductImageStorage(IConfiguration configuration)
         var urls = new List<string>(keys.Count);
         foreach (var key in keys)
         {
-            urls.Add(await _client.Value.GetPreSignedURLAsync(new GetPreSignedUrlRequest
-            {
-                BucketName = Bucket,
-                Key = key,
-                Verb = HttpVerb.GET,
-                Expires = DateTime.UtcNow + DownloadLifetime,
-                Protocol = Scheme,
-            }));
+            urls.Add(await DownloadUrlAsync(key));
         }
 
         return urls;
     }
+
+    public async Task<string> DownloadUrlAsync(string key) =>
+        await _client.Value.GetPreSignedURLAsync(new GetPreSignedUrlRequest
+        {
+            BucketName = Bucket,
+            Key = key,
+            Verb = HttpVerb.GET,
+            Expires = DateTime.UtcNow + DownloadLifetime,
+            Protocol = Scheme,
+        });
 
     // Uploads land here; confirmed images are copied out, so no upload URL can ever overwrite an attached image.
     public static string UploadKeyPrefix(ProductId id) => $"uploads/{id.Value}/";

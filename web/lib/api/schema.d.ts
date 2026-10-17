@@ -848,7 +848,7 @@ export interface paths {
         };
         /**
          * Searches and lists the products that have at least one SKU.
-         * @description q finds words with or without accents, in the singular or the plural, and name words with a small typo (longer words tolerate more); results are ordered by relevance. Without q, the newest products come first (creation time, to the millisecond). attribute=key:value can repeat (one per key) and matches a single SKU. priceAmount is the lowest price among the SKUs that match. Pass nextCursor as after to read the next page.
+         * @description q finds words with or without accents, in the singular or the plural, and name words with a small typo (longer words tolerate more); results are ordered by relevance. Without q, the newest products come first (creation time, to the millisecond). attribute=key:value can repeat (one per key) and matches a single SKU. priceAmount is the lowest price among the SKUs that match. imageUrl is a signed URL of the product's first image, valid for an hour, or null. Pass nextCursor as after to read the next page.
          */
         get: {
             parameters: {
@@ -2383,6 +2383,7 @@ export interface components {
             /** Format: double */
             priceAmount: number;
             priceCurrency: string;
+            imageUrl: null | string;
         };
         ProductVersionResponse: {
             /** Format: uint32 */

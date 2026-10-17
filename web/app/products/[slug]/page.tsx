@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { api } from "@/lib/api/client";
@@ -38,6 +39,15 @@ export default async function ProductPage({
         <Link href={`/?category=${encodeURIComponent(product.categorySlug)}`}>{product.categoryName}</Link>
       </p>
       <h1>{product.name}</h1>
+      {product.imageUrls.length > 0 && (
+        <ul className="gallery">
+          {product.imageUrls.map((url, index) => (
+            <li key={url}>
+              <Image src={url} alt={`${product.name}, imagem ${index + 1}`} width={320} height={320} unoptimized />
+            </li>
+          ))}
+        </ul>
+      )}
       <p>{product.description}</p>
       {Object.keys(product.attributes).length > 0 && <p className="hint">{describe(product.attributes)}</p>}
       {error && (
