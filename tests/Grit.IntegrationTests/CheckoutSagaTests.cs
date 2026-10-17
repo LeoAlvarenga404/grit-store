@@ -76,6 +76,23 @@ public class CheckoutSagaTests(ApiFactory factory)
     }
 
     [Fact]
+    public async Task CancelOrder_ConfirmedOrder_RefundsThePaymentAuthorization()
+    {
+        await using var payments = await PaymentListener.StartAsync(factory);
+        await StockedBasketAsync(onHand: 3, quantity: 2);
+        var orderId = await CheckoutApi.PlaceOrderIdAsync(_customer, "tok_visa", 199.80m);
+        await WaitForStatusAsync(orderId, "Confirmed");
+
+        var response = await _customer.PostAsync($"{CheckoutApi.OrdersPath}/{orderId}/cancel", null, TestContext.Current.CancellationToken);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+        var refunded = await Eventually.UntilAsync(() => Task.FromResult(payments.RefundOf(orderId)), authorizationId => authorizationId is not null);
+        refunded.ShouldNotBeNull();
+        refunded.ShouldStartWith("fake_");
+        refunded.ShouldBe(payments.AuthorizationOf(orderId));
+    }
+
+    [Fact]
     public async Task CancelOrder_TwiceAtOnce_CancelsOnceAndRecordsOneHistoryEntry()
     {
         for (var round = 0; round < 5; round++)
