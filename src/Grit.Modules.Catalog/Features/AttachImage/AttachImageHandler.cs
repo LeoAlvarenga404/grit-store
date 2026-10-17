@@ -18,23 +18,30 @@ internal sealed class AttachImageHandler(CatalogDbContext db, ProductImageStorag
             return CatalogErrors.ProductNotFound;
         }
 
-        var added = product.AddImage(command.Key);
+        var uploadPrefix = ProductImageStorage.UploadKeyPrefix(id);
+        if (!command.Key.StartsWith(uploadPrefix, StringComparison.Ordinal))
+        {
+            return CatalogErrors.InvalidImageKey;
+        }
+
+        var key = $"{Product.ImageKeyPrefix(id)}{command.Key[uploadPrefix.Length..]}";
+
+        // A repeated confirm changes nothing, not even the stored file.
+        if (product.ImageKeys.Contains(key))
+        {
+            return new ProductVersionResponse(db.VersionOf(product));
+        }
+
+        var added = product.AddImage(key);
         if (added.IsFailure)
         {
             return added.Error;
         }
 
-        // A presigned PUT cannot cap the size, so the confirm checks what the storage really holds.
-        var stored = await storage.FindAsync(command.Key, cancellationToken);
-        if (stored is null)
+        var published = await PublishAsync(command.Key, key, cancellationToken);
+        if (published.IsFailure)
         {
-            return CatalogErrors.ImageNotUploaded;
-        }
-
-        if (!ImageRule.IsAllowed(stored.Value.ContentType, stored.Value.SizeInBytes))
-        {
-            await storage.DeleteAsync(command.Key, cancellationToken);
-            return CatalogErrors.InvalidImage;
+            return published.Error;
         }
 
         var version = await db.SaveProductAsync(product, command.Version, cancellationToken);
@@ -43,6 +50,26 @@ internal sealed class AttachImageHandler(CatalogDbContext db, ProductImageStorag
             return version.Error;
         }
 
+        await storage.DeleteAsync(command.Key, cancellationToken);
         return new ProductVersionResponse(version.Value);
+    }
+
+    // A presigned PUT cannot cap the size, so the confirm checks what the storage really holds before copying it out of reach.
+    private async Task<Result> PublishAsync(string uploadKey, string key, CancellationToken cancellationToken)
+    {
+        var stored = await storage.FindAsync(uploadKey, cancellationToken);
+        if (stored is null)
+        {
+            return CatalogErrors.ImageNotUploaded;
+        }
+
+        if (ImageRule.IsAllowed(stored.Value.ContentType, stored.Value.SizeInBytes)
+            && await storage.CopyIfUnchangedAsync(uploadKey, key, stored.Value.ETag, cancellationToken))
+        {
+            return Result.Success();
+        }
+
+        await storage.DeleteAsync(uploadKey, cancellationToken);
+        return CatalogErrors.InvalidImage;
     }
 }

@@ -3,6 +3,7 @@ using System.Net;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Grit.Modules.Catalog.Domain;
 using Microsoft.Extensions.Configuration;
 
 namespace Grit.Modules.Catalog.Infrastructure;
@@ -57,16 +58,35 @@ internal sealed class ProductImageStorage(IConfiguration configuration)
         return urls;
     }
 
-    public async Task<(long SizeInBytes, string ContentType)?> FindAsync(string key, CancellationToken cancellationToken)
+    // Uploads land here; confirmed images are copied out, so no upload URL can ever overwrite an attached image.
+    public static string UploadKeyPrefix(ProductId id) => $"uploads/{id.Value}/";
+
+    public async Task<(long SizeInBytes, string ContentType, string ETag)?> FindAsync(string key, CancellationToken cancellationToken)
     {
         try
         {
             var metadata = await _client.Value.GetObjectMetadataAsync(new GetObjectMetadataRequest { BucketName = Bucket, Key = key }, cancellationToken);
-            return (metadata.ContentLength, metadata.Headers.ContentType);
+            return (metadata.ContentLength, metadata.Headers.ContentType, metadata.ETag);
         }
         catch (AmazonS3Exception exception) when (exception.StatusCode == HttpStatusCode.NotFound)
         {
             return null;
+        }
+    }
+
+    // The ETag condition closes the gap between the check and the copy: an upload replaced meanwhile is not copied.
+    public async Task<bool> CopyIfUnchangedAsync(string fromKey, string toKey, string eTag, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _client.Value.CopyObjectAsync(
+                new CopyObjectRequest { SourceBucket = Bucket, SourceKey = fromKey, DestinationBucket = Bucket, DestinationKey = toKey, ETagToMatch = eTag },
+                cancellationToken);
+            return true;
+        }
+        catch (AmazonS3Exception exception) when (exception.StatusCode is HttpStatusCode.PreconditionFailed or HttpStatusCode.NotFound)
+        {
+            return false;
         }
     }
 

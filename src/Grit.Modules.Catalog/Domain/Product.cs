@@ -56,7 +56,7 @@ internal sealed class Product : AggregateRoot<ProductId>
         return new Product(ProductId.New(), categoryId, name, slug.Value, description, new Dictionary<string, string>(attributes));
     }
 
-    // Upload keys are generated under this prefix, so a key from another product is never attached here.
+    // Confirmed uploads are copied under this prefix, so a key from another product is never attached here.
     public static string ImageKeyPrefix(ProductId id) => $"products/{id.Value}/";
 
     // The slug is kept on rename so links already published keep working.

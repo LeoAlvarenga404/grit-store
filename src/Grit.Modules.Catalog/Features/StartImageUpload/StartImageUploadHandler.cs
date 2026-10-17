@@ -17,7 +17,7 @@ internal sealed class StartImageUploadHandler(CatalogDbContext db, ProductImageS
             return CatalogErrors.ProductNotFound;
         }
 
-        var key = $"{Product.ImageKeyPrefix(id)}{Guid.CreateVersion7()}.{ImageRule.ExtensionByContentType[command.ContentType]}";
+        var key = $"{ProductImageStorage.UploadKeyPrefix(id)}{Guid.CreateVersion7()}.{ImageRule.ExtensionByContentType[command.ContentType]}";
         var expiresAt = DateTimeOffset.UtcNow + ProductImageStorage.UploadLifetime;
         return new ImageUploadResponse(key, await storage.UploadUrlAsync(key, command.ContentType, expiresAt), expiresAt);
     }

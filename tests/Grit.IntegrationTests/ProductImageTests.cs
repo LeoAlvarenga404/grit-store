@@ -2,6 +2,8 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Grit.Modules.Catalog.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Grit.IntegrationTests;
 
@@ -18,7 +20,7 @@ public class ProductImageTests(ProductImageHost images) : IClassFixture<ProductI
         var (productId, version, slug) = await ProductWithSkuAsync();
         var upload = await StartUploadAsync(productId, "image/png", 100);
         var key = upload.GetProperty("key").GetString()!;
-        key.ShouldStartWith($"products/{productId}/");
+        key.ShouldStartWith($"uploads/{productId}/");
         key.ShouldEndWith(".png");
         (await PutAsync(upload, "image/png", 100)).StatusCode.ShouldBe(HttpStatusCode.OK);
 
@@ -27,8 +29,8 @@ public class ProductImageTests(ProductImageHost images) : IClassFixture<ProductI
         attached.StatusCode.ShouldBe(HttpStatusCode.OK);
         var product = await CatalogAdminApi.GetProductAsync(_admin, productId);
         var image = product.GetProperty("images").EnumerateArray().ShouldHaveSingleItem();
-        image.GetProperty("key").GetString().ShouldBe(key);
-        image.GetProperty("fileName").GetString().ShouldBe(key[(key.LastIndexOf('/') + 1)..]);
+        image.GetProperty("key").GetString().ShouldBe($"products/{productId}/{FileNameOf(key)}");
+        image.GetProperty("fileName").GetString().ShouldBe(FileNameOf(key));
         var page = await _admin.GetFromJsonAsync<JsonElement>($"/api/v1/catalog/products/{slug}", TestContext.Current.CancellationToken);
         var url = page.GetProperty("imageUrls").EnumerateArray().ShouldHaveSingleItem().GetString();
         (await Storage.GetByteArrayAsync(url, TestContext.Current.CancellationToken)).Length.ShouldBe(100);
@@ -92,6 +94,51 @@ public class ProductImageTests(ProductImageHost images) : IClassFixture<ProductI
     }
 
     [Fact]
+    public async Task AttachImage_UploadUrlReusedAfterAttach_KeepsTheConfirmedImage()
+    {
+        var (productId, version, slug) = await ProductWithSkuAsync();
+        var upload = await StartUploadAsync(productId, "image/png", 100);
+        await PutAsync(upload, "image/png", 100);
+        (await AttachAsync(productId, upload.GetProperty("key").GetString()!, version)).StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        await PutAsync(upload, "image/png", 2_097_153);
+
+        var page = await _admin.GetFromJsonAsync<JsonElement>($"/api/v1/catalog/products/{slug}", TestContext.Current.CancellationToken);
+        var url = page.GetProperty("imageUrls").EnumerateArray().ShouldHaveSingleItem().GetString();
+        (await Storage.GetByteArrayAsync(url, TestContext.Current.CancellationToken)).Length.ShouldBe(100);
+    }
+
+    [Fact]
+    public async Task AttachImage_KeyOutsideTheUploadPrefix_Returns400()
+    {
+        var (productId, version, _) = await ProductWithSkuAsync();
+        var upload = await StartUploadAsync(productId, "image/png", 100);
+        await PutAsync(upload, "image/png", 100);
+
+        var response = await AttachAsync(productId, $"products/{productId}/{FileNameOf(upload.GetProperty("key").GetString()!)}", version);
+
+        (await CodeOfAsync(response, HttpStatusCode.BadRequest)).ShouldBe("catalog.invalid_image_key");
+    }
+
+    [Fact]
+    public async Task CopyIfUnchanged_UploadReplacedAfterTheCheck_CopiesNothing()
+    {
+        var (productId, _, _) = await ProductWithSkuAsync();
+        var upload = await StartUploadAsync(productId, "image/png", 100);
+        await PutAsync(upload, "image/png", 100);
+        var storage = images.Host.Services.GetRequiredService<ProductImageStorage>();
+        var key = upload.GetProperty("key").GetString()!;
+        var checkedUpload = (await storage.FindAsync(key, TestContext.Current.CancellationToken)).ShouldNotBeNull();
+        await PutAsync(upload, "image/png", 200);
+        var target = $"products/{productId}/{FileNameOf(key)}";
+
+        var isCopied = await storage.CopyIfUnchangedAsync(key, target, checkedUpload.ETag, TestContext.Current.CancellationToken);
+
+        isCopied.ShouldBeFalse();
+        (await storage.FindAsync(target, TestContext.Current.CancellationToken)).ShouldBeNull();
+    }
+
+    [Fact]
     public async Task RemoveImage_AttachedImage_RemovesIt()
     {
         var (productId, version, _) = await ProductWithSkuAsync();
@@ -99,7 +146,7 @@ public class ProductImageTests(ProductImageHost images) : IClassFixture<ProductI
         var key = upload.GetProperty("key").GetString()!;
         await PutAsync(upload, "image/webp", 10);
         var attached = await CatalogAdminApi.ReadAsync(await AttachAsync(productId, key, version));
-        var fileName = key[(key.LastIndexOf('/') + 1)..];
+        var fileName = FileNameOf(key);
 
         var response = await _admin.DeleteAsync(
             $"{CatalogAdminApi.ProductsPath}/{productId}/images/{fileName}?version={attached.GetProperty("version").GetUInt32()}",
@@ -147,6 +194,8 @@ public class ProductImageTests(ProductImageHost images) : IClassFixture<ProductI
 
     private Task<HttpResponseMessage> AttachAsync(Guid productId, string key, uint version) =>
         _admin.PostAsJsonAsync($"{CatalogAdminApi.ProductsPath}/{productId}/images", new { key, version }, TestContext.Current.CancellationToken);
+
+    private static string FileNameOf(string key) => key[(key.LastIndexOf('/') + 1)..];
 
     private static async Task<string?> CodeOfAsync(HttpResponseMessage response, HttpStatusCode status) =>
         (await ProblemResponse.ReadAsync(response, status)).GetProperty("code").GetString();
