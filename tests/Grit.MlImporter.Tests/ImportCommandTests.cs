@@ -105,6 +105,23 @@ public sealed class ImportCommandTests : IDisposable
         Directory.Exists(_output).ShouldBeFalse();
     }
 
+    [Fact]
+    public async Task ImportAsync_ImageWriteFails_KeepsThePreviousSeed()
+    {
+        Directory.CreateDirectory(Path.Combine(_output, "images"));
+        await File.WriteAllTextAsync(Path.Combine(_output, "catalog.json"), "old", TestContext.Current.CancellationToken);
+        await File.WriteAllBytesAsync(Path.Combine(_output, "images", "old.webp"), [1], TestContext.Current.CancellationToken);
+        var options = ImportOptions.Parse([.. Arguments, _output]).Value;
+        using var http = new HttpClient(RecordedCatalog(), disposeHandler: false);
+        var importer = new CatalogImporter(new MercadoLivreClient(http, "test-token"), TextWriter.Null, (_, _, _) => throw new IOException("No space left on device."));
+
+        await Should.ThrowAsync<IOException>(() => importer.ImportAsync(options, TestContext.Current.CancellationToken));
+
+        (await File.ReadAllTextAsync(Path.Combine(_output, "catalog.json"), TestContext.Current.CancellationToken)).ShouldBe("old");
+        File.Exists(Path.Combine(_output, "images", "old.webp")).ShouldBeTrue();
+        Directory.GetFileSystemEntries(_output).Select(Path.GetFileName).Order().ShouldBe(["catalog.json", "images"]);
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_output))
