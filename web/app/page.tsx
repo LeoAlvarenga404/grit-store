@@ -35,8 +35,10 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
           <ul className="products">
             {products.data.items.map((product) => (
               <li key={product.id}>
-                {product.imageUrl && <Image src={product.imageUrl} alt={product.name} width={192} height={192} unoptimized />}
-                <Link href={`/products/${product.slug}`}>{product.name}</Link>
+                <Link href={`/products/${product.slug}`}>
+                  {product.imageUrl && <Image src={product.imageUrl} alt="" width={192} height={192} unoptimized />}
+                  {product.name}
+                </Link>
                 <p>A partir de {formatPrice(product.priceAmount)}</p>
               </li>
             ))}

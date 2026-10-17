@@ -10,9 +10,6 @@ public class ProductImageTests(ProductImageHost images) : IClassFixture<ProductI
 {
     private readonly HttpClient _admin = AdminClient.Create(images.Host);
 
-    // Talks to the presigned URLs directly, like the BFF does.
-    private static readonly HttpClient Storage = new();
-
     [Fact]
     public async Task UploadAndAttach_PngImage_ShowsOnTheAdminAndPublicProduct()
     {
@@ -32,7 +29,7 @@ public class ProductImageTests(ProductImageHost images) : IClassFixture<ProductI
         image.GetProperty("fileName").GetString().ShouldBe(ProductImageApi.FileNameOf(key));
         var page = await _admin.GetFromJsonAsync<JsonElement>($"/api/v1/catalog/products/{slug}", TestContext.Current.CancellationToken);
         var url = page.GetProperty("imageUrls").EnumerateArray().ShouldHaveSingleItem().GetString();
-        (await Storage.GetByteArrayAsync(url, TestContext.Current.CancellationToken)).Length.ShouldBe(100);
+        (await ProductImageApi.Storage.GetByteArrayAsync(url, TestContext.Current.CancellationToken)).Length.ShouldBe(100);
     }
 
     [Theory]
@@ -104,7 +101,7 @@ public class ProductImageTests(ProductImageHost images) : IClassFixture<ProductI
 
         var page = await _admin.GetFromJsonAsync<JsonElement>($"/api/v1/catalog/products/{slug}", TestContext.Current.CancellationToken);
         var url = page.GetProperty("imageUrls").EnumerateArray().ShouldHaveSingleItem().GetString();
-        (await Storage.GetByteArrayAsync(url, TestContext.Current.CancellationToken)).Length.ShouldBe(100);
+        (await ProductImageApi.Storage.GetByteArrayAsync(url, TestContext.Current.CancellationToken)).Length.ShouldBe(100);
     }
 
     [Fact]

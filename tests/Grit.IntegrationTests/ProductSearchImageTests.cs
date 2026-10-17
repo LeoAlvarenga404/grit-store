@@ -5,8 +5,6 @@ namespace Grit.IntegrationTests;
 
 public class ProductSearchImageTests(ProductImageHost images) : IClassFixture<ProductImageHost>
 {
-    private static readonly HttpClient Storage = new();
-
     private readonly HttpClient _admin = AdminClient.Create(images.Host);
 
     [Fact]
@@ -16,9 +14,10 @@ public class ProductSearchImageTests(ProductImageHost images) : IClassFixture<Pr
         version = await ProductImageApi.AttachImageAsync(_admin, productId, version, 100);
         await ProductImageApi.AttachImageAsync(_admin, productId, version, 200);
 
+        await SearchItemAsync(productId);
         var item = await SearchItemAsync(productId);
 
-        (await Storage.GetByteArrayAsync(item.GetProperty("imageUrl").GetString(), TestContext.Current.CancellationToken)).Length.ShouldBe(100);
+        (await ProductImageApi.Storage.GetByteArrayAsync(item.GetProperty("imageUrl").GetString(), TestContext.Current.CancellationToken)).Length.ShouldBe(100);
     }
 
     [Fact]
@@ -40,7 +39,30 @@ public class ProductSearchImageTests(ProductImageHost images) : IClassFixture<Pr
 
         var item = await SearchItemAsync(productId);
 
-        (await Storage.GetByteArrayAsync(item.GetProperty("imageUrl").GetString(), TestContext.Current.CancellationToken)).Length.ShouldBe(100);
+        (await ProductImageApi.Storage.GetByteArrayAsync(item.GetProperty("imageUrl").GetString(), TestContext.Current.CancellationToken)).Length.ShouldBe(100);
+    }
+
+    [Fact]
+    public async Task Search_TwoProductsOnlyTheOlderWithAnImage_KeepsEachImageWithItsProduct()
+    {
+        var color = Guid.NewGuid().ToString("N");
+        var (olderId, olderVersion) = await CatalogAdminApi.CreateProductAsync(_admin);
+        var olderSku = await CatalogAdminApi.AddSkuAsync(_admin, olderId, olderVersion, color);
+        await ProductImageApi.AttachImageAsync(_admin, olderId, olderSku.Version, 100);
+        var (newerId, newerVersion) = await CatalogAdminApi.CreateProductAsync(_admin);
+        await CatalogAdminApi.AddSkuAsync(_admin, newerId, newerVersion, color);
+
+        var page = await _admin.GetFromJsonAsync<JsonElement>(
+            $"/api/v1/catalog/products?attribute=cor:{color}&limit=50",
+            TestContext.Current.CancellationToken);
+
+        var items = page.GetProperty("items");
+        items.GetArrayLength().ShouldBe(2);
+        items[0].GetProperty("id").GetGuid().ShouldBe(newerId);
+        items[0].GetProperty("imageUrl").ValueKind.ShouldBe(JsonValueKind.Null);
+        items[1].GetProperty("id").GetGuid().ShouldBe(olderId);
+        var olderImageUrl = items[1].GetProperty("imageUrl").GetString();
+        (await ProductImageApi.Storage.GetByteArrayAsync(olderImageUrl, TestContext.Current.CancellationToken)).Length.ShouldBe(100);
     }
 
     private async Task<JsonElement> SearchItemAsync(Guid productId)

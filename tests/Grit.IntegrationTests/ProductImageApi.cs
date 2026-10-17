@@ -8,7 +8,7 @@ namespace Grit.IntegrationTests;
 internal static class ProductImageApi
 {
     // Talks to the presigned URLs directly, like the BFF does.
-    private static readonly HttpClient Storage = new();
+    internal static readonly HttpClient Storage = new();
 
     public static async Task<(Guid Id, uint Version, string Slug)> ProductWithSkuAsync(HttpClient admin)
     {

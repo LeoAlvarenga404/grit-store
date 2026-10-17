@@ -51,8 +51,8 @@ internal sealed class ProductImageStorage(IConfiguration configuration)
         return urls;
     }
 
-    public async Task<string> DownloadUrlAsync(string key) =>
-        await _client.Value.GetPreSignedURLAsync(new GetPreSignedUrlRequest
+    public Task<string> DownloadUrlAsync(string key) =>
+        _client.Value.GetPreSignedURLAsync(new GetPreSignedUrlRequest
         {
             BucketName = Bucket,
             Key = key,

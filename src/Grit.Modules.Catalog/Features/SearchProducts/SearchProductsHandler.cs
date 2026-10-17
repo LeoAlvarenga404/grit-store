@@ -58,11 +58,11 @@ internal sealed class SearchProductsHandler(NpgsqlDataSource dataSource, Product
         var rows = (await connection.QueryAsync<SearchProductsRow>(
             new CommandDefinition(Sql, parameters, cancellationToken: cancellationToken))).AsList();
 
-        var items = rows
-            .Take(query.Limit)
+        var taken = rows.Take(query.Limit).ToList();
+        var items = taken
             .Select(row => new ProductSummaryResponse(row.Id, row.Slug, row.Name, row.PriceAmount, Product.StoreCurrency, ImageUrl: null))
             .ToList();
-        var imageKeys = rows.Take(query.Limit).Select(row => row.ImageKey).ToList();
+        var imageKeys = taken.Select(row => row.ImageKey).ToList();
         var nextCursor = rows.Count > query.Limit ? new ProductCursor(rows[query.Limit - 1].Rank, rows[query.Limit - 1].Id).Encode() : null;
         return new SearchProductsPage(new SearchProductsResponse(items, nextCursor), imageKeys);
     }

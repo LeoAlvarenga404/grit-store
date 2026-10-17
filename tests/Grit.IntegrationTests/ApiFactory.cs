@@ -67,7 +67,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.UseSetting("Payments:Stripe:WebhookSecret", StripeWebhookSecret);
 
         // Every host here shares one Redis, so a read cached from one test database would answer another;
-        // CatalogReadCacheTests turns the cache on in a host of its own.
+        // CatalogReadCacheTests and ProductImageHost turn the cache on in hosts of their own.
         builder.UseSetting("Caching:Enabled", "false");
 
         // No outbox delivery in this host, so tests read OutboxMessage rows before anything delivers them;
