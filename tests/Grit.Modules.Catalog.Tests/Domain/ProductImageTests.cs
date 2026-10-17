@@ -62,7 +62,7 @@ public class ProductImageTests
 
         product.AddImage(KeyOf(product, "a.png"), "preto").Error.ShouldBe(CatalogErrors.DuplicateImage);
 
-        product.Images.ShouldHaveSingleItem();
+        product.Images.ShouldBe([new ProductImage(KeyOf(product, "a.png"), "azul")]);
     }
 
     [Fact]

@@ -81,6 +81,32 @@ public class CatalogSeedValidationTests
     }
 
     [Fact]
+    public void Validate_InvalidFileInTheSecondGroup_Throws()
+    {
+        var images = new List<SeedColorImages> { new("preto", ["mochila.webp"]), new("azul", ["mochila-azul.webp", "../x.webp"]) };
+
+        var exception = Should.Throw<InvalidOperationException>(() => CatalogSeeder.Validate(CatalogWith(images, "preto", "azul")));
+
+        exception.Message.ShouldBe("The seed entry 'Mochila de Trilha' must list .webp file names only.");
+    }
+
+    [Fact]
+    public void Validate_NullGroup_Throws()
+    {
+        var exception = Should.Throw<InvalidOperationException>(() => CatalogSeeder.Validate(CatalogWith([null!], "preto")));
+
+        exception.Message.ShouldBe("The seed entry 'Mochila de Trilha' must list .webp file names only.");
+    }
+
+    [Fact]
+    public void Validate_NullFileName_Throws()
+    {
+        var exception = Should.Throw<InvalidOperationException>(() => CatalogSeeder.Validate(CatalogWith([new("preto", ["mochila.webp", null!])], "preto")));
+
+        exception.Message.ShouldBe("The seed entry 'Mochila de Trilha' must list .webp file names only.");
+    }
+
+    [Fact]
     public void Validate_CommittedSeedAndOwnLine_PassAsOneCatalog()
     {
         var seed = Committed("seed", "catalog.json");

@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Grit.Modules.Catalog.Features.SearchProducts;
@@ -108,6 +109,29 @@ public class ProductSearchImageTests(ProductImageHost images) : IClassFixture<Pr
         page.ImageKeys[index].Cover.ShouldNotBeNull().ShouldStartWith($"products/{productId}/");
         page.ImageKeys[index].Colors.ShouldBe([page.ImageKeys[index].Cover]);
         (await SizeOfAsync((await SearchItemAsync(productId)).GetProperty("imageUrl"))).ShouldBe(100);
+    }
+
+    // The cover is the product's first image even when it has no colour; the colour list starts at the first coloured image.
+    [Fact]
+    public async Task Search_FirstImageWithoutColor_IsTheCoverButNoColorsImage()
+    {
+        var (productId, version) = await CatalogAdminApi.CreateProductAsync(_admin);
+        var blue = await CatalogAdminApi.AddSkuAsync(_admin, productId, version, "azul");
+        var plain = await _admin.PostAsJsonAsync(
+            CatalogAdminApi.SkusPath(productId),
+            new { attributes = new { tamanho = "U" }, priceAmount = 59.90m, priceCurrency = "BRL", version = blue.Version },
+            TestContext.Current.CancellationToken);
+        plain.StatusCode.ShouldBe(HttpStatusCode.Created);
+        version = (await CatalogAdminApi.ReadAsync(plain)).GetProperty("version").GetUInt32();
+        version = await ProductImageApi.AttachImageAsync(_admin, productId, version, 100, color: null);
+        await ProductImageApi.AttachImageAsync(_admin, productId, version, 200, "azul");
+
+        var item = await SearchItemAsync(productId);
+
+        (await SizeOfAsync(item.GetProperty("imageUrl"))).ShouldBe(100);
+        var color = item.GetProperty("colors").EnumerateArray().ShouldHaveSingleItem();
+        color.GetProperty("name").GetString().ShouldBe("azul");
+        (await SizeOfAsync(color.GetProperty("imageUrl"))).ShouldBe(200);
     }
 
     private static async Task<int> SizeOfAsync(JsonElement url) =>

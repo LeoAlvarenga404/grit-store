@@ -164,6 +164,7 @@ public class ProductListingTests(SearchCorpus corpus)
     [InlineData("q=tenis", "Tênis de Corrida Veloz", true)]
     [InlineData("q=cafe", "Caneca Térmica para Café", false)]
     [InlineData("q=tenis&attribute=tamanho:42", "Tênis de Corrida Veloz", false)]
+    [InlineData("q=tenis&minPrice=380", "Tênis de Corrida Veloz", false)]
     public async Task Search_Item_FlagsWhenTheMatchingSkusHaveDifferentPrices(string queryString, string name, bool hasPriceRange)
     {
         var page = await corpus.GetAsync($"{SearchCorpus.ProductsPath}?{queryString}");

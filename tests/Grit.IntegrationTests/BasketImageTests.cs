@@ -65,6 +65,44 @@ public class BasketImageTests(ProductImageHost images) : IClassFixture<ProductIm
         line.GetProperty("imageUrl").ValueKind.ShouldBe(JsonValueKind.Null);
     }
 
+    // A coloured SKU never falls back to an image without colour.
+    [Fact]
+    public async Task GetBasket_SkuOfAColorWithOnlyImagesWithoutColor_ShowsNoImage()
+    {
+        var (productId, version) = await CatalogAdminApi.CreateProductAsync(_admin);
+        var blue = await CatalogAdminApi.AddSkuAsync(_admin, productId, version, "azul");
+        var plain = await AddSkuWithoutColorAsync(productId, blue.Version);
+        await ProductImageApi.AttachImageAsync(_admin, productId, plain.Version, 100, color: null);
+        await BasketApi.AddLineAsync(_customer, blue.Id, 1);
+
+        var line = (await BasketApi.GetAsync(_customer)).GetProperty("lines").EnumerateArray().ShouldHaveSingleItem();
+
+        line.GetProperty("imageUrl").ValueKind.ShouldBe(JsonValueKind.Null);
+    }
+
+    // The basket stores no image: every read asks the catalogue, so a gallery change shows on the next GET.
+    [Fact]
+    public async Task GetBasket_GalleryChangedBetweenReads_ShowsTheCurrentFirstImage()
+    {
+        var (productId, version, blueSkuId) = await BasketApi.CreateSkuAsync(_admin);
+        await BasketApi.AddLineAsync(_customer, blueSkuId, 2);
+        (await LineAsync(blueSkuId)).GetProperty("imageUrl").ValueKind.ShouldBe(JsonValueKind.Null);
+
+        var (firstKey, afterFirst) = await AttachAsync(productId, version, 100);
+        (await SizeOfAsync((await LineAsync(blueSkuId)).GetProperty("imageUrl"))).ShouldBe(100);
+
+        var (_, afterSecond) = await AttachAsync(productId, afterFirst, 200);
+        (await SizeOfAsync((await LineAsync(blueSkuId)).GetProperty("imageUrl"))).ShouldBe(100);
+        var removed = await _admin.DeleteAsync(
+            $"{CatalogAdminApi.ProductsPath}/{productId}/images/{ProductImageApi.FileNameOf(firstKey)}?version={afterSecond}",
+            TestContext.Current.CancellationToken);
+        removed.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var line = await LineAsync(blueSkuId);
+        (await SizeOfAsync(line.GetProperty("imageUrl"))).ShouldBe(200);
+        line.GetProperty("quantity").GetInt32().ShouldBe(2);
+    }
+
     private async Task<(Guid Id, uint Version)> AddSkuWithoutColorAsync(Guid productId, uint version)
     {
         var response = await _admin.PostAsJsonAsync(
@@ -74,6 +112,19 @@ public class BasketImageTests(ProductImageHost images) : IClassFixture<ProductIm
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
         var sku = await CatalogAdminApi.ReadAsync(response);
         return (sku.GetProperty("id").GetGuid(), sku.GetProperty("version").GetUInt32());
+    }
+
+    private async Task<JsonElement> LineAsync(Guid skuId) =>
+        (await BasketApi.GetAsync(_customer)).GetProperty("lines").EnumerateArray().Single(line => line.GetProperty("skuId").GetGuid() == skuId);
+
+    private async Task<(string Key, uint Version)> AttachAsync(Guid productId, uint version, int sizeInBytes)
+    {
+        var upload = await ProductImageApi.StartUploadAsync(_admin, productId, "image/png", sizeInBytes);
+        await ProductImageApi.PutAsync(upload, "image/png", sizeInBytes);
+        var key = upload.GetProperty("key").GetString()!;
+        var response = await ProductImageApi.AttachAsync(_admin, productId, key, version, "azul");
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        return (key, (await CatalogAdminApi.ReadAsync(response)).GetProperty("version").GetUInt32());
     }
 
     private static async Task<int> SizeOfAsync(JsonElement url) =>

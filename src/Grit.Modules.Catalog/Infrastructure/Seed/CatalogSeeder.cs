@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Grit.Modules.Catalog.Infrastructure.Seed;
 
 // Idempotent by slug: an existing category or product is left as it is, so a restart adds only what is missing.
-// The whole file is checked before the database is read, so a bad file fails on an empty and on a seeded catalog alike;
+// Both files are checked as one catalogue before the database is read, so a bad file fails on an empty and on a seeded catalog alike;
 // one SaveChanges for both files, so nothing is written unless everything is (images uploaded before a failed save
 // stay in the storage as orphans, like an unconfirmed upload: ADR 0016).
 internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage images)
@@ -160,15 +160,15 @@ internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage ima
 
     private static void CheckImages(SeedProduct seed)
     {
-        if (!(seed.Images ?? []).All(group => group.Files is not null && group.Files.All(IsWebpFileName)))
+        if (!(seed.Images ?? []).All(group => group is not null && group.Files is not null && group.Files.All(IsWebpFileName)))
         {
             throw new InvalidOperationException($"The seed entry '{seed.Name}' must list .webp file names only.");
         }
     }
 
     // A bare file name: the seed must not reach outside its images folder.
-    private static bool IsWebpFileName(string image) =>
-        image.Length > ".webp".Length && image.EndsWith(".webp", StringComparison.Ordinal) && Path.GetFileName(image) == image;
+    private static bool IsWebpFileName(string? image) =>
+        image is not null && image.Length > ".webp".Length && image.EndsWith(".webp", StringComparison.Ordinal) && Path.GetFileName(image) == image;
 
     private static T Valid<T>(string name, Result<T> result) =>
         result.IsSuccess ? result.Value : throw new InvalidOperationException($"The seed entry '{name}' is invalid: {result.Error.Code}.");

@@ -121,6 +121,18 @@ public class CatalogSeederTests(ApiFactory api)
         exception.Message.ShouldBe("The seed entry 'Tênis' repeats the slug 'tenis'.");
     }
 
+    [Fact]
+    public async Task SeedAsync_ProductInBothFiles_ThrowsAndWritesNothing()
+    {
+        await using var host = await HostAsync("seed_own_line_product", seedPath: null);
+        var path = await WriteSeedFolderAsync(ImportedSeed, OwnLine(89.90m).Replace("Camiseta GRIT Teste", "tênis veloz", StringComparison.Ordinal));
+
+        var exception = await Should.ThrowAsync<InvalidOperationException>(() => SeedAsync(host, path));
+
+        exception.Message.ShouldBe("The seed entry 'tênis veloz' repeats the slug 'tenis-veloz'.");
+        (await CatalogSeedTests.CountAsync(host)).ShouldBe((0, 0, 0));
+    }
+
     // Two SKUs and a photo that does not exist: the own line seeds without its pictures until the user adds them.
     private static string OwnLine(decimal price) => $$"""
         {"categories": [{"name": "Camisetas e regatas", "products": [{"name": "Camiseta GRIT Teste", "description": "Leve.",

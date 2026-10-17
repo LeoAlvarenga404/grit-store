@@ -19,6 +19,18 @@ public class ProductImageColorTests(ProductImageHost images) : IClassFixture<Pro
         (await CodeOfAsync(response, HttpStatusCode.BadRequest)).ShouldBe("catalog.image_color_not_found");
     }
 
+    // Leaving the colour out is only for products whose SKUs have no colour: here it must not fall back to a SKU's colour.
+    [Fact]
+    public async Task AttachImage_ColorLeftOutForAProductWithColors_Returns400()
+    {
+        var (productId, version, _) = await ProductImageApi.ProductWithSkuAsync(_admin);
+        var key = await UploadAsync(productId);
+
+        var response = await ProductImageApi.AttachAsync(_admin, productId, key, version, color: null);
+
+        (await CodeOfAsync(response, HttpStatusCode.BadRequest)).ShouldBe("catalog.image_color_not_found");
+    }
+
     // A retry of the very same request carries the version read before the first attach.
     [Fact]
     public async Task AttachImage_SameUploadAgain_ReturnsTheCurrentVersionAndKeepsOneImage()

@@ -94,6 +94,7 @@ public class CatalogImagePersistenceTests(ApiFactory api)
         var keys = await ScalarAsync<string>(dataSource, $"SELECT image_keys::text FROM catalog.products WHERE id = '{ShirtId}'");
         keys.ShouldBe($"{{products/{ShirtId}/a.webp,products/{ShirtId}/b.webp}}");
         (await ScalarAsync<string>(dataSource, $"SELECT image_keys::text FROM catalog.products WHERE id = '{SockId}'")).ShouldBe("{}");
+        (await ScalarAsync<string>(dataSource, $"SELECT image_keys::text FROM catalog.products WHERE id = '{CapId}'")).ShouldBe($"{{products/{CapId}/c.webp}}");
         (await ColumnCountAsync(dataSource, "images")).ShouldBe(0L);
     }
 

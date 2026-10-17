@@ -13,7 +13,7 @@ internal static class GetBasketEndpoint
     public static void MapGetBasket(this IEndpointRouteBuilder basket) =>
         basket.MapGet("/", GetBasket)
             .WithSummary("Gets the customer's basket with the price seen when each item was added and the current price.")
-            .WithDescription("hasPriceChanged flags items whose price changed since they were added; the subtotal uses current prices of available items. Send that subtotal as expectedSubtotalAmount at checkout. color, size and imageUrl come from the catalog when the basket is read (imageUrl is the first image of the SKU's colour, signed for an hour); each is null when the SKU or the value is missing.")
+            .WithDescription("hasPriceChanged flags items whose price changed since they were added; the subtotal uses current prices of available items. Send that subtotal as expectedSubtotalAmount at checkout. color, size and imageUrl come from the catalog when the basket is read (imageUrl is the first image of the SKU's colour, or for a SKU without colour the first image without colour, never another colour's; signed for an hour); each is null when the SKU or the value is missing.")
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 
     private static async Task<Ok<BasketResponse>> GetBasket(ClaimsPrincipal user, ISender sender, CancellationToken cancellationToken)
