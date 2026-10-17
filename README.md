@@ -1,6 +1,6 @@
 # Grit Store
 
-**English summary.** Grit Store is a portfolio e-commerce for sports and outdoor gear: a **.NET 10 modular monolith** built with DDD (Identity, Catalog, Basket, Inventory, Ordering, Payments) and a minimal **Next.js** front behind a BFF. The checkout is a **MassTransit saga** with a transactional outbox: it reserves stock, authorizes payment through an `IPaymentGateway` port (fake gateway today, Stripe later) and compensates on failure. Search uses PostgreSQL full text + trigram with facets and keyset paging. Everything runs locally with `dotnet run --project src/Grit.AppHost` (.NET Aspire), with no secrets to configure. Tests run against real Postgres and Redis through Testcontainers.
+**English summary.** Grit Store is a portfolio e-commerce for sports and outdoor gear: a **.NET 10 modular monolith** built with DDD (Identity, Catalog, Basket, Inventory, Ordering, Payments) and a minimal **Next.js** front (store + admin) behind a BFF. The checkout is a **MassTransit saga** with a transactional outbox: it reserves stock, authorizes payment through an `IPaymentGateway` port (fake gateway today, Stripe later) and compensates on failure. Search uses PostgreSQL full text + trigram with facets and keyset paging; public catalog reads go through HybridCache (memory + Redis) with post-commit tag invalidation, measured with k6 on 50k products. Product images live in S3-compatible storage (SeaweedFS) behind presigned URLs. Everything runs locally with `dotnet run --project src/Grit.AppHost` (.NET Aspire), with no secrets to configure. Tests run against real Postgres and Redis through Testcontainers.
 
 ---
 
@@ -21,13 +21,18 @@ O AppHost sobe Postgres, Redis, a API e o Next.js, e abre o dashboard do Aspire.
 
 Para testar o checkout: crie uma conta, adicione itens ao carrinho e finalize. O cartão `tok_decline` é recusado, a reserva de estoque é liberada e o pedido é cancelado; qualquer outro valor é aprovado.
 
+**Admin:** entre com `admin@grit.local`. A senha é gerada pelo AppHost na primeira execução e fica nos user secrets dele (`dotnet user-secrets list --project src/Grit.AppHost`, chave `Parameters:admin-password`), também visível nos parâmetros do dashboard do Aspire. Em `/admin` dá para:
+- ajustar o estoque por SKU;
+- enviar fotos dos produtos (jpeg, png ou webp até 2 MB, guardadas no SeaweedFS por URL pré-assinada);
+- marcar pedidos confirmados como enviados, o que baixa o estoque.
+
 ## Testes
 
 ```bash
 dotnet test
 ```
 
-Os testes de integração usam Testcontainers (Postgres e Redis reais, nunca mocks do banco), então o Docker precisa estar rodando. Hoje são 446 testes. O teste vitrine é `tests/Grit.IntegrationTests/CheckoutSagaTests.cs`: caminho feliz do checkout e pagamento recusado que libera a reserva. `StockReservationRaceTests.cs` prova que dois compradores não levam a última unidade.
+Os testes de integração usam Testcontainers (Postgres e Redis reais, nunca mocks do banco), então o Docker precisa estar rodando. Hoje são 544 testes. O teste vitrine é `tests/Grit.IntegrationTests/CheckoutSagaTests.cs`: caminho feliz do checkout e pagamento recusado que libera a reserva. `StockReservationRaceTests.cs` prova que dois compradores não levam a última unidade.
 
 ## Arquitetura
 
@@ -37,7 +42,34 @@ Os testes de integração usam Testcontainers (Postgres e Redis reais, nunca moc
 - **Erros:** `Result`/`Result<T>` para falhas esperadas, ProblemDetails com `code` estável na API.
 - **Identidade:** JWT de 15 minutos, refresh com rotação e detecção de reuso (a família inteira é revogada), limite de tentativas no login.
 
-Decisões e seus motivos: `docs/architecture/design.md` e os ADRs em `docs/adr/`.
+Diagramas C4 e a sequência da saga: `docs/architecture/diagramas.md`. Linguagem ubíqua: `docs/glossary.md`. Decisões e seus motivos: `docs/architecture/design.md` e os ADRs em `docs/adr/`.
+
+## Performance
+
+As leituras públicas do catálogo passam por HybridCache (memória + Redis), invalidado depois do commit de cada escrita do admin (ADR 0017). Medição com k6 (`bench/`), em 2026-10-17, numa máquina de desenvolvimento Windows com Docker Desktop. O catálogo tinha 50.016 produtos e 100.058 SKUs, gerados com `--Seed:VolumeProducts=50000`; a primeira subida leva cerca de 70 s. A navegação no catálogo roda a 20 iterações/s por 1 minuto, com 5 requisições por iteração. Os p95 abaixo são do cenário de catálogo.
+
+| p95 | com cache | sem cache |
+|---|---|---|
+| Facetas sem filtro | 43,6 ms | 32,2 s |
+| Listagem sem `q` | 1,85 ms | 5,69 s |
+| Busca | 1,96 ms | 168,7 ms |
+| Sugestões | 1,15 ms | 136,5 ms |
+| Página do produto | 2,36 ms | 141,7 ms |
+| Requisições com sucesso | 100% | 0,9% |
+
+Sem cache, uma consulta de facetas sem filtro varre todos os SKUs e leva cerca de 1,1 s mesmo com o sistema ocioso. Com 20 iterações/s, o Postgres satura, as requisições se acumulam e as conexões se esgotam. O erro se espalha para todos os endpoints, inclusive o checkout que roda logo depois: só 5% dos pedidos chegam a ser criados, e nenhum é confirmado durante a medição; com cache, 100% dos pedidos passam.
+
+Para repetir a medição (o Docker precisa estar rodando):
+
+```bash
+dotnet run --project src/Grit.AppHost -- --Seed:VolumeProducts=50000
+sh bench/run.sh with-cache
+# reinicie com o cache desligado
+dotnet run --project src/Grit.AppHost -- --Seed:VolumeProducts=50000 --Caching:Enabled=false
+sh bench/run.sh without-cache
+```
+
+Os resultados ficam em `bench/results/`, que não é versionado.
 
 ## Ordem de leitura sugerida
 
@@ -51,4 +83,4 @@ Decisões e seus motivos: `docs/architecture/design.md` e os ADRs em `docs/adr/`
 
 ## Fora do escopo por enquanto
 
-Imagens de produto em armazenamento S3 e importador do Mercado Livre, Stripe real, telas de admin, cache distribuído e testes de carga com k6. Estão no roadmap.
+Importador do Mercado Livre (precisa do token do app), Stripe real (precisa de uma conta de teste) e um GIF do trace no Aspire. Estão no roadmap.
