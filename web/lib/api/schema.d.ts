@@ -2353,6 +2353,10 @@ export interface components {
             status?: null | number;
             detail?: null | string;
             instance?: null | string;
+            code?: string;
+            errors?: {
+                [key: string]: string[];
+            };
         };
         ProductImageResponse: {
             key: string;
