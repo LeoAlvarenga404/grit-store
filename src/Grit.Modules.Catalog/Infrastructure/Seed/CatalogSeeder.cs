@@ -100,7 +100,7 @@ internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage ima
 
             var key = Product.ImageKeyPrefix(product.Id) + fileName;
             await images.PutFileAsync(key, file, "image/webp", cancellationToken);
-            Valid(seed.Name, product.AddImage(key));
+            Valid(seed.Name, product.AddImage(key, product.Skus is [var first, ..] ? first.Color : null));
         }
     }
 
@@ -120,9 +120,9 @@ internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage ima
     private static void CheckImages(SeedProduct seed)
     {
         var fileNames = seed.Images ?? [];
-        if (fileNames.Count > Product.MaxImages || !fileNames.All(IsWebpFileName))
+        if (fileNames.Count > Product.MaxImagesPerColor || !fileNames.All(IsWebpFileName))
         {
-            throw new InvalidOperationException($"The seed entry '{seed.Name}' must list at most {Product.MaxImages} .webp file names.");
+            throw new InvalidOperationException($"The seed entry '{seed.Name}' must list at most {Product.MaxImagesPerColor} .webp file names.");
         }
     }
 

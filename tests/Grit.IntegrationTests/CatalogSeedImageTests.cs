@@ -22,7 +22,7 @@ public class CatalogSeedImageTests(ApiFactory api, ProductImageHost images) : IC
 
         var product = await ProductAsync(host);
         var key = Product.ImageKeyPrefix(product.Id) + "capa.webp";
-        product.ImageKeys.ShouldHaveSingleItem().ShouldBe(key);
+        product.Images.ShouldHaveSingleItem().ShouldBe(new ProductImage(key, "preto"));
         var stored = await host.Services.GetRequiredService<ProductImageStorage>().FindAsync(key, TestContext.Current.CancellationToken);
         stored.ShouldNotBeNull();
         stored.Value.SizeInBytes.ShouldBe(CoverBytes.LongLength);
@@ -37,7 +37,7 @@ public class CatalogSeedImageTests(ApiFactory api, ProductImageHost images) : IC
 
         await SeedAsync(host, path);
 
-        (await ProductAsync(host)).ImageKeys.ShouldBeEmpty();
+        (await ProductAsync(host)).Images.ShouldBeEmpty();
     }
 
     // Reading Services starts the host: migrations run and, with the storage, the bucket is created.

@@ -1,5 +1,7 @@
+using System.Text.Json;
 using Grit.Modules.Catalog.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Grit.Modules.Catalog.Infrastructure;
@@ -22,7 +24,16 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasIndex(product => product.Slug).IsUnique();
         builder.Property(product => product.Description).HasMaxLength(4000);
         builder.Property(product => product.Attributes).IsJsonAttributes();
-        builder.PrimitiveCollection(product => product.ImageKeys);
+        // jsonb on the product row, so an image change moves the row version (xmin) like any other product write.
+        builder.Property(product => product.Images)
+            .HasColumnType("jsonb")
+            .HasConversion(
+                images => JsonSerializer.Serialize(images, JsonSerializerOptions.Web),
+                json => JsonSerializer.Deserialize<List<ProductImage>>(json, JsonSerializerOptions.Web)!,
+                new ValueComparer<IReadOnlyList<ProductImage>>(
+                    (left, right) => left!.SequenceEqual(right!),
+                    images => images.Aggregate(0, (hash, image) => HashCode.Combine(hash, image)),
+                    images => images.ToList()));
         builder.HasMany(product => product.Skus).WithOne().HasForeignKey("ProductId").IsRequired();
         builder.Property<uint>(CatalogDbContext.Version).IsRowVersion();
         builder.Property<DateTimeOffset>(AuditInterceptor.CreatedAt);

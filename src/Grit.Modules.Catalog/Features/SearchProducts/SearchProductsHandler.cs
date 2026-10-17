@@ -15,7 +15,7 @@ internal sealed class SearchProductsHandler(NpgsqlDataSource dataSource, Product
     private const string Sql = $"""
         WITH {ProductFilterSql.Input},
         matched AS (
-            SELECT p.id, p.slug, p.name, p.image_keys[1] AS image_key, s.price_amount,
+            SELECT p.id, p.slug, p.name, p.images -> 0 ->> 'key' AS image_key, s.price_amount,
                 CASE WHEN @Query IS NULL THEN 0
                     ELSE round((ts_rank(p.search_vector, input.query)
                         + strict_word_similarity(input.text, catalog.immutable_unaccent(p.name)))::numeric, 6)

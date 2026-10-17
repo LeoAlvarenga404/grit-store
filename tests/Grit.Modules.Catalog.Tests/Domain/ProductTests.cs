@@ -143,6 +143,18 @@ public class ProductTests
     }
 
     [Fact]
+    public void AddSku_ColorAttribute_IsTheSkuColor()
+    {
+        var product = NewProduct();
+
+        var blue = product.AddSku(Attributes(("cor", "azul"), ("tamanho", "M")), Reais(99.90m)).Value;
+        var sizeOnly = product.AddSku(Attributes(("tamanho", "G")), Reais(99.90m)).Value;
+
+        blue.Color.ShouldBe("azul");
+        sizeOnly.Color.ShouldBeNull();
+    }
+
+    [Fact]
     public void ChangeSkuPrice_ExistingSku_ChangesOnlyThatPrice()
     {
         var product = NewProduct();

@@ -22,7 +22,11 @@ internal static class CatalogErrors
 
     public static readonly Error DuplicateVariant = new("catalog.duplicate_variant", "The product already has a SKU with these attributes.", ErrorType.Conflict);
 
-    public static readonly Error ImageLimit = new("catalog.image_limit", "A product has at most 8 images. Remove one first.", ErrorType.Conflict);
+    public static readonly Error ImageLimit = new("catalog.image_limit", "A colour has at most 8 images. Remove one first.", ErrorType.Conflict);
+
+    public static readonly Error DuplicateImage = new("catalog.duplicate_image", "The product already has an image with this key.", ErrorType.Conflict);
+
+    public static readonly Error ImageColorNotFound = new("catalog.image_color_not_found", "No SKU of the product has this colour. Add the SKU first.", ErrorType.Validation);
 
     public static readonly Error InvalidImageKey = new("catalog.invalid_image_key", "The image key does not belong to this product.", ErrorType.Validation);
 

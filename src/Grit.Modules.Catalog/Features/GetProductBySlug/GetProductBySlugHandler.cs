@@ -25,14 +25,14 @@ internal sealed class GetProductBySlugHandler(CatalogDbContext db, ProductImageS
         }
 
         // A missing product is cached too (as null); the write that adds its first SKU clears it with everything else.
-        var row = await cache.GetOrCreateAsync($"catalog:product:{query.Slug}", token => FindAsync(slug.Value, token), cancellationToken);
+        var row = await cache.GetOrCreateAsync($"catalog:product-v2:{query.Slug}", token => FindAsync(slug.Value, token), cancellationToken);
         if (row is null)
         {
             return CatalogErrors.ProductNotFound;
         }
 
         // The cache holds keys, never URLs: each response signs its own, so no entry outlives a URL's hour.
-        return row.Product with { ImageUrls = await storage.DownloadUrlsAsync(row.ImageKeys) };
+        return row.Product with { ImageUrls = await storage.DownloadUrlsAsync([.. row.Images.Select(image => image.Key)]) };
     }
 
     // ponytail: a miss reads with this request's DbContext; if this request aborts while another waits on the same
@@ -55,7 +55,7 @@ internal sealed class GetProductBySlugHandler(CatalogDbContext db, ProductImageS
                         .Select(sku => new GetProductBySlugSkuResponse(sku.Id.Value, sku.Attributes, sku.Price.Amount, sku.Price.Currency))
                         .ToList(),
                     Array.Empty<string>()),
-                product.ImageKeys))
+                product.Images))
             .SingleOrDefaultAsync(cancellationToken);
 
     private static bool HasSlugShape(string text) =>

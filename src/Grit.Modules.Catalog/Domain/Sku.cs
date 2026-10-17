@@ -11,7 +11,13 @@ internal sealed class Sku : Entity<SkuId>
         Price = null!;
     }
 
+    public const string ColorAttribute = "cor";
+
+    public const string SizeAttribute = "tamanho";
+
     public IReadOnlyDictionary<string, string> Attributes { get; }
+
+    public string? Color => Attributes.GetValueOrDefault(ColorAttribute);
 
     public Money Price { get; private set; }
 
