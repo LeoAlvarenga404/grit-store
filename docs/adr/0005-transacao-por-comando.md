@@ -20,6 +20,8 @@ O design (§4) pede um pipeline behavior de transação. Cada módulo tem o pró
   - `Task.WhenAll` sobre o mesmo `DbContext`;
   - Dapper ao lado do EF dentro de um comando;
   - um leitor de outro módulo que abra a própria conexão dentro de um comando.
+
+  Por isso o Dapper fica só em handlers de query (sub-plano 1b, ADR 0013); o teste `CommandHandlers_DoNotUseDapper` falha se um handler de `ICommand` referenciar o Dapper diretamente.
 - **Sem retry:** nunca `EnableRetryOnFailure` nem o `AddNpgsqlDbContext` do Aspire, que liga retry por padrão; retry lança exceção dentro de uma transação ambiente. Os módulos usam `AddDbContext` com o `NpgsqlDataSource` compartilhado do host.
 - **Consumers e sagas** do MassTransit abrem a própria transação local. Dentro deles, não se envia um `ICommand` pelo MediatR; o consumer usa o domínio e o `DbContext` do módulo direto.
 - **Outbox do barramento em um só `DbContext`.** O MassTransit permite um `DbContext` de bus outbox por barramento, e com dois o último registro vence. Copiar `UseBusOutbox()` para um segundo módulo é proibido até o sub-plano do segundo módulo que publica (4b, no máximo) provar a seleção por módulo com dois contextos.

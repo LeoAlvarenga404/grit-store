@@ -3,6 +3,7 @@
     <Project Path="src/Grit.Api/Grit.Api.csproj" />
     <Project Path="src/Grit.AppHost/Grit.AppHost.csproj" />
     <Project Path="src/Grit.BuildingBlocks/Grit.BuildingBlocks.csproj" />
+    <Project Path="src/Grit.Modules.Catalog/Grit.Modules.Catalog.csproj" />
     <Project Path="src/Grit.ServiceDefaults/Grit.ServiceDefaults.csproj" />
     <Project Path="src/Grit.SharedKernel/Grit.SharedKernel.csproj" />
   </Folder>
@@ -10,6 +11,7 @@
     <Project Path="tests/Grit.ArchitectureTests/Grit.ArchitectureTests.csproj" />
     <Project Path="tests/Grit.BuildingBlocks.Tests/Grit.BuildingBlocks.Tests.csproj" />
     <Project Path="tests/Grit.IntegrationTests/Grit.IntegrationTests.csproj" />
+    <Project Path="tests/Grit.Modules.Catalog.Tests/Grit.Modules.Catalog.Tests.csproj" />
     <Project Path="tests/Grit.Modules.Probe.Contracts/Grit.Modules.Probe.Contracts.csproj" />
     <Project Path="tests/Grit.Modules.Probe/Grit.Modules.Probe.csproj" />
     <Project Path="tests/Grit.SharedKernel.Tests/Grit.SharedKernel.Tests.csproj" />

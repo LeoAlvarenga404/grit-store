@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using FluentValidation;
 using Grit.Api;
 using Grit.BuildingBlocks.Behaviors;
@@ -12,13 +13,14 @@ var moduleAssemblies = modules.Select(module => module.GetType().Assembly).ToArr
 builder.AddServiceDefaults();
 builder.AddNpgsqlDataSource("grit");
 builder.Services.AddProblemDetails();
+// The web defaults also read numbers from strings, which types every number as integer-or-string in OpenAPI and the web client.
+builder.Services.ConfigureHttpJsonOptions(options => options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict);
 builder.Services.AddOpenApi();
 builder.Services.AddRateLimiter(options => options.RejectionStatusCode = StatusCodes.Status429TooManyRequests);
 builder.Services.AddValidatorsFromAssemblies(moduleAssemblies, includeInternalTypes: true);
 builder.Services.AddMediatR(mediatr =>
 {
-    // MediatR rejects an empty assembly list, and the API alone has no module yet (the probe lives in the tests).
-    mediatr.RegisterServicesFromAssemblies([typeof(Program).Assembly, .. moduleAssemblies]);
+    mediatr.RegisterServicesFromAssemblies(moduleAssemblies);
     mediatr.AddOpenBehavior(typeof(LoggingBehavior<,>));
     mediatr.AddOpenBehavior(typeof(ValidationBehavior<,>));
     mediatr.AddOpenBehavior(typeof(TransactionBehavior<,>));
@@ -39,6 +41,15 @@ foreach (var module in modules)
 }
 
 var app = builder.Build();
+
+// Development covers the AppHost and the integration tests; the build-time OpenAPI run is Production and has no database.
+if (app.Environment.IsDevelopment())
+{
+    foreach (var module in modules)
+    {
+        await module.MigrateDatabaseAsync(app.Services, app.Lifetime.ApplicationStopping);
+    }
+}
 
 app.UseExceptionHandler(new ExceptionHandlerOptions
 {

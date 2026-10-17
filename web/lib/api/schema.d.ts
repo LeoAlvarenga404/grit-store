@@ -49,12 +49,755 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a category.
+         * @description The slug comes from the name; two categories cannot share a slug.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateCategoryRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CreateCategoryResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Creates a product without SKUs.
+         * @description The slug comes from the name and never changes. The response carries the version to send on the next change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateProductRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CreateProductResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/products/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Gets a product with its SKUs and current version. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GetProductResponse"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        /**
+         * Updates a product's category, name, description and attributes.
+         * @description Send the version last read; a stale version answers 409 catalog.product_changed. The slug does not change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateProductRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductVersionResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/products/{id}/skus": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Adds a SKU (a variant such as color and size) with its price to a product.
+         * @description Send the product version last read; a stale version answers 409 catalog.product_changed. Prices are in BRL.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AddSkuRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AddSkuResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/products/{id}/skus/{skuId}/price": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Changes the price of one SKU.
+         * @description Send the product version last read; a stale version answers 409 catalog.product_changed. Prices are in BRL.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    skuId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ChangeSkuPriceRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductVersionResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/catalog/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Searches and lists the products that have at least one SKU.
+         * @description q finds words with or without accents, in the singular or the plural, and name words with a small typo (longer words tolerate more); results are ordered by relevance. Without q, the newest products come first (creation time, to the millisecond). attribute=key:value can repeat (one per key) and matches a single SKU. priceAmount is the lowest price among the SKUs that match. Pass nextCursor as after to read the next page.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    q?: string;
+                    category?: string;
+                    minPrice?: number;
+                    maxPrice?: number;
+                    attribute?: string[];
+                    after?: string;
+                    limit?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SearchProductsResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/catalog/facets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Counts the products of a search per category, price range and attribute value.
+         * @description Takes the q, category, minPrice, maxPrice and attribute of the product search. Every count is the number of products the search returns for that refinement. A price range is minAmount ≤ price < maxAmount (no upper bound when maxAmount is null); to list it, send minPrice = the larger of minAmount and the current minPrice, and maxPrice = the smaller of maxAmount−0.01 and the current maxPrice (leave out a bound that is absent on both sides).
+         */
+        get: {
+            parameters: {
+                query?: {
+                    q?: string;
+                    category?: string;
+                    minPrice?: number;
+                    maxPrice?: number;
+                    attribute?: string[];
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GetProductFacetsResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/catalog/suggestions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Suggests up to 8 product names for the text typed so far.
+         * @description q takes 2 to 50 characters. Accents and case are ignored, and names that start with q come first.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    q?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductSuggestionResponse"][];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/catalog/products/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Gets a product page by slug: category, attributes and SKUs with prices.
+         * @description A product without SKUs is not for sale yet and answers 404, as does a slug in any other spelling.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    slug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["GetProductBySlugResponse"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        AddSkuRequest: {
+            /** Format: double */
+            priceAmount: number;
+            priceCurrency: string;
+            /** Format: uint32 */
+            version: number;
+            attributes?: null | {
+                [key: string]: string;
+            };
+        };
+        AddSkuResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uint32 */
+            version: number;
+        };
+        AttributeFacetResponse: {
+            key: string;
+            values: components["schemas"]["AttributeValueFacetResponse"][];
+        };
+        AttributeValueFacetResponse: {
+            value: string;
+            /** Format: int64 */
+            count: number;
+        };
+        CategoryFacetResponse: {
+            slug: string;
+            name: string;
+            /** Format: int64 */
+            count: number;
+        };
+        ChangeSkuPriceRequest: {
+            /** Format: double */
+            priceAmount: number;
+            priceCurrency: string;
+            /** Format: uint32 */
+            version: number;
+        };
+        CreateCategoryRequest: {
+            name: string;
+        };
+        CreateCategoryResponse: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+        };
+        CreateProductRequest: {
+            /** Format: uuid */
+            categoryId: string;
+            name: string;
+            description: string;
+            attributes?: null | {
+                [key: string]: string;
+            };
+        };
+        CreateProductResponse: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            /** Format: uint32 */
+            version: number;
+        };
+        GetProductBySlugResponse: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            name: string;
+            description: string;
+            attributes: {
+                [key: string]: string;
+            };
+            categorySlug: string;
+            categoryName: string;
+            skus: components["schemas"]["GetProductBySlugSkuResponse"][];
+        };
+        GetProductBySlugSkuResponse: {
+            /** Format: uuid */
+            id: string;
+            attributes: {
+                [key: string]: string;
+            };
+            /** Format: double */
+            priceAmount: number;
+            priceCurrency: string;
+        };
+        GetProductFacetsResponse: {
+            categories: components["schemas"]["CategoryFacetResponse"][];
+            prices: components["schemas"]["PriceFacetResponse"][];
+            attributes: components["schemas"]["AttributeFacetResponse"][];
+        };
+        GetProductResponse: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            categoryId: string;
+            name: string;
+            slug: string;
+            description: string;
+            attributes: {
+                [key: string]: string;
+            };
+            /** Format: uint32 */
+            version: number;
+            skus: components["schemas"]["GetProductSkuResponse"][];
+        };
+        GetProductSkuResponse: {
+            /** Format: uuid */
+            id: string;
+            attributes: {
+                [key: string]: string;
+            };
+            /** Format: double */
+            priceAmount: number;
+            priceCurrency: string;
+        };
         HealthResponse: {
             status: string;
+        };
+        PriceFacetResponse: {
+            /** Format: double */
+            minAmount: number;
+            /** Format: double */
+            maxAmount: null | number;
+            /** Format: int64 */
+            count: number;
+        };
+        ProblemDetails: {
+            type?: null | string;
+            title?: null | string;
+            /** Format: int32 */
+            status?: null | number;
+            detail?: null | string;
+            instance?: null | string;
+        };
+        ProductSuggestionResponse: {
+            slug: string;
+            name: string;
+        };
+        ProductSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            slug: string;
+            name: string;
+            /** Format: double */
+            priceAmount: number;
+            priceCurrency: string;
+        };
+        ProductVersionResponse: {
+            /** Format: uint32 */
+            version: number;
+        };
+        SearchProductsResponse: {
+            items: components["schemas"]["ProductSummaryResponse"][];
+            nextCursor: null | string;
+        };
+        UpdateProductRequest: {
+            /** Format: uuid */
+            categoryId: string;
+            name: string;
+            description: string;
+            /** Format: uint32 */
+            version: number;
+            attributes?: null | {
+                [key: string]: string;
+            };
         };
     };
     responses: never;

@@ -33,6 +33,9 @@ public sealed class ProbeModule : IModule
             outbox.UseBusOutbox();
         });
 
+    // The test fixture creates the probe schema with EnsureCreated before the host starts; the probe has no migrations.
+    public Task MigrateDatabaseAsync(IServiceProvider services, CancellationToken cancellationToken) => Task.CompletedTask;
+
     public void MapEndpoints(IEndpointRouteBuilder api)
     {
         var probe = api.MapGroup("/probe").WithTags("Probe");

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 using Testcontainers.PostgreSql;
 
 [assembly: AssemblyFixture(typeof(Grit.IntegrationTests.ApiFactory))]
@@ -22,7 +23,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     public async ValueTask InitializeAsync()
     {
         await _postgres.StartAsync();
-        await CreateProbeSchemaAsync();
+        await CreateProbeSchemaAsync(_postgres.GetConnectionString());
         _ = Server;
     }
 
@@ -30,6 +31,20 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         await base.DisposeAsync();
         await _postgres.DisposeAsync();
+    }
+
+    // A database of its own on the same container, for tests that count rows no other test may add to.
+    public async Task<string> CreateDatabaseAsync(string name)
+    {
+        await using (var dataSource = NpgsqlDataSource.Create(_postgres.GetConnectionString()))
+        await using (var command = dataSource.CreateCommand($"CREATE DATABASE {name}"))
+        {
+            await command.ExecuteNonQueryAsync();
+        }
+
+        var connectionString = new NpgsqlConnectionStringBuilder(_postgres.GetConnectionString()) { Database = name }.ConnectionString;
+        await CreateProbeSchemaAsync(connectionString);
+        return connectionString;
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -57,12 +72,12 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     private static bool IsProbeOutboxDelivery(ServiceDescriptor service) =>
         service.ImplementationType == typeof(BusOutboxDeliveryService<ProbeDbContext>);
 
-    private async Task CreateProbeSchemaAsync()
+    private static async Task CreateProbeSchemaAsync(string connectionString)
     {
-        var options = new DbContextOptionsBuilder<ProbeDbContext>().UseNpgsql(_postgres.GetConnectionString()).Options;
+        var options = new DbContextOptionsBuilder<ProbeDbContext>().UseNpgsql(connectionString).Options;
         await using var probe = new ProbeDbContext(options);
 
-        // The probe module has no migrations; real modules bring their own from sub-plan 1a.
+        // Runs before the host starts: EnsureCreated does nothing once any table exists, and the API migrates Catalog at start-up.
         await probe.Database.EnsureCreatedAsync();
     }
 }

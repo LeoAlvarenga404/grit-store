@@ -9,9 +9,13 @@ var database = builder.AddPostgres("postgres")
 builder.AddRedis("redis").WithImageTag("8.10.2-alpine");
 builder.AddSeaweedFS("storage").WithImageTag("4.46").WithS3();
 
+// The API seeds this file at start-up in Development; seeding is idempotent, so restarts are safe.
+var seedPath = Path.GetFullPath(Path.Combine(builder.AppHostDirectory, "..", "..", "seed", "catalog.json"));
+
 var api = builder.AddProject<Projects.Grit_Api>("api")
     .WithReference(database)
     .WaitFor(database)
+    .WithEnvironment("Seed__Path", seedPath)
     .WithHttpHealthCheck("/health");
 
 builder.AddJavaScriptApp("web", "../../web", "dev")

@@ -10,5 +10,7 @@ public interface IModule
 
     void AddMessaging(IBusRegistrationConfigurator bus);
 
+    Task MigrateDatabaseAsync(IServiceProvider services, CancellationToken cancellationToken);
+
     void MapEndpoints(IEndpointRouteBuilder api);
 }

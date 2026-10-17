@@ -1,3 +1,5 @@
+using Grit.BuildingBlocks;
+using MediatR;
 using NetArchTest.Rules;
 
 namespace Grit.ArchitectureTests;
@@ -68,4 +70,40 @@ public class ModuleTests
 
         violations.ShouldBeEmpty();
     }
+
+    // TransactionBehavior keys on ICommand: a command without the marker would write outside the transaction.
+    [Fact]
+    public void Commands_ImplementICommand_AndQueriesDoNot()
+    {
+        var types = ModuleAssemblies.Load().SelectMany(assembly => assembly.GetTypes()).ToList();
+
+        var commandsWithoutMarker = types
+            .Where(type => type.Name.EndsWith("Command", StringComparison.Ordinal) && !type.IsAssignableTo(typeof(ICommand)));
+        var queriesWithMarker = types
+            .Where(type => type.Name.EndsWith("Query", StringComparison.Ordinal) && type.IsAssignableTo(typeof(ICommand)));
+
+        commandsWithoutMarker.Concat(queriesWithMarker).Select(type => type.FullName).ShouldBeEmpty();
+    }
+
+    // ADR 0005: a command runs on one connection inside the ambient transaction, so its handler never opens a Dapper connection.
+    [Fact]
+    public void CommandHandlers_DoNotUseDapper()
+    {
+        var violations = ModuleAssemblies.Load()
+            .SelectMany(assembly => Types.InAssembly(assembly).That().HaveDependencyOnAny("Dapper").GetTypes())
+            .Select(type => OutermostType(type.ReflectionType))
+            .Where(HandlesACommand)
+            .Select(type => type.FullName)
+            .Distinct();
+
+        violations.ShouldBeEmpty();
+    }
+
+    // An async Handle compiles to a nested state machine type, which is where the Dapper calls live.
+    private static Type OutermostType(Type type) => type.DeclaringType is null ? type : OutermostType(type.DeclaringType);
+
+    private static bool HandlesACommand(Type type) =>
+        type.GetInterfaces().Any(contract => contract.IsGenericType
+            && contract.GetGenericTypeDefinition() == typeof(IRequestHandler<,>)
+            && contract.GetGenericArguments()[0].IsAssignableTo(typeof(ICommand)));
 }

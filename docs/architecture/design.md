@@ -109,11 +109,10 @@ E-commerce de esportes e outdoor para portfolio: backend .NET maduro, rápido e 
 
 ## 12. Seed
 
-- Nicho **esportes e outdoor**, ~200 produtos em 8 a 10 categorias, com variantes cor × tamanho (vestuário, calçados) e atributos técnicos por categoria (barraca: capacidade, peso; bike: aro, marchas; garrafa: litros).
-- **Importador avulso** `tools/Grit.MlImporter`: API de catálogo do Mercado Livre (`/products/search`, `/products/{id}`, `/products/{id}/items`, `/highlights/MLB/category/{id}`, `/categories/{id}`) com o token OAuth do app do wpp-bot (via `dotnet user-secrets`, nunca no repositório). Grava `seed/catalog.json` no formato do domínio e as imagens em `seed/images/` (WebP, até 800 px).
-- **Seed inteiro versionado** (JSON + imagens): quem clona roda sem token nenhum. O importador só regera o seed.
-- **Bogus** (pt_BR) gera ~50 mil produtos de volume para o k6, ligado por flag.
-- Seeder idempotente, só em Development, disparado pelo AppHost.
+- Nicho **esportes e outdoor**, com variantes cor × tamanho (vestuário, calçados) e atributos técnicos por categoria (barraca: capacidade, peso; bike: aro, marchas; garrafa: litros).
+- **Seed atual (versão enxuta):** `seed/catalog.json` escrito à mão, com 4 categorias, 16 produtos e 30 SKUs, sem imagens. Quem clona roda sem token nenhum.
+- **Seeder idempotente** (`CatalogSeedService`, só em Development): o AppHost passa o caminho em `Seed:Path`; tudo passa pelo domínio, numa transação só, e o que já existe (por slug) é pulado.
+- **Adiado (fica no roadmap):** importador `tools/Grit.MlImporter` a partir da API de catálogo do Mercado Livre, com imagens WebP em armazenamento S3 (entra com o admin, 5a); **Bogus** (pt_BR) com ~50 mil produtos de volume para o k6 (entra com a performance, 5b).
 
 ## 13. Testes
 

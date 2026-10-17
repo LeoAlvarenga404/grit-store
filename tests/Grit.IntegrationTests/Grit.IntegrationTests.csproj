@@ -18,7 +18,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Grit.Api\Grit.Api.csproj" />
+    <ProjectReference Include="..\..\src\Grit.Modules.Catalog\Grit.Modules.Catalog.csproj" />
     <ProjectReference Include="..\Grit.Modules.Probe\Grit.Modules.Probe.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\seed\catalog.json" Link="Seed\catalog.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

@@ -34,10 +34,998 @@
           }
         }
       }
+    },
+    "/api/v1/admin/categories": {
+      "post": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Creates a category.",
+        "description": "The slug comes from the name; two categories cannot share a slug.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategoryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCategoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/products": {
+      "post": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Creates a product without SKUs.",
+        "description": "The slug comes from the name and never changes. The response carries the version to send on the next change.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateProductResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/products/{id}": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Gets a product with its SKUs and current version.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProductResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Updates a product's category, name, description and attributes.",
+        "description": "Send the version last read; a stale version answers 409 catalog.product_changed. The slug does not change.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductVersionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/products/{id}/skus": {
+      "post": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Adds a SKU (a variant such as color and size) with its price to a product.",
+        "description": "Send the product version last read; a stale version answers 409 catalog.product_changed. Prices are in BRL.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddSkuRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddSkuResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/products/{id}/skus/{skuId}/price": {
+      "put": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Changes the price of one SKU.",
+        "description": "Send the product version last read; a stale version answers 409 catalog.product_changed. Prices are in BRL.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "skuId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeSkuPriceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductVersionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/catalog/products": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Searches and lists the products that have at least one SKU.",
+        "description": "q finds words with or without accents, in the singular or the plural, and name words with a small typo (longer words tolerate more); results are ordered by relevance. Without q, the newest products come first (creation time, to the millisecond). attribute=key:value can repeat (one per key) and matches a single SKU. priceAmount is the lowest price among the SKUs that match. Pass nextCursor as after to read the next page.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minPrice",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "maxPrice",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "attribute",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchProductsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/catalog/facets": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Counts the products of a search per category, price range and attribute value.",
+        "description": "Takes the q, category, minPrice, maxPrice and attribute of the product search. Every count is the number of products the search returns for that refinement. A price range is minAmount ≤ price < maxAmount (no upper bound when maxAmount is null); to list it, send minPrice = the larger of minAmount and the current minPrice, and maxPrice = the smaller of maxAmount−0.01 and the current maxPrice (leave out a bound that is absent on both sides).",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minPrice",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "maxPrice",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "attribute",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProductFacetsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/catalog/suggestions": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Suggests up to 8 product names for the text typed so far.",
+        "description": "q takes 2 to 50 characters. Accents and case are ignored, and names that start with q come first.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductSuggestionResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/catalog/products/{slug}": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Gets a product page by slug: category, attributes and SKUs with prices.",
+        "description": "A product without SKUs is not for sale yet and answers 404, as does a slug in any other spelling.",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProductBySlugResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AddSkuRequest": {
+        "required": [
+          "priceAmount",
+          "priceCurrency",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "priceAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "priceCurrency": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "attributes": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AddSkuResponse": {
+        "required": [
+          "id",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "AttributeFacetResponse": {
+        "required": [
+          "key",
+          "values"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttributeValueFacetResponse"
+            }
+          }
+        }
+      },
+      "AttributeValueFacetResponse": {
+        "required": [
+          "value",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "CategoryFacetResponse": {
+        "required": [
+          "slug",
+          "name",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ChangeSkuPriceRequest": {
+        "required": [
+          "priceAmount",
+          "priceCurrency",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "priceAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "priceCurrency": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "CreateCategoryRequest": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateCategoryResponse": {
+        "required": [
+          "id",
+          "slug"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateProductRequest": {
+        "required": [
+          "categoryId",
+          "name",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "attributes": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CreateProductResponse": {
+        "required": [
+          "id",
+          "slug",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "GetProductBySlugResponse": {
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "description",
+          "attributes",
+          "categorySlug",
+          "categoryName",
+          "skus"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "categorySlug": {
+            "type": "string"
+          },
+          "categoryName": {
+            "type": "string"
+          },
+          "skus": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetProductBySlugSkuResponse"
+            }
+          }
+        }
+      },
+      "GetProductBySlugSkuResponse": {
+        "required": [
+          "id",
+          "attributes",
+          "priceAmount",
+          "priceCurrency"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "priceAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "priceCurrency": {
+            "type": "string"
+          }
+        }
+      },
+      "GetProductFacetsResponse": {
+        "required": [
+          "categories",
+          "prices",
+          "attributes"
+        ],
+        "type": "object",
+        "properties": {
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryFacetResponse"
+            }
+          },
+          "prices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceFacetResponse"
+            }
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttributeFacetResponse"
+            }
+          }
+        }
+      },
+      "GetProductResponse": {
+        "required": [
+          "id",
+          "categoryId",
+          "name",
+          "slug",
+          "description",
+          "attributes",
+          "version",
+          "skus"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "version": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "skus": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetProductSkuResponse"
+            }
+          }
+        }
+      },
+      "GetProductSkuResponse": {
+        "required": [
+          "id",
+          "attributes",
+          "priceAmount",
+          "priceCurrency"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "priceAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "priceCurrency": {
+            "type": "string"
+          }
+        }
+      },
       "HealthResponse": {
         "required": [
           "status"
@@ -48,12 +1036,187 @@
             "type": "string"
           }
         }
+      },
+      "PriceFacetResponse": {
+        "required": [
+          "minAmount",
+          "maxAmount",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "minAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxAmount": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
+          },
+          "detail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "instance": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "ProductSuggestionResponse": {
+        "required": [
+          "slug",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductSummaryResponse": {
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "priceAmount",
+          "priceCurrency"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "priceAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "priceCurrency": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductVersionResponse": {
+        "required": [
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "SearchProductsResponse": {
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductSummaryResponse"
+            }
+          },
+          "nextCursor": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "UpdateProductRequest": {
+        "required": [
+          "categoryId",
+          "name",
+          "description",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "attributes": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
       }
     }
   },
   "tags": [
     {
       "name": "Health"
+    },
+    {
+      "name": "Catalog"
     }
   ]
 }

@@ -10,6 +10,9 @@ node_modules/
 .next/
 next-env.d.ts
 *.tsbuildinfo
+# Rewritten by `next dev` on every start.
+web/AGENTS.md
+web/CLAUDE.md
 
 .env
 .env.*
