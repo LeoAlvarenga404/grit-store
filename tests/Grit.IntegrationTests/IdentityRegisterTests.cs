@@ -60,6 +60,21 @@ public class IdentityRegisterTests(ApiFactory factory)
         }
     }
 
+    // Length is the only password rule (D5): one character class at either length limit is accepted.
+    [Theory]
+    [InlineData('a', 8)]
+    [InlineData('1', 8)]
+    [InlineData('a', 128)]
+    public async Task Register_PasswordOfOneCharacterClassWithinTheLengthLimits_Returns201(char character, int length)
+    {
+        var response = await _client.PostAsJsonAsync(
+            IdentityApi.RegisterPath,
+            new { email = IdentityApi.UniqueEmail(), password = new string(character, length) },
+            TestContext.Current.CancellationToken);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.Created);
+    }
+
     [Theory]
     [InlineData("nao-e-um-email", 18, "email")]
     [InlineData("", 18, "email")]

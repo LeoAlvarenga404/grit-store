@@ -74,15 +74,36 @@ public class IdentityMeTests(ApiFactory factory)
         (await IdentityApi.GetMeAsync(_client, token)).StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    private static string Sign(string key, DateTime expires, string issuer = "grit-api", string audience = "grit-web") =>
-        new JsonWebTokenHandler().CreateToken(new SecurityTokenDescriptor
+    // Signed with the API's key, issuer and audience: only the lifetime check can reject these two.
+    [Fact]
+    public async Task GetMe_TokenNotValidYet_Returns401()
+    {
+        var token = Sign(ApiFactory.JwtSigningKey, DateTime.UtcNow.AddMinutes(30), notBefore: DateTime.UtcNow.AddMinutes(10));
+
+        (await IdentityApi.GetMeAsync(_client, token)).StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task GetMe_TokenWithoutExpiry_Returns401()
+    {
+        var token = Sign(ApiFactory.JwtSigningKey, expires: null);
+
+        (await IdentityApi.GetMeAsync(_client, token)).StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+    }
+
+    // Default times are off so a token can leave "exp" out; "nbf" and "iat" default to 15 minutes before the expiry.
+    private static string Sign(string key, DateTime? expires, string issuer = "grit-api", string audience = "grit-web", DateTime? notBefore = null)
+    {
+        var validFrom = notBefore ?? (expires ?? DateTime.UtcNow).AddMinutes(-15);
+        return new JsonWebTokenHandler { SetDefaultTimesOnTokenCreation = false }.CreateToken(new SecurityTokenDescriptor
         {
             Issuer = issuer,
             Audience = audience,
-            IssuedAt = expires.AddMinutes(-15),
-            NotBefore = expires.AddMinutes(-15),
+            IssuedAt = validFrom,
+            NotBefore = validFrom,
             Expires = expires,
             Subject = new ClaimsIdentity([new Claim("sub", Guid.NewGuid().ToString()), new Claim("email", "ana@grit.dev"), new Claim("role", "customer")]),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)), SecurityAlgorithms.HmacSha256),
         });
+    }
 }

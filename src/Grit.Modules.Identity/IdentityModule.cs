@@ -79,7 +79,7 @@ public sealed class IdentityModule : IModule
         options.Lockout.AllowedForNewUsers = true;
     }
 
-    // Behind the Next.js BFF every request carries the BFF's address: sub-plan 2b adds forwarded headers.
+    // Behind the BFF the client address comes from X-Forwarded-For, which Program.cs accepts only from known proxies.
     private static void AddLogInRateLimit(IHostApplicationBuilder builder)
     {
         var attemptsPerMinute = builder.Configuration.GetValue("Identity:LoginAttemptsPerMinute", 10);
