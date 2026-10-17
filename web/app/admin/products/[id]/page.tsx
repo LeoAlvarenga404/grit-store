@@ -11,7 +11,9 @@ type StockLevel = components["schemas"]["StockLevelResponse"];
 
 const errorMessages: Record<string, string> = {
   "catalog.product_changed": "Outra pessoa alterou o produto. Confira os valores e tente de novo.",
-  "catalog.image_limit": "O produto já tem 8 imagens. Remova uma antes.",
+  "catalog.image_limit": "Essa cor já tem 8 imagens. Remova uma antes.",
+  "catalog.image_color_not_found": "Nenhum SKU do produto tem essa cor. Cadastre o SKU antes.",
+  "catalog.duplicate_image": "Essa imagem já foi anexada.",
   "catalog.invalid_image": "Use uma imagem JPEG, PNG ou WebP de até 2 MB.",
   "catalog.image_not_uploaded": "O arquivo não chegou ao armazenamento. Tente de novo.",
   "catalog.image_not_found": "A imagem já tinha sido removida.",
@@ -45,6 +47,8 @@ export default async function AdminProductPage({
       ? []
       : ((await callApi((headers) => api.GET("/api/v1/admin/stock", { headers, params: { query: { skuId: skuIds } } }))).data?.items ?? []);
   const levelBySku = new Map(levels.map((level) => [level.skuId, level]));
+  // "" stands for SKUs without a colour: their images are sent without one.
+  const colors = [...new Set(product.skus.map((sku) => sku.attributes["cor"] ?? ""))];
 
   return (
     <main className="legacy narrow">
@@ -67,6 +71,7 @@ export default async function AdminProductPage({
           {product.images.map((image, index) => (
             <li key={image.key}>
               <Image src={image.url} alt={`${product.name}, imagem ${index + 1}`} width={120} height={120} unoptimized />
+              <span className="hint">{image.color ?? "Sem cor"}</span>
               <form action={removeImage}>
                 <input type="hidden" name="productId" value={product.id} />
                 <input type="hidden" name="fileName" value={image.fileName} />
@@ -79,15 +84,29 @@ export default async function AdminProductPage({
           ))}
         </ul>
       )}
-      <form action={uploadImage} className="stack">
-        <input type="hidden" name="productId" value={product.id} />
-        <input type="hidden" name="version" value={product.version} />
-        <label>
-          Nova imagem (JPEG, PNG ou WebP, até 2 MB)
-          <input type="file" name="file" accept="image/jpeg,image/png,image/webp" required />
-        </label>
-        <button type="submit">Enviar imagem</button>
-      </form>
+      {colors.length === 0 ? (
+        <p>Cadastre um SKU antes de enviar imagens: cada imagem mostra uma cor dos SKUs.</p>
+      ) : (
+        <form action={uploadImage} className="stack">
+          <input type="hidden" name="productId" value={product.id} />
+          <input type="hidden" name="version" value={product.version} />
+          <label>
+            Cor
+            <select name="color" defaultValue={colors[0]}>
+              {colors.map((color) => (
+                <option key={color} value={color}>
+                  {color || "Sem cor"}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Nova imagem (JPEG, PNG ou WebP, até 2 MB)
+            <input type="file" name="file" accept="image/jpeg,image/png,image/webp" required />
+          </label>
+          <button type="submit">Enviar imagem</button>
+        </form>
+      )}
 
       <h2>Variantes</h2>
       <table>
