@@ -26,6 +26,8 @@ internal static class SeedMapper
 
     private const string SizeId = "SIZE";
 
+    private const string GenderKey = "genero";
+
     public static Result<SeedProduct> Map(MlProduct product, IReadOnlyList<MlItem> items, IReadOnlyList<string> imageFileNames)
     {
         var price = LowestPriceInBrl(items);
@@ -54,6 +56,10 @@ internal static class SeedMapper
         return prices.Count == 0 ? null : decimal.Round(prices.Min(), 2, MidpointRounding.AwayFromZero);
     }
 
+    // The winning listing is the price the product page shows; anything but a positive BRL price is no offer.
+    public static decimal? PriceOf(MlBuyBoxWinner? winner) =>
+        winner is { CurrencyId: Product.StoreCurrency, Price: > 0 } ? decimal.Round(winner.Price.Value, 2, MidpointRounding.AwayFromZero) : null;
+
     // Color and size become the SKU's variant; GTIN and package sizes say nothing to a shopper.
     public static Dictionary<string, string> ProductAttributes(IReadOnlyList<MlAttribute> attributes)
     {
@@ -71,7 +77,7 @@ internal static class SeedMapper
             }
 
             var key = AttributeKey(attribute.Name);
-            var value = Clean(attribute.ValueName, MaxAttributeValueLength);
+            var value = StoreValue(key, Clean(attribute.ValueName, MaxAttributeValueLength));
             if (key is not null && value.Length > 0)
             {
                 result.TryAdd(key, value);
@@ -87,13 +93,13 @@ internal static class SeedMapper
         var color = Clean(attributes.FirstOrDefault(attribute => attribute.Id == ColorId)?.ValueName, MaxAttributeValueLength);
         if (color.Length > 0)
         {
-            result["cor"] = color.ToLowerInvariant();
+            result[Sku.ColorAttribute] = color.ToLowerInvariant();
         }
 
         var size = Clean(attributes.FirstOrDefault(attribute => attribute.Id == SizeId)?.ValueName, MaxAttributeValueLength);
         if (size.Length > 0)
         {
-            result["tamanho"] = size;
+            result[Sku.SizeAttribute] = size;
         }
 
         return result;
@@ -124,4 +130,7 @@ internal static class SeedMapper
         var length = char.IsHighSurrogate(cleaned[maxLength - 1]) ? maxLength - 1 : maxLength;
         return cleaned[..length].TrimEnd();
     }
+
+    // The store's gender facet is Masculino, Feminino or Unissex; the catalog says "Sem gênero" for the last.
+    private static string StoreValue(string? key, string value) => key == GenderKey && value == "Sem gênero" ? "Unissex" : value;
 }

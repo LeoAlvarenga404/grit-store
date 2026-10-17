@@ -105,6 +105,30 @@ public class SeedMapperTests
         SeedMapper.Clean("abc\U0001F3D5", 4).ShouldBe("abc");
     }
 
+    [Theory]
+    [InlineData(79.905, "BRL", 79.91)]
+    [InlineData(79.9, "USD", null)]
+    [InlineData(0.0, "BRL", null)]
+    [InlineData(null, "BRL", null)]
+    public void PriceOf_Winner_IsAPositiveBrlPriceRoundedToCents(double? price, string currency, double? expected)
+    {
+        SeedMapper.PriceOf(new MlBuyBoxWinner((decimal?)price, currency)).ShouldBe((decimal?)expected);
+    }
+
+    [Fact]
+    public void PriceOf_NoWinner_ReturnsNull()
+    {
+        SeedMapper.PriceOf(null).ShouldBeNull();
+    }
+
+    [Theory]
+    [InlineData("Sem gênero", "Unissex")]
+    [InlineData("Masculino", "Masculino")]
+    public void ProductAttributes_Gender_UsesTheStoreNames(string value, string expected)
+    {
+        SeedMapper.ProductAttributes([new MlAttribute("GENDER", "Gênero", value)]).ShouldBe(new Dictionary<string, string> { ["genero"] = expected });
+    }
+
     private static MlProduct Product(string name, string? description = null, IReadOnlyList<MlAttribute>? attributes = null) =>
         new("MLB1", name, attributes ?? [], [], description is null ? null : new MlShortDescription(description));
 }
