@@ -7,7 +7,7 @@ namespace Grit.MlImporter;
 
 internal sealed class MercadoLivreClient(HttpClient http, string accessToken, TimeSpan retryDelay)
 {
-    public const int MaxAttempts = 4;
+    public const int MaxAttempts = 5;
 
     // The widest page the search serves; offsets move by it.
     public const int SearchLimit = 50;
@@ -15,6 +15,13 @@ internal sealed class MercadoLivreClient(HttpClient http, string accessToken, Ti
     public static readonly Uri ApiAddress = new("https://api.mercadolibre.com/");
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
+
+    // 429 and the gateway errors are passing states of the API: retried with a growing wait. Anything else ends the run.
+    private static readonly HashSet<HttpStatusCode> RetriedStatuses =
+    [
+        HttpStatusCode.TooManyRequests, HttpStatusCode.InternalServerError, HttpStatusCode.BadGateway,
+        HttpStatusCode.ServiceUnavailable, HttpStatusCode.GatewayTimeout,
+    ];
 
     public async Task<MlPage<MlProduct>> SearchAsync(string query, string? domain, int offset, CancellationToken cancellationToken)
     {
@@ -52,15 +59,20 @@ internal sealed class MercadoLivreClient(HttpClient http, string accessToken, Ti
         return (await ReadAsync<MlPage<MlItem>>(response, cancellationToken)).Results;
     }
 
-    // Pictures are public CDN files: the token goes only to the API host.
-    public Task<byte[]> DownloadAsync(string url, CancellationToken cancellationToken) => http.GetByteArrayAsync(url, cancellationToken);
+    // Pictures are public CDN files: the token goes only to the API host. A missing or failing picture comes back empty,
+    // which WebpImage rejects, so the caller skips that picture instead of losing the run.
+    public async Task<byte[]> DownloadAsync(string url, CancellationToken cancellationToken)
+    {
+        using var response = await http.GetAsync(url, cancellationToken);
+        return response.IsSuccessStatusCode ? await response.Content.ReadAsByteArrayAsync(cancellationToken) : [];
+    }
 
     private async Task<HttpResponseMessage> SendAsync(string path, CancellationToken cancellationToken)
     {
         for (var attempt = 1; ; attempt++)
         {
             var response = await SendOnceAsync(path, cancellationToken);
-            if (response.StatusCode != HttpStatusCode.TooManyRequests || attempt == MaxAttempts)
+            if (!RetriedStatuses.Contains(response.StatusCode) || attempt == MaxAttempts)
             {
                 return response;
             }

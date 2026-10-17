@@ -6,8 +6,9 @@ namespace Grit.MlImporter.Tests;
 
 // Synthetic world (the importer treats every domain alike). Two families behind the "camiseta dry fit" search: a parent
 // with four leaves (one without a BRL offer) and a pair linked only by pickers; MLB2010 has a single colour and MLB2002
-// repeats a leaf already read; MLB2021's picture is an error page. "tenis veloz" finds two parents joined by a picker.
-// Every picture is one flat marker colour, so a test can tell which picture ended up in which file.
+// repeats a leaf already read; MLB2020's picture is an error page. "tenis veloz" finds two parents joined by a picker;
+// "tenis gemeos" adds a third parent with MLB2030's family name. Every picture is one flat marker colour, so a test can
+// tell which picture ended up in which file.
 internal static class RecordedCatalog
 {
     public const string Api = "https://api.mercadolibre.com/";
@@ -24,7 +25,11 @@ internal static class RecordedCatalog
 
     public static readonly string RegatasPage = SearchUrl("regata", 0, "MLB-TANK_TOPS");
 
+    public const string TwinsCategory = "Tênis=tenis gemeos@MLB-SNEAKERS";
+
     public static readonly string SneakersPage = SearchUrl("tenis%20veloz", 0, "MLB-SNEAKERS");
+
+    public static readonly string TwinsPage = SearchUrl("tenis%20gemeos", 0, "MLB-SNEAKERS");
 
     public static readonly IReadOnlyDictionary<string, SKColor> Markers = new Dictionary<string, SKColor>
     {
@@ -33,17 +38,22 @@ internal static class RecordedCatalog
         ["700003-MLA2002"] = new(0, 0, 200),
         ["700005-MLA2004"] = new(200, 200, 0),
         ["700010-MLA2010"] = new(0, 200, 200),
-        ["710001-MLA2020"] = new(200, 0, 200),
+        ["710002-MLA2021"] = new(200, 0, 200),
         ["720031-MLA2031"] = new(120, 60, 0),
         ["720032-MLA2032"] = new(0, 90, 160),
         ["720041-MLA2041"] = new(160, 160, 160),
         ["720042-MLA2042"] = new(60, 0, 120),
+        ["720051-MLA2051"] = new(30, 30, 30),
+        ["720052-MLA2052"] = new(230, 230, 230),
+        ["730060-MLA2060"] = new(250, 200, 0),
+        ["730061-MLA2061"] = new(100, 0, 160),
     };
 
     private static readonly string[] Products =
     [
         "MLB2000", "MLB2001", "MLB2002", "MLB2003", "MLB2004", "MLB2010", "MLB2020", "MLB2021",
         "MLB2030", "MLB2031", "MLB2032", "MLB2040", "MLB2041", "MLB2042",
+        "MLB2050", "MLB2051", "MLB2052", "MLB2060", "MLB2061",
     ];
 
     public static string SearchUrl(string query, int offset, string domain) =>
@@ -57,9 +67,10 @@ internal static class RecordedCatalog
             .Json(RegatasPage, "search-regatas-0.json")
             .Json(SneakersPage, "search-tenis-0.json")
             .Json($"{Api}products/MLB2002/items", "items-MLB2002.json")
+            .Json(TwinsPage, "search-gemeos-0.json")
             .Json($"{Api}products/MLB2003/items", "items-not-found.json", HttpStatusCode.NotFound)
             .Json($"{Api}products/MLB2099", "items-not-found.json", HttpStatusCode.NotFound)
-            .Bytes($"{Picture}710002-MLA2021-F.jpg", Encoding.UTF8.GetBytes("<html>Erro 503</html>"));
+            .Bytes($"{Picture}710001-MLA2020-F.jpg", Encoding.UTF8.GetBytes("<html>Erro 503</html>"));
         foreach (var id in Products)
         {
             handler.Json($"{Api}products/{id}", $"product-{id}.json");

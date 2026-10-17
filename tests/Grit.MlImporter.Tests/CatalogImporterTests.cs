@@ -39,7 +39,7 @@ public sealed class CatalogImporterTests : IDisposable
         images[1].Files.ShouldBe(["camiseta-dry-fit-grit-2-1.webp"]);
         var thermal = catalog.Categories[0].Products[1];
         var thermalImages = thermal.Images.ShouldNotBeNull().ShouldHaveSingleItem();
-        thermalImages.Color.ShouldBe("vermelho");
+        thermalImages.Color.ShouldBe("verde");
         thermalImages.Files.ShouldBe(["camiseta-termica-grit-1-1.webp"]);
         Directory.GetFiles(Path.Combine(_output, "images")).Select(Path.GetFileName).Order(StringComparer.Ordinal).ShouldBe(
         [
@@ -52,7 +52,7 @@ public sealed class CatalogImporterTests : IDisposable
         await ShouldShowAsync("camiseta-dry-fit-grit-1-2.webp", "700002-MLA2001");
         await ShouldShowAsync("camiseta-dry-fit-grit-1-3.webp", "700003-MLA2002");
         await ShouldShowAsync("camiseta-dry-fit-grit-2-1.webp", "700005-MLA2004");
-        await ShouldShowAsync("camiseta-termica-grit-1-1.webp", "710001-MLA2020");
+        await ShouldShowAsync("camiseta-termica-grit-1-1.webp", "710002-MLA2021");
     }
 
     [Fact]
@@ -114,9 +114,13 @@ public sealed class CatalogImporterTests : IDisposable
 
         await ImportAsync(handler, "--category", RecordedCatalog.Category, "--category", "Camisetas e regatas=regata@MLB-TANK_TOPS", "--count", "3");
 
-        handler.Requests.Select(request => request.Url).ShouldContain(RecordedCatalog.RegatasPage);
         var category = (await ReadSeedAsync()).Categories.ShouldHaveSingleItem();
-        category.Products.Count.ShouldBe(2);
+        category.Products.Select(product => product.Name).ShouldBe(["Camiseta Dry Fit Grit", "Camiseta Térmica Grit", "Regata Leve Grit"]);
+        var regata = category.Products[2];
+        regata.Skus.Select(sku => (sku.Attributes["cor"], sku.Attributes["tamanho"], sku.PriceAmount)).ShouldBe([("amarelo", "M", 59.9m), ("roxo", "M", 64.9m)]);
+        regata.Images.ShouldNotBeNull().SelectMany(group => group.Files).ShouldBe(["regata-leve-grit-1-1.webp", "regata-leve-grit-2-1.webp"]);
+        await ShouldShowAsync("regata-leve-grit-1-1.webp", "730060-MLA2060");
+        await ShouldShowAsync("regata-leve-grit-2-1.webp", "730061-MLA2061");
     }
 
     // The store's own line lives in grit/ next to the imported seed (CatalogSeeder.OwnLineFolder): a run never touches it.

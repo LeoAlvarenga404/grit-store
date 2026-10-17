@@ -1,7 +1,7 @@
 {
   "keywords": "regata",
   "paging": {
-    "total": 1,
+    "total": 2,
     "offset": 0,
     "limit": 50
   },
@@ -11,6 +11,14 @@
       "status": "active",
       "domain_id": "MLB-TANK_TOPS",
       "name": "Camiseta Térmica Grit Verde P",
+      "parent_id": null,
+      "children_ids": []
+    },
+    {
+      "id": "MLB2060",
+      "status": "active",
+      "domain_id": "MLB-TANK_TOPS",
+      "name": "Regata Leve Grit Amarela M",
       "parent_id": null,
       "children_ids": []
     }

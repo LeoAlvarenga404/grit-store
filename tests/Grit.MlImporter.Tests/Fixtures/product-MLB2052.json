@@ -1,0 +1,63 @@
+{
+  "id": "MLB2052",
+  "status": "active",
+  "domain_id": "MLB-T_SHIRTS",
+  "name": "Tênis Veloz Grit Branco 41",
+  "family_name": "Tênis Veloz Grit",
+  "parent_id": "MLB2050",
+  "children_ids": [],
+  "pickers": [
+    {
+      "picker_id": "COLOR",
+      "picker_name": "Cor",
+      "products": [
+        {
+          "product_id": "MLB2051",
+          "picker_label": "Preto"
+        },
+        {
+          "product_id": "MLB2052",
+          "picker_label": "Branco"
+        }
+      ]
+    }
+  ],
+  "buy_box_winner": {
+    "item_id": "MLB3300000052",
+    "price": 199.9,
+    "currency_id": "BRL"
+  },
+  "pictures": [
+    {
+      "id": "720052-MLA2052",
+      "url": "https://http2.mlstatic.com/D_NQ_NP_720052-MLA2052-F.jpg"
+    }
+  ],
+  "attributes": [
+    {
+      "id": "BRAND",
+      "name": "Marca",
+      "value_id": null,
+      "value_name": "Grit",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "COLOR",
+      "name": "Cor",
+      "value_id": null,
+      "value_name": "Branco",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "SIZE",
+      "name": "Tamanho",
+      "value_id": null,
+      "value_name": "41 BR",
+      "values": [],
+      "meta": null
+    }
+  ],
+  "short_description": null
+}

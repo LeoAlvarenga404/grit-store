@@ -31,7 +31,7 @@ internal static class ImportCommand
         using var http = new HttpClient(handler, disposeHandler: false);
         try
         {
-            await new CatalogImporter(new MercadoLivreClient(http, accessToken, retryDelay ?? TimeSpan.FromSeconds(2)), output).ImportAsync(options.Value, CancellationToken.None);
+            await new CatalogImporter(new MercadoLivreClient(http, accessToken, retryDelay ?? TimeSpan.FromSeconds(5)), output).ImportAsync(options.Value, CancellationToken.None);
             return Succeeded;
         }
         catch (HttpRequestException exception)

@@ -89,6 +89,21 @@ public sealed class ImportCommandTests : IDisposable
         Directory.Exists(_output).ShouldBeFalse();
     }
 
+    [Theory]
+    [InlineData(HttpStatusCode.InternalServerError)]
+    [InlineData(HttpStatusCode.BadGateway)]
+    [InlineData(HttpStatusCode.ServiceUnavailable)]
+    [InlineData(HttpStatusCode.GatewayTimeout)]
+    public async Task RunAsync_ServerErrorTwice_RetriesAndSucceeds(HttpStatusCode status)
+    {
+        var handler = RecordedCatalog.Handler().Failing(RecordedCatalog.FirstPage, 2, status);
+
+        var exitCode = await RunAsync(handler, "test-token", TextWriter.Null);
+
+        exitCode.ShouldBe(ImportCommand.Succeeded);
+        handler.Requests.Count(request => request.Url == RecordedCatalog.FirstPage).ShouldBe(3);
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_output))

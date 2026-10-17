@@ -98,7 +98,7 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log,
         // Most leaves have no offer: a model with fewer than 2 colours is dropped before its listings are read.
         if (leaves.Select(ModelMapper.ColorOf).OfType<string>().Distinct().Count() < ModelMapper.MinColors)
         {
-            await log.WriteLineAsync($"  skipped {modelId}: {ModelMapper.TooFewColors.Message}");
+            await log.WriteLineAsync($"  skipped {modelId}: shows fewer than 2 colours");
             return null;
         }
 

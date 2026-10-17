@@ -8,7 +8,7 @@ internal sealed class FixtureHandler : HttpMessageHandler
 {
     private readonly Dictionary<string, Func<HttpResponseMessage>> _responses = [];
 
-    private readonly Dictionary<string, int> _throttledRequests = [];
+    private readonly Dictionary<string, (int Remaining, HttpStatusCode Status)> _failures = [];
 
     public List<(string Url, string? Authorization)> Requests { get; } = [];
 
@@ -28,9 +28,11 @@ internal sealed class FixtureHandler : HttpMessageHandler
         return this;
     }
 
-    public FixtureHandler Throttled(string url, int times)
+    public FixtureHandler Throttled(string url, int times) => Failing(url, times, HttpStatusCode.TooManyRequests);
+
+    public FixtureHandler Failing(string url, int times, HttpStatusCode status)
     {
-        _throttledRequests[url] = times;
+        _failures[url] = (times, status);
         return this;
     }
 
@@ -38,13 +40,13 @@ internal sealed class FixtureHandler : HttpMessageHandler
     {
         var url = request.RequestUri!.AbsoluteUri;
         Requests.Add((url, request.Headers.Authorization?.ToString()));
-        if (_throttledRequests.TryGetValue(url, out var remaining) && remaining > 0)
+        if (_failures.TryGetValue(url, out var failure) && failure.Remaining > 0)
         {
-            _throttledRequests[url] = remaining - 1;
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.TooManyRequests)
+            _failures[url] = (failure.Remaining - 1, failure.Status);
+            return Task.FromResult(new HttpResponseMessage(failure.Status)
             {
                 RequestMessage = request,
-                Content = new StringContent("""{"message":"local_rate_limited","status":429}""", MediaTypeHeaderValue.Parse("application/json; charset=utf-8")),
+                Content = new StringContent($$"""{"message":"local_failure","status":{{(int)failure.Status}}}""", MediaTypeHeaderValue.Parse("application/json; charset=utf-8")),
             });
         }
 

@@ -7,12 +7,12 @@ public class ModelMapperTests
     [Fact]
     public void Map_TwoColorsAndTwoSizes_KeepsOnlyTheObservedVariants()
     {
-        PricedLeaf[] leaves = [Leaf("Preto", "40", 100m), Leaf("Preto", "41", 100m), Leaf("Azul", "40", 120m)];
+        PricedLeaf[] leaves = [Leaf("Preto", "40", 100m), Leaf("Preto", "41", 110m), Leaf("Azul", "40", 120m)];
 
         var skus = ModelMapper.Map(leaves, []).Value.Skus;
 
         skus.Select(sku => (sku.Attributes["cor"], sku.Attributes["tamanho"], sku.PriceAmount))
-            .ShouldBe([("preto", "40", 100m), ("preto", "41", 100m), ("azul", "40", 120m)]);
+            .ShouldBe([("preto", "40", 100m), ("preto", "41", 110m), ("azul", "40", 120m)]);
     }
 
     [Fact]
@@ -34,11 +34,12 @@ public class ModelMapperTests
     [Fact]
     public void Map_LeafWithoutColor_IsLeftOut()
     {
-        PricedLeaf[] leaves = [Leaf(null, "40"), Leaf("Preto", "40"), Leaf("Azul", "41")];
+        PricedLeaf[] leaves = [Leaf(null, "40", familyName: "Outro"), Leaf("Preto", "40"), Leaf("Azul", "41")];
 
-        var skus = ModelMapper.Map(leaves, []).Value.Skus;
+        var mapped = ModelMapper.Map(leaves, []).Value;
 
-        skus.Select(sku => sku.Attributes["cor"]).ShouldBe(["preto", "azul"]);
+        mapped.Skus.Select(sku => sku.Attributes["cor"]).ShouldBe(["preto", "azul"]);
+        mapped.Name.ShouldBe("Tênis Veloz");
     }
 
     [Fact]
@@ -78,7 +79,7 @@ public class ModelMapperTests
         [
             Leaf("Preto", "40", extra: [new("BRAND", "Marca", "Grit"), new("MAIN_COLOR", "Cor principal", "Preto"), new("GENDER", "Gênero", "Masculino")]),
             Leaf("Azul", "40", extra: [new("BRAND", "Marca", "Grit"), new("MAIN_COLOR", "Cor principal", "Azul"), new("GENDER", "Gênero", "Masculino")]),
-            Leaf("Azul", "41", extra: [new("BRAND", "Marca", "Grit"), new("GENDER", "Gênero", "Masculino")]),
+            Leaf("Azul", "41", extra: [new("BRAND", "Marca", "Grit"), new("MAIN_COLOR", "Cor principal", "Azul"), new("GENDER", "Gênero", "Masculino")]),
         ];
 
         ModelMapper.Map(leaves, []).Value.Attributes.ShouldBe(new Dictionary<string, string> { ["marca"] = "Grit", ["genero"] = "Masculino" });
@@ -87,7 +88,7 @@ public class ModelMapperTests
     [Fact]
     public void Map_Description_IsTheFirstOneThatIsNotEmpty()
     {
-        PricedLeaf[] leaves = [Leaf("Preto", "40", description: " "), Leaf("Azul", "40", description: "Leve e respirável.")];
+        PricedLeaf[] leaves = [Leaf("Preto", "40", description: " "), Leaf("Azul", "40", description: "Leve e respirável."), Leaf("Azul", "41", description: "Outra descrição.")];
 
         ModelMapper.Map(leaves, []).Value.Description.ShouldBe("Leve e respirável.");
     }

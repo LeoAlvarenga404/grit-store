@@ -82,6 +82,7 @@ public class SeedMapperTests
 
     [Theory]
     [InlineData(79.905, "BRL", 79.91)]
+    [InlineData(-1.0, "BRL", null)]
     [InlineData(79.9, "USD", null)]
     [InlineData(0.0, "BRL", null)]
     [InlineData(null, "BRL", null)]
