@@ -15,7 +15,7 @@ Dois administradores podem editar o mesmo produto ao mesmo tempo. O produto é u
 - **A versão viaja no corpo JSON**, não em `ETag`/`If-Match`: o cliente envia a `version` que leu (na criação, no GET ou na resposta da escrita anterior). Assim ela fica tipada no OpenAPI e nos tipos do web.
 - `CatalogDbContext.SaveProductAsync` usa essa versão como valor original do `xmin` e transforma `DbUpdateConcurrencyException` no erro `catalog.product_changed` (409, com `code`). Como o handler sempre carrega o produto atual no próprio request, uma versão velha marca a raiz como modificada mesmo que os valores enviados sejam iguais aos atuais, e a escrita é rejeitada.
 - Uma `version` ausente (0) é erro de formato: 400 `validation.failed`. O `xmin` nunca vale 0.
-- **Auditoria:** `created_at`/`updated_at` (`timestamptz`) só nas raízes (`products`, `categories`). "Criado/alterado por" (design §3) fica para o sub-plano 2a, quando existir usuário.
+- **Auditoria:** `created_at`/`updated_at` (`timestamptz`) só nas raízes (`products`, `categories`). "Criado/alterado por" (design §3) ainda não existe: o 2a criou os usuários, mas o interceptor de auditoria segue gravando só as datas.
 
 ## Consequências
 

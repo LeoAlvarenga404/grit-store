@@ -26,6 +26,31 @@ Para testar o checkout: crie uma conta, adicione itens ao carrinho e finalize. O
 - enviar fotos dos produtos (jpeg, png ou webp até 2 MB, guardadas no SeaweedFS por URL pré-assinada);
 - marcar pedidos confirmados como enviados, o que baixa o estoque.
 
+## Como subir com Docker Compose
+
+O AppHost gera `deploy/compose/` (`docker-compose.yaml` e `web.Dockerfile`) com `aspire publish`, e o CI falha se o arquivo versionado estiver desatualizado. Para regerar:
+
+```bash
+dotnet run --project src/Grit.AppHost --no-build -- --operation publish --step publish --output-path ../../deploy/compose
+```
+
+Para subir sem o .NET Aspire em execução:
+
+```bash
+dotnet publish src/Grit.Api -c Release -t:PublishContainer -p:ContainerRepository=grit-api
+docker build -f deploy/compose/web.Dockerfile -t grit-web:latest web
+cp deploy/compose/.env.example deploy/compose/.env   # troque os valores; JWT_SIGNING_KEY com 32 bytes ou mais, senhas sem ';' nem '='
+docker compose -f deploy/compose/docker-compose.yaml up -d
+```
+
+A loja fica em http://localhost:3000, e o admin entra com `admin@grit.local` e o `ADMIN_PASSWORD` do `.env`. O dashboard do Aspire fica em http://localhost:18888; o token de login aparece em `docker compose -f deploy/compose/docker-compose.yaml logs compose-dashboard`.
+
+É um ambiente de demonstração:
+- a API roda em Development, para aplicar as migrations e carregar o seed;
+- não há volumes, então os dados somem no `down`;
+- as URLs das imagens apontam para `storage:8333`, que o navegador não alcança;
+- o cookie de sessão `Secure` só funciona em `localhost`.
+
 ## Testes
 
 ```bash
@@ -83,4 +108,4 @@ Os resultados ficam em `bench/results/`, que não é versionado.
 
 ## Fora do escopo por enquanto
 
-Importador do Mercado Livre (precisa do token do app), Stripe real (precisa de uma conta de teste) e um GIF do trace no Aspire. Estão no roadmap.
+Importador do Mercado Livre (precisa do token do app), Stripe real (precisa de uma conta de teste), GIF do trace no Aspire, logout que revogue a família de tokens e "criado/alterado por" na auditoria. Estão no roadmap.

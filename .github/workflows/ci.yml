@@ -34,6 +34,11 @@ jobs:
         run: |
           git status --porcelain -- web/openapi web/lib/api
           test -z "$(git status --porcelain -- web/openapi web/lib/api)"
+      - name: Generated compose file is committed
+        run: |
+          dotnet run --project src/Grit.AppHost --no-build -- --operation publish --step publish --output-path ../../deploy/compose
+          git status --porcelain -- deploy/compose
+          test -z "$(git status --porcelain -- deploy/compose)"
       - run: npm run lint
         working-directory: web
       - run: npm run build

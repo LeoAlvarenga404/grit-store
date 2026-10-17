@@ -4,11 +4,13 @@
     <OutputType>Exe</OutputType>
     <!-- The CLI bundle needs the Aspire CLI installed; the dashboard and DCP NuGet packages work with plain dotnet run and in CI. -->
     <AspireUseCliBundle>false</AspireUseCliBundle>
-    <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
+    <!-- AddNextJsApp is still experimental in Aspire 13.6, but it is the integration that builds the standalone Next.js image for compose. -->
+    <NoWarn>$(NoWarn);ASPIRE010;ASPIREJAVASCRIPT001</NoWarn>
     <UserSecretsId>9f1c2a64-1b1e-4d2e-9c55-3a0b6f2d7e10</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.Docker" />
     <PackageReference Include="Aspire.Hosting.JavaScript" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" />
     <PackageReference Include="Aspire.Hosting.Redis" />
