@@ -1,0 +1,34 @@
+{
+  "keywords": "camiseta dry fit",
+  "paging": {
+    "total": 60,
+    "offset": 0,
+    "limit": 50
+  },
+  "results": [
+    {
+      "id": "MLB2001",
+      "status": "active",
+      "domain_id": "MLB-T_SHIRTS",
+      "name": "Camiseta Dry Fit Grit Preta M",
+      "parent_id": "MLB2000",
+      "children_ids": []
+    },
+    {
+      "id": "MLB2010",
+      "status": "active",
+      "domain_id": "MLB-T_SHIRTS",
+      "name": "Regata Básica Grit Branca",
+      "parent_id": null,
+      "children_ids": []
+    },
+    {
+      "id": "MLB2002",
+      "status": "active",
+      "domain_id": "MLB-T_SHIRTS",
+      "name": "Camiseta Dry Fit Grit Preta G",
+      "parent_id": "MLB2000",
+      "children_ids": []
+    }
+  ]
+}

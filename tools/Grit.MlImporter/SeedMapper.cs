@@ -1,5 +1,4 @@
 using Grit.Modules.Catalog.Domain;
-using Grit.Modules.Catalog.Infrastructure.Seed;
 using Grit.SharedKernel;
 
 namespace Grit.MlImporter;
@@ -27,27 +26,6 @@ internal static class SeedMapper
     private const string SizeId = "SIZE";
 
     private const string GenderKey = "genero";
-
-    public static Result<SeedProduct> Map(MlProduct product, IReadOnlyList<MlItem> items, IReadOnlyList<string> imageFileNames)
-    {
-        var price = LowestPriceInBrl(items);
-        if (price is null)
-        {
-            return NoPrice;
-        }
-
-        var name = Clean(product.Name, MaxNameLength);
-        if (Slug.FromName(name).IsFailure)
-        {
-            return NoName;
-        }
-
-        var description = Clean(product.ShortDescription?.Content, MaxDescriptionLength);
-        var attributes = product.Attributes ?? [];
-        var sku = new SeedSku(SkuAttributes(attributes), price.Value);
-        IReadOnlyList<SeedColorImages> images = imageFileNames.Count == 0 ? [] : [new SeedColorImages(sku.Attributes.GetValueOrDefault("cor"), imageFileNames)];
-        return new SeedProduct(name, description.Length > 0 ? description : name, ProductAttributes(attributes), [sku], images);
-    }
 
     // The cheapest listing is the price a shopper would find first; two decimals, as Money requires (ADR 0001).
     public static decimal? LowestPriceInBrl(IReadOnlyList<MlItem> items)

@@ -1,0 +1,63 @@
+{
+  "id": "MLB2042",
+  "status": "active",
+  "domain_id": "MLB-T_SHIRTS",
+  "name": "Tênis Veloz Grit Couro Branco 40",
+  "family_name": "Tênis Veloz Grit Couro",
+  "parent_id": "MLB2040",
+  "children_ids": [],
+  "pickers": [
+    {
+      "picker_id": "COLOR",
+      "picker_name": "Cor",
+      "products": [
+        {
+          "product_id": "MLB2041",
+          "picker_label": "Preto"
+        },
+        {
+          "product_id": "MLB2042",
+          "picker_label": "Branco"
+        }
+      ]
+    }
+  ],
+  "buy_box_winner": {
+    "item_id": "MLB3300000042",
+    "price": 159.9,
+    "currency_id": "BRL"
+  },
+  "pictures": [
+    {
+      "id": "720042-MLA2042",
+      "url": "https://http2.mlstatic.com/D_NQ_NP_720042-MLA2042-F.jpg"
+    }
+  ],
+  "attributes": [
+    {
+      "id": "BRAND",
+      "name": "Marca",
+      "value_id": null,
+      "value_name": "Grit",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "COLOR",
+      "name": "Cor",
+      "value_id": null,
+      "value_name": "Branco",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "SIZE",
+      "name": "Tamanho",
+      "value_id": null,
+      "value_name": "40 BR",
+      "values": [],
+      "meta": null
+    }
+  ],
+  "short_description": null
+}

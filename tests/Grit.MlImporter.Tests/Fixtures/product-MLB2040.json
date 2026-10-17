@@ -1,0 +1,26 @@
+{
+  "id": "MLB2040",
+  "status": "active",
+  "domain_id": "MLB-T_SHIRTS",
+  "name": "Tênis Veloz Grit Couro",
+  "family_name": "Tênis Veloz Grit Couro",
+  "parent_id": null,
+  "children_ids": [
+    "MLB2041",
+    "MLB2042"
+  ],
+  "pickers": null,
+  "buy_box_winner": null,
+  "pictures": [],
+  "attributes": [
+    {
+      "id": "BRAND",
+      "name": "Marca",
+      "value_id": null,
+      "value_name": "Grit",
+      "values": [],
+      "meta": null
+    }
+  ],
+  "short_description": null
+}

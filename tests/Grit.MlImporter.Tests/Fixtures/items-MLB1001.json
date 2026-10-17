@@ -1,8 +1,0 @@
-{
-  "paging": { "total": 3, "offset": 0, "limit": 10 },
-  "results": [
-    { "site_id": "MLB", "item_id": "MLB3200000001", "price": 499.9, "currency_id": "BRL", "original_price": 599.9, "seller_id": 123456, "category_id": "MLB23333", "official_store_id": null, "condition": "new", "listing_type_id": "gold_special", "shipping": { "logistic_type": "fulfillment", "free_shipping": true, "mode": "me2", "tags": [] }, "sale_terms": [], "tags": ["good_quality_thumbnail"], "warranty": "Garantia de fábrica: 3 meses", "deal_ids": [] },
-    { "site_id": "MLB", "item_id": "MLB3200000002", "price": 459.9, "currency_id": "BRL", "original_price": null, "seller_id": 654321, "category_id": "MLB23333", "official_store_id": 2210, "condition": "new", "listing_type_id": "gold_pro", "shipping": { "logistic_type": "cross_docking", "free_shipping": true, "mode": "me2", "tags": [] }, "sale_terms": [], "tags": [], "warranty": null, "deal_ids": [] },
-    { "site_id": "MLB", "item_id": "MLB3200000003", "price": 89.0, "currency_id": "USD", "original_price": null, "seller_id": 777, "category_id": "MLB23333", "official_store_id": null, "condition": "new", "listing_type_id": "gold_special", "shipping": { "logistic_type": "drop_off", "free_shipping": false, "mode": "me2", "tags": [] }, "sale_terms": [], "tags": [], "warranty": null, "deal_ids": [] }
-  ]
-}

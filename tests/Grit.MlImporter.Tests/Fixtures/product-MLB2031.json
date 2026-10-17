@@ -1,0 +1,77 @@
+{
+  "id": "MLB2031",
+  "status": "active",
+  "domain_id": "MLB-T_SHIRTS",
+  "name": "Tênis Veloz Grit Preto 40",
+  "family_name": "Tênis Veloz Grit",
+  "parent_id": "MLB2030",
+  "children_ids": [],
+  "pickers": [
+    {
+      "picker_id": "COLOR",
+      "picker_name": "Cor",
+      "products": [
+        {
+          "product_id": "MLB2031",
+          "picker_label": "Preto"
+        },
+        {
+          "product_id": "MLB2032",
+          "picker_label": "Branco"
+        }
+      ]
+    },
+    {
+      "picker_id": "FABRIC_DESIGN",
+      "picker_name": "Material",
+      "products": [
+        {
+          "product_id": "MLB2031",
+          "picker_label": "Tecido"
+        },
+        {
+          "product_id": "MLB2041",
+          "picker_label": "Couro"
+        }
+      ]
+    }
+  ],
+  "buy_box_winner": {
+    "item_id": "MLB3300000031",
+    "price": 199.9,
+    "currency_id": "BRL"
+  },
+  "pictures": [
+    {
+      "id": "720031-MLA2031",
+      "url": "https://http2.mlstatic.com/D_NQ_NP_720031-MLA2031-F.jpg"
+    }
+  ],
+  "attributes": [
+    {
+      "id": "BRAND",
+      "name": "Marca",
+      "value_id": null,
+      "value_name": "Grit",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "COLOR",
+      "name": "Cor",
+      "value_id": null,
+      "value_name": "Preto",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "SIZE",
+      "name": "Tamanho",
+      "value_id": null,
+      "value_name": "40 BR",
+      "values": [],
+      "meta": null
+    }
+  ],
+  "short_description": null
+}
