@@ -6,7 +6,7 @@ using Grit.Modules.Catalog.Infrastructure.Seed;
 
 namespace Grit.MlImporter;
 
-// Calls are sequential; a 429 is retried by the client, any other failure ends the run.
+// Calls are sequential; the client retries 429 and 5xx answers and skips a dead picture, any other failure ends the run.
 internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log, Func<string, byte[], CancellationToken, Task>? writeFile = null)
 {
     // 3 photos x ~3 colours x 10 models x 2 imported categories x ~30 KB: about 6 MB of committed images.
