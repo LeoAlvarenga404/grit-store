@@ -25,6 +25,7 @@
     <Project Path="tests/Grit.Modules.Catalog.Tests/Grit.Modules.Catalog.Tests.csproj" />
     <Project Path="tests/Grit.Modules.Inventory.Tests/Grit.Modules.Inventory.Tests.csproj" />
     <Project Path="tests/Grit.Modules.Ordering.Tests/Grit.Modules.Ordering.Tests.csproj" />
+    <Project Path="tests/Grit.Modules.Payments.Tests/Grit.Modules.Payments.Tests.csproj" />
     <Project Path="tests/Grit.Modules.Probe.Contracts/Grit.Modules.Probe.Contracts.csproj" />
     <Project Path="tests/Grit.Modules.Probe/Grit.Modules.Probe.csproj" />
     <Project Path="tests/Grit.SharedKernel.Tests/Grit.SharedKernel.Tests.csproj" />

@@ -2,6 +2,11 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Grit.IntegrationTests" />
+    <InternalsVisibleTo Include="Grit.Modules.Payments.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Stripe.net" />
   </ItemGroup>
 
   <ItemGroup>
