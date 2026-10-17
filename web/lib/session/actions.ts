@@ -4,7 +4,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { api } from "@/lib/api/client";
 import { errorCode } from "@/lib/api/problem";
-import { clearSession, writeSession } from "./session";
+import { clearSession, refreshTokenCookie, writeSession } from "./session";
 
 function readCredentials(formData: FormData) {
   return { email: String(formData.get("email") ?? ""), password: String(formData.get("password") ?? "") };
@@ -34,6 +34,12 @@ export async function register(formData: FormData) {
 }
 
 export async function logOut() {
-  clearSession(await cookies());
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get(refreshTokenCookie)?.value;
+  // Best effort: the cookies go even when the API cannot be reached; the session then ends when its refresh token expires.
+  if (refreshToken) {
+    await api.POST("/api/v1/identity/logout", { body: { refreshToken }, cache: "no-store" }).catch(() => undefined);
+  }
+  clearSession(cookieStore);
   redirect("/login");
 }
