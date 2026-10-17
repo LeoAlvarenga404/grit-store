@@ -43,7 +43,9 @@ public class SeedMapperTests
 
         mapped.Skus.ShouldHaveSingleItem().Attributes.ShouldBe(new Dictionary<string, string> { ["cor"] = "azul marinho", ["tamanho"] = "42" });
         mapped.Attributes.ShouldBe(new Dictionary<string, string> { ["marca"] = "Serra Alta", ["material-da-sola"] = "Borracha" });
-        mapped.Images.ShouldBe(["bota-serra-1.webp"]);
+        var images = mapped.Images.ShouldNotBeNull().ShouldHaveSingleItem();
+        images.Color.ShouldBe("azul marinho");
+        images.Files.ShouldBe(["bota-serra-1.webp"]);
     }
 
     [Fact]

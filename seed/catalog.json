@@ -38,8 +38,13 @@
             }
           ],
           "images": [
-            "tenis-olympikus-beats-1.webp",
-            "tenis-olympikus-beats-2.webp"
+            {
+              "color": "bege",
+              "files": [
+                "tenis-olympikus-beats-1.webp",
+                "tenis-olympikus-beats-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -77,8 +82,13 @@
             }
           ],
           "images": [
-            "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-1.webp",
-            "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-2.webp"
+            {
+              "color": "preto/dourado",
+              "files": [
+                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-1.webp",
+                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-2.webp"
+              ]
+            }
           ]
         }
       ]
@@ -113,8 +123,13 @@
             }
           ],
           "images": [
-            "barraca-camping-hawapi-barraca-wasi-verde-1.webp",
-            "barraca-camping-hawapi-barraca-wasi-verde-2.webp"
+            {
+              "color": "verde",
+              "files": [
+                "barraca-camping-hawapi-barraca-wasi-verde-1.webp",
+                "barraca-camping-hawapi-barraca-wasi-verde-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -138,7 +153,11 @@
             }
           ],
           "images": [
-            "barraca-camping-4-lugares-antares-1.webp"
+            {
+              "files": [
+                "barraca-camping-4-lugares-antares-1.webp"
+              ]
+            }
           ]
         },
         {
@@ -169,8 +188,13 @@
             }
           ],
           "images": [
-            "barraca-camping-stranger-1-azteq-vermelho-1.webp",
-            "barraca-camping-stranger-1-azteq-vermelho-2.webp"
+            {
+              "color": "vermelho",
+              "files": [
+                "barraca-camping-stranger-1-azteq-vermelho-1.webp",
+                "barraca-camping-stranger-1-azteq-vermelho-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -201,8 +225,13 @@
             }
           ],
           "images": [
-            "sandiario-barraca-camping-mp2-barraca-impermeavel-2-3-pessoas-1.webp",
-            "sandiario-barraca-camping-mp2-barraca-impermeavel-2-3-pessoas-2.webp"
+            {
+              "color": "preto",
+              "files": [
+                "sandiario-barraca-camping-mp2-barraca-impermeavel-2-3-pessoas-1.webp",
+                "sandiario-barraca-camping-mp2-barraca-impermeavel-2-3-pessoas-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -237,8 +266,13 @@
             }
           ],
           "images": [
-            "sandiario-an4-barraca-camping-barraca-grande-4-pessoas-upf50-preto-1.webp",
-            "sandiario-an4-barraca-camping-barraca-grande-4-pessoas-upf50-preto-2.webp"
+            {
+              "color": "preto",
+              "files": [
+                "sandiario-an4-barraca-camping-barraca-grande-4-pessoas-upf50-preto-1.webp",
+                "sandiario-an4-barraca-camping-barraca-grande-4-pessoas-upf50-preto-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -273,8 +307,13 @@
             }
           ],
           "images": [
-            "sandiario-ah6-barraca-camping-barraca-grande-4-6-pessoas-preto-1.webp",
-            "sandiario-ah6-barraca-camping-barraca-grande-4-6-pessoas-preto-2.webp"
+            {
+              "color": "preto",
+              "files": [
+                "sandiario-ah6-barraca-camping-barraca-grande-4-6-pessoas-preto-1.webp",
+                "sandiario-ah6-barraca-camping-barraca-grande-4-6-pessoas-preto-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -303,8 +342,13 @@
             }
           ],
           "images": [
-            "barraca-camping-impermeavel-monta-sozinha-1.webp",
-            "barraca-camping-impermeavel-monta-sozinha-2.webp"
+            {
+              "color": "azul-turquesa",
+              "files": [
+                "barraca-camping-impermeavel-monta-sozinha-1.webp",
+                "barraca-camping-impermeavel-monta-sozinha-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -329,7 +373,11 @@
             }
           ],
           "images": [
-            "barraca-camping-acampamento-impermeavel-5-pessoas-benoa-1.webp"
+            {
+              "files": [
+                "barraca-camping-acampamento-impermeavel-5-pessoas-benoa-1.webp"
+              ]
+            }
           ]
         },
         {
@@ -361,8 +409,13 @@
             }
           ],
           "images": [
-            "barraca-camping-iglu-3-pessoas-mor-1.webp",
-            "barraca-camping-iglu-3-pessoas-mor-2.webp"
+            {
+              "color": "azul",
+              "files": [
+                "barraca-camping-iglu-3-pessoas-mor-1.webp",
+                "barraca-camping-iglu-3-pessoas-mor-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -396,8 +449,12 @@
             }
           ],
           "images": [
-            "nautika-barraca-camping-blackout-onix-4-pessoas-1.webp",
-            "nautika-barraca-camping-blackout-onix-4-pessoas-2.webp"
+            {
+              "files": [
+                "nautika-barraca-camping-blackout-onix-4-pessoas-1.webp",
+                "nautika-barraca-camping-blackout-onix-4-pessoas-2.webp"
+              ]
+            }
           ]
         }
       ]
@@ -436,7 +493,12 @@
             }
           ],
           "images": [
-            "capacete-ciclismo-abus-gamechanger-2-0-preto-m-1.webp"
+            {
+              "color": "preto",
+              "files": [
+                "capacete-ciclismo-abus-gamechanger-2-0-preto-m-1.webp"
+              ]
+            }
           ]
         },
         {
@@ -466,8 +528,13 @@
             }
           ],
           "images": [
-            "capacete-ciclismo-adulto-m-catlike-vulcano-branco-1.webp",
-            "capacete-ciclismo-adulto-m-catlike-vulcano-branco-2.webp"
+            {
+              "color": "branco",
+              "files": [
+                "capacete-ciclismo-adulto-m-catlike-vulcano-branco-1.webp",
+                "capacete-ciclismo-adulto-m-catlike-vulcano-branco-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -501,8 +568,13 @@
             }
           ],
           "images": [
-            "capacete-ciclismo-asw-accel-verde-p-m-1.webp",
-            "capacete-ciclismo-asw-accel-verde-p-m-2.webp"
+            {
+              "color": "verde",
+              "files": [
+                "capacete-ciclismo-asw-accel-verde-p-m-1.webp",
+                "capacete-ciclismo-asw-accel-verde-p-m-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -535,8 +607,13 @@
             }
           ],
           "images": [
-            "capacete-ciclismo-abus-wing-back-1.webp",
-            "capacete-ciclismo-abus-wing-back-2.webp"
+            {
+              "color": "vermelho",
+              "files": [
+                "capacete-ciclismo-abus-wing-back-1.webp",
+                "capacete-ciclismo-abus-wing-back-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -568,7 +645,12 @@
             }
           ],
           "images": [
-            "capacete-ciclismo-absolute-nero-branco-vermelho-1.webp"
+            {
+              "color": "branco/vermelho",
+              "files": [
+                "capacete-ciclismo-absolute-nero-branco-vermelho-1.webp"
+              ]
+            }
           ]
         }
       ]
@@ -610,8 +692,13 @@
             }
           ],
           "images": [
-            "mochila-trilha-viagem-20l-resistente-a-agua-mochila-trilha-preto-1.webp",
-            "mochila-trilha-viagem-20l-resistente-a-agua-mochila-trilha-preto-2.webp"
+            {
+              "color": "preto",
+              "files": [
+                "mochila-trilha-viagem-20l-resistente-a-agua-mochila-trilha-preto-1.webp",
+                "mochila-trilha-viagem-20l-resistente-a-agua-mochila-trilha-preto-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -643,8 +730,13 @@
             }
           ],
           "images": [
-            "mochila-trilha-arpenaz-20-litros-quechua-cinza-1.webp",
-            "mochila-trilha-arpenaz-20-litros-quechua-cinza-2.webp"
+            {
+              "color": "cinza",
+              "files": [
+                "mochila-trilha-arpenaz-20-litros-quechua-cinza-1.webp",
+                "mochila-trilha-arpenaz-20-litros-quechua-cinza-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -681,8 +773,13 @@
             }
           ],
           "images": [
-            "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-azul-1.webp",
-            "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-azul-2.webp"
+            {
+              "color": "azul",
+              "files": [
+                "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-azul-1.webp",
+                "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-azul-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -719,8 +816,13 @@
             }
           ],
           "images": [
-            "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-preto-1.webp",
-            "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-preto-2.webp"
+            {
+              "color": "preto",
+              "files": [
+                "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-preto-1.webp",
+                "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-preto-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -757,8 +859,13 @@
             }
           ],
           "images": [
-            "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-vermelho-1.webp",
-            "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-vermelho-2.webp"
+            {
+              "color": "vermelho",
+              "files": [
+                "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-vermelho-1.webp",
+                "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-vermelho-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -795,8 +902,13 @@
             }
           ],
           "images": [
-            "mochila-trilha-viagem-reforcada-90l-mochila-camping-cargueira-wicopet-mochila-masculina-impermeavel-1.webp",
-            "mochila-trilha-viagem-reforcada-90l-mochila-camping-cargueira-wicopet-mochila-masculina-impermeavel-2.webp"
+            {
+              "color": "preto",
+              "files": [
+                "mochila-trilha-viagem-reforcada-90l-mochila-camping-cargueira-wicopet-mochila-masculina-impermeavel-1.webp",
+                "mochila-trilha-viagem-reforcada-90l-mochila-camping-cargueira-wicopet-mochila-masculina-impermeavel-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -833,7 +945,12 @@
             }
           ],
           "images": [
-            "mochila-trilha-acampamento-camping-flamengo-time-rubro-negro-1.webp"
+            {
+              "color": "preto",
+              "files": [
+                "mochila-trilha-acampamento-camping-flamengo-time-rubro-negro-1.webp"
+              ]
+            }
           ]
         },
         {
@@ -870,7 +987,12 @@
             }
           ],
           "images": [
-            "mochila-trilha-70-litros-camping-pesca-caminhada-reforcada-1.webp"
+            {
+              "color": "azul-escuro",
+              "files": [
+                "mochila-trilha-70-litros-camping-pesca-caminhada-reforcada-1.webp"
+              ]
+            }
           ]
         },
         {
@@ -897,8 +1019,13 @@
             }
           ],
           "images": [
-            "mochila-trilha-camping-55l-litros-impermeavel-clio-exploring-1.webp",
-            "mochila-trilha-camping-55l-litros-impermeavel-clio-exploring-2.webp"
+            {
+              "color": "cinza-escuro",
+              "files": [
+                "mochila-trilha-camping-55l-litros-impermeavel-clio-exploring-1.webp",
+                "mochila-trilha-camping-55l-litros-impermeavel-clio-exploring-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -935,8 +1062,13 @@
             }
           ],
           "images": [
-            "mochila-trilha-thule-stir-com-aba-protetora-contra-chuva-35l-1.webp",
-            "mochila-trilha-thule-stir-com-aba-protetora-contra-chuva-35l-2.webp"
+            {
+              "color": "marrom",
+              "files": [
+                "mochila-trilha-thule-stir-com-aba-protetora-contra-chuva-35l-1.webp",
+                "mochila-trilha-thule-stir-com-aba-protetora-contra-chuva-35l-2.webp"
+              ]
+            }
           ]
         }
       ]
@@ -970,8 +1102,13 @@
             }
           ],
           "images": [
-            "oculos-natacao-leader-swell-mirror-preto-1.webp",
-            "oculos-natacao-leader-swell-mirror-preto-2.webp"
+            {
+              "color": "preto",
+              "files": [
+                "oculos-natacao-leader-swell-mirror-preto-1.webp",
+                "oculos-natacao-leader-swell-mirror-preto-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -1000,7 +1137,12 @@
             }
           ],
           "images": [
-            "oculos-natacao-speedo-one-fit-verde-1.webp"
+            {
+              "color": "verde",
+              "files": [
+                "oculos-natacao-speedo-one-fit-verde-1.webp"
+              ]
+            }
           ]
         },
         {
@@ -1023,8 +1165,13 @@
             }
           ],
           "images": [
-            "oculos-natacao-athlon-mormaii-branco-espelhado-1.webp",
-            "oculos-natacao-athlon-mormaii-branco-espelhado-2.webp"
+            {
+              "color": "branco/espelhado",
+              "files": [
+                "oculos-natacao-athlon-mormaii-branco-espelhado-1.webp",
+                "oculos-natacao-athlon-mormaii-branco-espelhado-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -1047,7 +1194,12 @@
             }
           ],
           "images": [
-            "oculos-natacao-athlon-mormaii-cinza-espelhado-1.webp"
+            {
+              "color": "cinza espelhado",
+              "files": [
+                "oculos-natacao-athlon-mormaii-cinza-espelhado-1.webp"
+              ]
+            }
           ]
         },
         {
@@ -1075,8 +1227,13 @@
             }
           ],
           "images": [
-            "oculos-natacao-speedo-beats-cor-fume-1.webp",
-            "oculos-natacao-speedo-beats-cor-fume-2.webp"
+            {
+              "color": "fumê",
+              "files": [
+                "oculos-natacao-speedo-beats-cor-fume-1.webp",
+                "oculos-natacao-speedo-beats-cor-fume-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -1105,8 +1262,13 @@
             }
           ],
           "images": [
-            "oculos-natacao-leader-swell-cor-verde-1.webp",
-            "oculos-natacao-leader-swell-cor-verde-2.webp"
+            {
+              "color": "verde",
+              "files": [
+                "oculos-natacao-leader-swell-cor-verde-1.webp",
+                "oculos-natacao-leader-swell-cor-verde-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -1135,8 +1297,13 @@
             }
           ],
           "images": [
-            "oculos-natacao-mormaii-endurance-cor-transparente-1.webp",
-            "oculos-natacao-mormaii-endurance-cor-transparente-2.webp"
+            {
+              "color": "transparente",
+              "files": [
+                "oculos-natacao-mormaii-endurance-cor-transparente-1.webp",
+                "oculos-natacao-mormaii-endurance-cor-transparente-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -1165,8 +1332,13 @@
             }
           ],
           "images": [
-            "oculos-natacao-leader-soft-cor-azul-1.webp",
-            "oculos-natacao-leader-soft-cor-azul-2.webp"
+            {
+              "color": "azul",
+              "files": [
+                "oculos-natacao-leader-soft-cor-azul-1.webp",
+                "oculos-natacao-leader-soft-cor-azul-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -1195,8 +1367,13 @@
             }
           ],
           "images": [
-            "oculos-natacao-leader-soft-cor-preto-1.webp",
-            "oculos-natacao-leader-soft-cor-preto-2.webp"
+            {
+              "color": "preto",
+              "files": [
+                "oculos-natacao-leader-soft-cor-preto-1.webp",
+                "oculos-natacao-leader-soft-cor-preto-2.webp"
+              ]
+            }
           ]
         },
         {
@@ -1225,8 +1402,13 @@
             }
           ],
           "images": [
-            "oculos-natacao-speedo-tornado-cor-rosa-1.webp",
-            "oculos-natacao-speedo-tornado-cor-rosa-2.webp"
+            {
+              "color": "rosa",
+              "files": [
+                "oculos-natacao-speedo-tornado-cor-rosa-1.webp",
+                "oculos-natacao-speedo-tornado-cor-rosa-2.webp"
+              ]
+            }
           ]
         }
       ]

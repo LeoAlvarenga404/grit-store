@@ -52,7 +52,9 @@ internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage ima
             Unique(categorySlugs, category.Slug, seedCategory.Name);
             foreach (var seedProduct in seedCategory.Products)
             {
-                Unique(productSlugs, Build(category.Id, seedProduct).Slug, seedProduct.Name);
+                var product = Build(category.Id, seedProduct);
+                AttachAll(product, seedProduct);
+                Unique(productSlugs, product.Slug, seedProduct.Name);
             }
         }
     }
@@ -90,17 +92,33 @@ internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage ima
             return;
         }
 
-        foreach (var fileName in seed.Images ?? [])
+        foreach (var group in seed.Images ?? [])
         {
-            var file = Path.Combine(imagesDirectory, fileName);
-            if (!File.Exists(file))
+            foreach (var fileName in group.Files)
             {
-                continue;
-            }
+                var file = Path.Combine(imagesDirectory, fileName);
+                if (!File.Exists(file))
+                {
+                    continue;
+                }
 
-            var key = Product.ImageKeyPrefix(product.Id) + fileName;
-            await images.PutFileAsync(key, file, "image/webp", cancellationToken);
-            Valid(seed.Name, product.AddImage(key, product.Skus is [var first, ..] ? first.Color : null));
+                var key = Product.ImageKeyPrefix(product.Id) + fileName;
+                await images.PutFileAsync(key, file, "image/webp", cancellationToken);
+                Valid(seed.Name, product.AddImage(key, group.Color));
+            }
+        }
+    }
+
+    // Every listed file as if it existed, on a product that is thrown away: the domain checks each colour, repeated
+    // files and the limit per colour before anything is read or stored.
+    private static void AttachAll(Product product, SeedProduct seed)
+    {
+        foreach (var group in seed.Images ?? [])
+        {
+            foreach (var fileName in group.Files)
+            {
+                Valid(seed.Name, product.AddImage(Product.ImageKeyPrefix(product.Id) + fileName, group.Color));
+            }
         }
     }
 
@@ -119,10 +137,9 @@ internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage ima
 
     private static void CheckImages(SeedProduct seed)
     {
-        var fileNames = seed.Images ?? [];
-        if (fileNames.Count > Product.MaxImagesPerColor || !fileNames.All(IsWebpFileName))
+        if (!(seed.Images ?? []).All(group => group.Files is not null && group.Files.All(IsWebpFileName)))
         {
-            throw new InvalidOperationException($"The seed entry '{seed.Name}' must list at most {Product.MaxImagesPerColor} .webp file names.");
+            throw new InvalidOperationException($"The seed entry '{seed.Name}' must list .webp file names only.");
         }
     }
 

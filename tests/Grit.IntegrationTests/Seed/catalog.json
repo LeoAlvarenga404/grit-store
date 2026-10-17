@@ -11,6 +11,10 @@
             { "attributes": { "cor": "azul", "tamanho": "40" }, "priceAmount": 399.90 },
             { "attributes": { "cor": "azul", "tamanho": "42" }, "priceAmount": 399.90 },
             { "attributes": { "cor": "preto", "tamanho": "41" }, "priceAmount": 379.90 }
+          ],
+          "images": [
+            { "color": "azul", "files": ["tenis-de-corrida-asfalto-leve-1-1.webp", "tenis-de-corrida-asfalto-leve-1-2.webp"] },
+            { "color": "preto", "files": ["tenis-de-corrida-asfalto-leve-2-1.webp"] }
           ]
         },
         {
@@ -52,6 +56,10 @@
             { "attributes": { "cor": "azul", "tamanho": "M" }, "priceAmount": 79.90 },
             { "attributes": { "cor": "azul", "tamanho": "G" }, "priceAmount": 79.90 },
             { "attributes": { "cor": "vermelho", "tamanho": "M" }, "priceAmount": 89.90 }
+          ],
+          "images": [
+            { "color": "azul", "files": ["camiseta-dry-fit-masculina-1-1.webp"] },
+            { "color": "vermelho", "files": ["camiseta-dry-fit-masculina-2-1.webp"] }
           ]
         },
         {

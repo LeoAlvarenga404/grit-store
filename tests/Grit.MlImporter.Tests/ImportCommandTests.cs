@@ -45,7 +45,9 @@ public sealed class ImportCommandTests : IDisposable
         var sku = tent.Skus.ShouldHaveSingleItem();
         sku.PriceAmount.ShouldBe(459.9m);
         sku.Attributes.ShouldBe(new Dictionary<string, string> { ["cor"] = "verde" });
-        var images = tent.Images.ShouldNotBeNull();
+        var group = tent.Images.ShouldNotBeNull().ShouldHaveSingleItem();
+        group.Color.ShouldBe("verde");
+        var images = group.Files;
         images.ShouldBe(["barraca-camping-iglu-4-pessoas-falcon-1.webp", "barraca-camping-iglu-4-pessoas-falcon-2.webp"]);
         category.Products[1].Images.ShouldBeEmpty();
         Directory.GetFiles(Path.Combine(_output, "images")).Select(Path.GetFileName).Order().ShouldBe(images);

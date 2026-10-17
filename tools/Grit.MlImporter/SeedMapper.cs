@@ -43,7 +43,8 @@ internal static class SeedMapper
         var description = Clean(product.ShortDescription?.Content, MaxDescriptionLength);
         var attributes = product.Attributes ?? [];
         var sku = new SeedSku(SkuAttributes(attributes), price.Value);
-        return new SeedProduct(name, description.Length > 0 ? description : name, ProductAttributes(attributes), [sku], imageFileNames);
+        IReadOnlyList<SeedColorImages> images = imageFileNames.Count == 0 ? [] : [new SeedColorImages(sku.Attributes.GetValueOrDefault("cor"), imageFileNames)];
+        return new SeedProduct(name, description.Length > 0 ? description : name, ProductAttributes(attributes), [sku], images);
     }
 
     // The cheapest listing is the price a shopper would find first; two decimals, as Money requires (ADR 0001).

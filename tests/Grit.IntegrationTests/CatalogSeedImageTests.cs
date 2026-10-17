@@ -12,6 +12,8 @@ public class CatalogSeedImageTests(ApiFactory api, ProductImageHost images) : IC
 {
     private static readonly byte[] CoverBytes = [0x52, 0x49, 0x46, 0x46, 0x01, 0x02, 0x03];
 
+    private static readonly byte[] BlueBytes = [0x52, 0x49, 0x46, 0x46, 0x09];
+
     [Fact]
     public async Task SeedAsync_WithStorage_UploadsTheImageFilesThatExistAndAttachesThem()
     {
@@ -21,12 +23,16 @@ public class CatalogSeedImageTests(ApiFactory api, ProductImageHost images) : IC
         await SeedAsync(host, path);
 
         var product = await ProductAsync(host);
-        var key = Product.ImageKeyPrefix(product.Id) + "capa.webp";
-        product.Images.ShouldHaveSingleItem().ShouldBe(new ProductImage(key, "preto"));
-        var stored = await host.Services.GetRequiredService<ProductImageStorage>().FindAsync(key, TestContext.Current.CancellationToken);
+        var prefix = Product.ImageKeyPrefix(product.Id);
+        product.Images.ShouldBe([new ProductImage(prefix + "capa.webp", "preto"), new ProductImage(prefix + "azul.webp", "azul")]);
+        var storage = host.Services.GetRequiredService<ProductImageStorage>();
+        var stored = await storage.FindAsync(prefix + "capa.webp", TestContext.Current.CancellationToken);
         stored.ShouldNotBeNull();
         stored.Value.SizeInBytes.ShouldBe(CoverBytes.LongLength);
         stored.Value.ContentType.ShouldBe("image/webp");
+        var blue = await storage.FindAsync(prefix + "azul.webp", TestContext.Current.CancellationToken);
+        blue.ShouldNotBeNull();
+        blue.Value.SizeInBytes.ShouldBe(BlueBytes.LongLength);
     }
 
     [Fact]
@@ -55,10 +61,12 @@ public class CatalogSeedImageTests(ApiFactory api, ProductImageHost images) : IC
         var folder = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), $"grit-seed-{Guid.NewGuid():N}"));
         var imagesFolder = folder.CreateSubdirectory("images");
         await File.WriteAllBytesAsync(Path.Combine(imagesFolder.FullName, "capa.webp"), CoverBytes, TestContext.Current.CancellationToken);
+        await File.WriteAllBytesAsync(Path.Combine(imagesFolder.FullName, "azul.webp"), BlueBytes, TestContext.Current.CancellationToken);
         var path = Path.Combine(folder.FullName, "catalog.json");
         await File.WriteAllTextAsync(path, """
             {"categories": [{"name": "Camping", "products": [{"name": "Lanterna de Cabeça", "description": "Leve.", "attributes": {},
-              "skus": [{"attributes": {"cor": "preto"}, "priceAmount": 89.90}], "images": ["capa.webp", "falta.webp"]}]}]}
+              "skus": [{"attributes": {"cor": "preto"}, "priceAmount": 89.90}, {"attributes": {"cor": "azul"}, "priceAmount": 89.90}],
+              "images": [{"color": "preto", "files": ["capa.webp", "falta.webp"]}, {"color": "azul", "files": ["azul.webp"]}]}]}]}
             """, TestContext.Current.CancellationToken);
         return path;
     }
