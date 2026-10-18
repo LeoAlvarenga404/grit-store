@@ -2,34 +2,32 @@ namespace Grit.MlImporter.Tests;
 
 public class SeedMapperTests
 {
-    private static readonly MlItem[] OneListing = [new MlItem(199.90m, "BRL")];
-
     [Fact]
-    public void Map_ProductWithListings_TakesTheLowestBrlPriceRoundedToCents()
+    public void LowestPriceInBrl_Listings_TakesTheLowestPositiveBrlPriceRoundedToCents()
     {
         MlItem[] items = [new(10m, "USD"), new(499.9m, "BRL"), new(459.905m, "BRL"), new(0m, "BRL"), new(null, "BRL")];
 
-        var mapped = SeedMapper.Map(Product("Barraca Iglu"), items, []);
-
-        mapped.Value.Skus.ShouldHaveSingleItem().PriceAmount.ShouldBe(459.91m);
+        SeedMapper.LowestPriceInBrl(items).ShouldBe(459.91m);
     }
 
     [Fact]
-    public void Map_NoBrlListing_FailsWithNoPrice()
+    public void LowestPriceInBrl_NoBrlListing_ReturnsNull()
     {
-        SeedMapper.Map(Product("Barraca Iglu"), [new MlItem(89m, "USD")], []).Error.ShouldBe(SeedMapper.NoPrice);
+        SeedMapper.LowestPriceInBrl([new MlItem(89m, "USD")]).ShouldBeNull();
     }
 
     [Fact]
-    public void Map_NameWithoutLetterOrDigit_FailsWithNoName()
+    public void SkuAttributes_ColorAndSize_BecomeCorInLowerCaseAndTamanho()
     {
-        SeedMapper.Map(Product("--- ***"), OneListing, []).Error.ShouldBe(SeedMapper.NoName);
+        MlAttribute[] attributes = [new("COLOR", "Cor", "Azul Marinho"), new("SIZE", "Tamanho", "42"), new("BRAND", "Marca", "Serra Alta")];
+
+        SeedMapper.SkuAttributes(attributes).ShouldBe(new Dictionary<string, string> { ["cor"] = "azul marinho", ["tamanho"] = "42" });
     }
 
     [Fact]
-    public void Map_ColorAndSize_BecomeTheSkuVariantAndLeaveTheProductAttributes()
+    public void ProductAttributes_ColorSizeGtinAndPackage_AreLeftOut()
     {
-        var product = Product("Bota Serra", attributes:
+        MlAttribute[] attributes =
         [
             new("BRAND", "Marca", "Serra Alta"),
             new("COLOR", "Cor", "Azul Marinho"),
@@ -37,30 +35,9 @@ public class SeedMapperTests
             new("SOLE_MATERIAL", "Material da sola", "Borracha"),
             new("GTIN", "Código universal de produto", "7898950123456"),
             new("PACKAGE_WEIGHT", "Peso da embalagem", "900 g"),
-        ]);
+        ];
 
-        var mapped = SeedMapper.Map(product, OneListing, ["bota-serra-1.webp"]).Value;
-
-        mapped.Skus.ShouldHaveSingleItem().Attributes.ShouldBe(new Dictionary<string, string> { ["cor"] = "azul marinho", ["tamanho"] = "42" });
-        mapped.Attributes.ShouldBe(new Dictionary<string, string> { ["marca"] = "Serra Alta", ["material-da-sola"] = "Borracha" });
-        mapped.Images.ShouldBe(["bota-serra-1.webp"]);
-    }
-
-    [Fact]
-    public void Map_NoShortDescription_UsesTheName()
-    {
-        SeedMapper.Map(Product("Barraca Iglu"), OneListing, []).Value.Description.ShouldBe("Barraca Iglu");
-    }
-
-    [Fact]
-    public void Map_LongNameAndDescription_AreCutToTheApiLimits()
-    {
-        var product = Product(new string('a', 250), new string('b', 5000));
-
-        var mapped = SeedMapper.Map(product, OneListing, []).Value;
-
-        mapped.Name.Length.ShouldBe(SeedMapper.MaxNameLength);
-        mapped.Description.Length.ShouldBe(SeedMapper.MaxDescriptionLength);
+        SeedMapper.ProductAttributes(attributes).ShouldBe(new Dictionary<string, string> { ["marca"] = "Serra Alta", ["material-da-sola"] = "Borracha" });
     }
 
     [Fact]
@@ -103,6 +80,28 @@ public class SeedMapperTests
         SeedMapper.Clean("abc\U0001F3D5", 4).ShouldBe("abc");
     }
 
-    private static MlProduct Product(string name, string? description = null, IReadOnlyList<MlAttribute>? attributes = null) =>
-        new("MLB1", name, attributes ?? [], [], description is null ? null : new MlShortDescription(description));
+    [Theory]
+    [InlineData(79.905, "BRL", 79.91)]
+    [InlineData(-1.0, "BRL", null)]
+    [InlineData(79.9, "USD", null)]
+    [InlineData(0.0, "BRL", null)]
+    [InlineData(null, "BRL", null)]
+    public void PriceOf_Winner_IsAPositiveBrlPriceRoundedToCents(double? price, string currency, double? expected)
+    {
+        SeedMapper.PriceOf(new MlBuyBoxWinner((decimal?)price, currency)).ShouldBe((decimal?)expected);
+    }
+
+    [Fact]
+    public void PriceOf_NoWinner_ReturnsNull()
+    {
+        SeedMapper.PriceOf(null).ShouldBeNull();
+    }
+
+    [Theory]
+    [InlineData("Sem gênero", "Unissex")]
+    [InlineData("Masculino", "Masculino")]
+    public void ProductAttributes_Gender_UsesTheStoreNames(string value, string expected)
+    {
+        SeedMapper.ProductAttributes([new MlAttribute("GENDER", "Gênero", value)]).ShouldBe(new Dictionary<string, string> { ["genero"] = expected });
+    }
 }

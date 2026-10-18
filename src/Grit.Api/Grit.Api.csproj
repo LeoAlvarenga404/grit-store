@@ -16,8 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Published only (not copied to bin): the compose image seeds from /app/seed/catalog.json (AppHost Seed__Path). -->
+    <!-- Published only (not copied to bin): the compose image seeds from /app/seed/catalog.json (AppHost Seed__Path), the own line next to it, and the photos each file lists from its images/ folder. -->
     <Content Include="../../seed/catalog.json" Link="seed/catalog.json" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="../../seed/grit/catalog.json" Link="seed/grit/catalog.json" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="../../seed/images/**" LinkBase="seed/images" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="../../seed/grit/images/**" LinkBase="seed/grit/images" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

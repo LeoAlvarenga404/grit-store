@@ -3,6 +3,12 @@ namespace Grit.MlImporter;
 // Each step is undone in reverse order when a later one throws, so a failed swap never leaves the seed half replaced.
 internal static class SeedSwap
 {
+    // ponytail: Windows antivirus and the indexer hold just-written files for a moment; 5 tries 500 ms apart is the knob
+    // to raise if a real run still loses its swap.
+    private const int MoveAttempts = 5;
+
+    private static readonly TimeSpan MoveRetryDelay = TimeSpan.FromMilliseconds(500);
+
     private static readonly string[] Entries = ["images", "catalog.json"];
 
     public static void Replace(string outputDirectory, string stagingDirectory)
@@ -64,7 +70,26 @@ internal static class SeedSwap
 
     private static bool Exists(string path) => Directory.Exists(path) || File.Exists(path);
 
-    private static void Move(string source, string destination)
+    private static void Move(string source, string destination) => Move(source, destination, MoveOnce, Thread.Sleep);
+
+    // The seams let a test count attempts and waits without a real locked file.
+    internal static void Move(string source, string destination, Action<string, string> moveOnce, Action<TimeSpan> wait)
+    {
+        for (var attempt = 1; ; attempt++)
+        {
+            try
+            {
+                moveOnce(source, destination);
+                return;
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException && attempt < MoveAttempts)
+            {
+                wait(MoveRetryDelay);
+            }
+        }
+    }
+
+    private static void MoveOnce(string source, string destination)
     {
         if (Directory.Exists(source))
         {

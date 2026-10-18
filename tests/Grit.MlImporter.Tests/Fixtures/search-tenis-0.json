@@ -1,0 +1,18 @@
+{
+  "keywords": "tenis veloz",
+  "paging": {
+    "total": 1,
+    "offset": 0,
+    "limit": 50
+  },
+  "results": [
+    {
+      "id": "MLB2031",
+      "status": "active",
+      "domain_id": "MLB-SNEAKERS",
+      "name": "Tênis Veloz Grit Preto 40",
+      "parent_id": "MLB2030",
+      "children_ids": []
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "paging": {
+    "total": 2,
+    "offset": 0,
+    "limit": 10
+  },
+  "results": [
+    {
+      "site_id": "MLB",
+      "item_id": "MLB3300000102",
+      "price": 89.9,
+      "currency_id": "BRL",
+      "seller_id": 11
+    },
+    {
+      "site_id": "MLB",
+      "item_id": "MLB3300000202",
+      "price": 84.9,
+      "currency_id": "BRL",
+      "seller_id": 12
+    }
+  ]
+}

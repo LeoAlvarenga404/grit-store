@@ -708,7 +708,7 @@
           "Catalog"
         ],
         "summary": "Attaches an uploaded image to the product, after its other images.",
-        "description": "Send the key from /images/uploads and the product version last read. The stored file is checked again: a wrong type or a file over 2 MB is deleted (400 catalog.invalid_image). At most 8 images.",
+        "description": "Send the key from /images/uploads, the colour the image shows (the cor value of the coloured SKU it shows; leave it out, or send null, only for an image of a SKU without cor) and the product version last read. The stored file is checked again: a wrong type or a file over 2 MB is deleted (400 catalog.invalid_image). A colour no SKU has is 400 catalog.image_color_not_found; a colour has at most 8 images (409 catalog.image_limit). The same key again with the same colour answers the current version; with another colour it is 409 catalog.duplicate_image. A new image sent with a stale version is 409 catalog.product_changed.",
         "parameters": [
           {
             "name": "id",
@@ -909,7 +909,7 @@
           "Catalog"
         ],
         "summary": "Searches and lists the products that have at least one SKU.",
-        "description": "q finds words with or without accents, in the singular or the plural, and name words with a small typo (longer words tolerate more); results are ordered by relevance. Without q, the newest products come first (creation time, to the millisecond). attribute=key:value can repeat (one per key) and matches a single SKU. priceAmount is the lowest price among the SKUs that match. imageUrl is a signed URL of the product's first image, valid for an hour, or null. Pass nextCursor as after to read the next page.",
+        "description": "q finds words with or without accents, in the singular or the plural, and name words with a small typo (longer words tolerate more). attribute=key:value can repeat (one per key) and matches a single SKU. sort is relevance (the default: by relevance with q, newest first without), price_asc or price_desc (by priceAmount, ties by id). priceAmount is the lowest price among the SKUs that match; hasPriceRange tells whether those SKUs have different prices. imageUrl is a signed URL of the product's first image (the cover), valid for an hour, or null. colors lists every colour of the product's SKUs (the cor attribute): colours with images first, in the order of their first image, then the others by name; each imageUrl is that colour's first image or null. Pass nextCursor as after, with the same filters and sort, to read the next page; drop after whenever the filters or the sort change (only its syntax is checked).",
         "parameters": [
           {
             "name": "q",
@@ -949,6 +949,13 @@
               "items": {
                 "type": "string"
               }
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           },
           {
@@ -1113,7 +1120,7 @@
           "Catalog"
         ],
         "summary": "Gets a product page by slug: category, attributes and SKUs with prices.",
-        "description": "A product without SKUs is not for sale yet and answers 404, as does a slug in any other spelling.",
+        "description": "A product without SKUs is not for sale yet and answers 404, as does a slug in any other spelling. imageUrls is the whole gallery, cover first; colors lists every colour of the SKUs (the cor attribute), colours with images first in the order of their first image, then the others by name, each with its own image URLs. Image URLs are signed and valid for an hour.",
         "parameters": [
           {
             "name": "slug",
@@ -1387,7 +1394,7 @@
           "Basket"
         ],
         "summary": "Gets the customer's basket with the price seen when each item was added and the current price.",
-        "description": "hasPriceChanged flags items whose price changed since they were added; the subtotal uses current prices of available items. Send that subtotal as expectedSubtotalAmount at checkout.",
+        "description": "hasPriceChanged flags items whose price changed since they were added; the subtotal uses current prices of available items. Send that subtotal as expectedSubtotalAmount at checkout. color, size and imageUrl come from the catalog when the basket is read (imageUrl is the first image of the SKU's colour, or for a SKU without colour the first image without colour, never another colour's; signed for an hour); each is null when the SKU or the value is missing.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1860,7 +1867,7 @@
           "Ordering"
         ],
         "summary": "Gets one of the customer's orders with its lines, totals and status timeline.",
-        "description": "Another customer's order answers 404.",
+        "description": "Another customer's order answers 404. Each line keeps the product slug, colour and size bought (null on orders placed before they were kept); imageUrl is read from the catalog on each request: the first image of the SKU's colour (for a SKU without colour, the first image without colour), signed for an hour; null when there is none or the SKU is gone.",
         "parameters": [
           {
             "name": "id",
@@ -2201,6 +2208,12 @@
           "version": {
             "type": "integer",
             "format": "uint32"
+          },
+          "color": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -2247,7 +2260,10 @@
           "unitPriceAmount",
           "currentUnitPriceAmount",
           "hasPriceChanged",
-          "isAvailable"
+          "isAvailable",
+          "color",
+          "size",
+          "imageUrl"
         ],
         "type": "object",
         "properties": {
@@ -2281,6 +2297,24 @@
           },
           "isAvailable": {
             "type": "boolean"
+          },
+          "color": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "size": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "imageUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -2460,6 +2494,24 @@
           }
         }
       },
+      "GetProductBySlugColorResponse": {
+        "required": [
+          "name",
+          "imageUrls"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "imageUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "GetProductBySlugResponse": {
         "required": [
           "id",
@@ -2470,7 +2522,8 @@
           "categorySlug",
           "categoryName",
           "skus",
-          "imageUrls"
+          "imageUrls",
+          "colors"
         ],
         "type": "object",
         "properties": {
@@ -2509,6 +2562,12 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          },
+          "colors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetProductBySlugColorResponse"
             }
           }
         }
@@ -2752,6 +2811,10 @@
         "required": [
           "skuId",
           "productName",
+          "productSlug",
+          "color",
+          "size",
+          "imageUrl",
           "quantity",
           "unitPriceAmount",
           "lineTotalAmount"
@@ -2764,6 +2827,30 @@
           },
           "productName": {
             "type": "string"
+          },
+          "productSlug": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "color": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "size": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "imageUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "quantity": {
             "type": "integer",
@@ -3042,6 +3129,7 @@
         "required": [
           "key",
           "fileName",
+          "color",
           "url"
         ],
         "type": "object",
@@ -3051,6 +3139,12 @@
           },
           "fileName": {
             "type": "string"
+          },
+          "color": {
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "url": {
             "type": "string"
@@ -3097,6 +3191,24 @@
           }
         }
       },
+      "ProductSummaryColorResponse": {
+        "required": [
+          "name",
+          "imageUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
       "ProductSummaryResponse": {
         "required": [
           "id",
@@ -3104,7 +3216,9 @@
           "name",
           "priceAmount",
           "priceCurrency",
-          "imageUrl"
+          "hasPriceRange",
+          "imageUrl",
+          "colors"
         ],
         "type": "object",
         "properties": {
@@ -3125,11 +3239,20 @@
           "priceCurrency": {
             "type": "string"
           },
+          "hasPriceRange": {
+            "type": "boolean"
+          },
           "imageUrl": {
             "type": [
               "null",
               "string"
             ]
+          },
+          "colors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductSummaryColorResponse"
+            }
           }
         }
       },

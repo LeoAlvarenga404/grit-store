@@ -6,26 +6,30 @@ using Microsoft.EntityFrameworkCore;
 namespace Grit.Modules.Catalog.Infrastructure.Seed;
 
 // Idempotent by slug: an existing category or product is left as it is, so a restart adds only what is missing.
-// The whole file is checked before the database is read, so a bad file fails on an empty and on a seeded catalog alike;
-// one SaveChanges for the whole file, so nothing is written unless everything is (images uploaded before a failed save
+// Both files are checked as one catalogue before the database is read, so a bad file fails on an empty and on a seeded catalog alike;
+// one SaveChanges for both files, so nothing is written unless everything is (images uploaded before a failed save
 // stay in the storage as orphans, like an unconfirmed upload: ADR 0016).
 internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage images)
 {
+    // The store's own line (GRIT apparel) is hand-written in grit/ next to the imported seed: the importer replaces only
+    // catalog.json and images/, so neither file overwrites the other.
+    public const string OwnLineFolder = "grit";
+
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     public async Task<SeedReport> SeedAsync(string path, CancellationToken cancellationToken)
     {
-        var catalog = await ReadAsync(path, cancellationToken);
-        Validate(catalog);
-        var imagesDirectory = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(path))!, "images");
-
-        foreach (var seedCategory in catalog.Categories)
+        var files = new List<SeedFile>();
+        foreach (var file in FilesOf(path))
         {
-            var categoryId = await FindOrAddCategoryAsync(seedCategory.Name, cancellationToken);
-            foreach (var seedProduct in seedCategory.Products)
-            {
-                await AddProductIfMissingAsync(categoryId, seedProduct, imagesDirectory, cancellationToken);
-            }
+            files.Add(new SeedFile(await ReadAsync(file, cancellationToken), Path.Combine(Path.GetDirectoryName(file)!, "images")));
+        }
+
+        // Checked as one catalogue: a category or a product slug belongs to one file only.
+        Validate(new SeedCatalog([.. files.SelectMany(file => file.Catalog.Categories)]));
+        foreach (var file in files)
+        {
+            await AddCatalogAsync(file, cancellationToken);
         }
 
         var report = new SeedReport(CountAdded<Category>(), CountAdded<Product>());
@@ -33,7 +37,27 @@ internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage ima
         return report;
     }
 
-    private static async Task<SeedCatalog> ReadAsync(string path, CancellationToken cancellationToken)
+    private static List<string> FilesOf(string path)
+    {
+        var fullPath = Path.GetFullPath(path);
+        var ownLine = Path.Combine(Path.GetDirectoryName(fullPath)!, OwnLineFolder, "catalog.json");
+        return File.Exists(ownLine) ? [fullPath, ownLine] : [fullPath];
+    }
+
+    private async Task AddCatalogAsync(SeedFile file, CancellationToken cancellationToken)
+    {
+        foreach (var seedCategory in file.Catalog.Categories)
+        {
+            var categoryId = await FindOrAddCategoryAsync(seedCategory.Name, cancellationToken);
+            foreach (var seedProduct in seedCategory.Products)
+            {
+                await AddProductIfMissingAsync(categoryId, seedProduct, file.ImagesDirectory, cancellationToken);
+            }
+        }
+    }
+
+    // Internal for tools/Grit.MlImporter, which reads the own line to keep its output compatible with it.
+    internal static async Task<SeedCatalog> ReadAsync(string path, CancellationToken cancellationToken)
     {
         await using var file = File.OpenRead(path);
         return await JsonSerializer.DeserializeAsync<SeedCatalog>(file, JsonOptions, cancellationToken)
@@ -52,7 +76,9 @@ internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage ima
             Unique(categorySlugs, category.Slug, seedCategory.Name);
             foreach (var seedProduct in seedCategory.Products)
             {
-                Unique(productSlugs, Build(category.Id, seedProduct).Slug, seedProduct.Name);
+                var product = Build(category.Id, seedProduct);
+                AttachAll(product, seedProduct);
+                Unique(productSlugs, product.Slug, seedProduct.Name);
             }
         }
     }
@@ -90,17 +116,33 @@ internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage ima
             return;
         }
 
-        foreach (var fileName in seed.Images ?? [])
+        foreach (var group in seed.Images ?? [])
         {
-            var file = Path.Combine(imagesDirectory, fileName);
-            if (!File.Exists(file))
+            foreach (var fileName in group.Files)
             {
-                continue;
-            }
+                var file = Path.Combine(imagesDirectory, fileName);
+                if (!File.Exists(file))
+                {
+                    continue;
+                }
 
-            var key = Product.ImageKeyPrefix(product.Id) + fileName;
-            await images.PutFileAsync(key, file, "image/webp", cancellationToken);
-            Valid(seed.Name, product.AddImage(key));
+                var key = Product.ImageKeyPrefix(product.Id) + fileName;
+                await images.PutFileAsync(key, file, "image/webp", cancellationToken);
+                Valid(seed.Name, product.AddImage(key, group.Color));
+            }
+        }
+    }
+
+    // Every listed file as if it existed, on a product that is thrown away: the domain checks each colour, repeated
+    // files and the limit per colour before anything is read or stored.
+    private static void AttachAll(Product product, SeedProduct seed)
+    {
+        foreach (var group in seed.Images ?? [])
+        {
+            foreach (var fileName in group.Files)
+            {
+                Valid(seed.Name, product.AddImage(Product.ImageKeyPrefix(product.Id) + fileName, group.Color));
+            }
         }
     }
 
@@ -119,16 +161,15 @@ internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage ima
 
     private static void CheckImages(SeedProduct seed)
     {
-        var fileNames = seed.Images ?? [];
-        if (fileNames.Count > Product.MaxImages || !fileNames.All(IsWebpFileName))
+        if (!(seed.Images ?? []).All(group => group is not null && group.Files is not null && group.Files.All(IsWebpFileName)))
         {
-            throw new InvalidOperationException($"The seed entry '{seed.Name}' must list at most {Product.MaxImages} .webp file names.");
+            throw new InvalidOperationException($"The seed entry '{seed.Name}' must list .webp file names only.");
         }
     }
 
     // A bare file name: the seed must not reach outside its images folder.
-    private static bool IsWebpFileName(string image) =>
-        image.Length > ".webp".Length && image.EndsWith(".webp", StringComparison.Ordinal) && Path.GetFileName(image) == image;
+    private static bool IsWebpFileName(string? image) =>
+        image is not null && image.Length > ".webp".Length && image.EndsWith(".webp", StringComparison.Ordinal) && Path.GetFileName(image) == image;
 
     private static T Valid<T>(string name, Result<T> result) =>
         result.IsSuccess ? result.Value : throw new InvalidOperationException($"The seed entry '{name}' is invalid: {result.Error.Code}.");

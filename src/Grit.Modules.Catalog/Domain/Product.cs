@@ -7,7 +7,7 @@ internal sealed class Product : AggregateRoot<ProductId>
     // v1 sells in reais only, so basket and order totals always add up (Money.Add rejects mixed currencies).
     public const string StoreCurrency = "BRL";
 
-    public const int MaxImages = 8;
+    public const int MaxImagesPerColor = 8;
 
     private readonly List<Sku> _skus = [];
 
@@ -38,8 +38,8 @@ internal sealed class Product : AggregateRoot<ProductId>
 
     public IReadOnlyList<Sku> Skus => _skus;
 
-    // Storage keys in display order; the first image is the cover.
-    public IReadOnlyList<string> ImageKeys { get; private set; } = [];
+    // In display order; the first image is the cover.
+    public IReadOnlyList<ProductImage> Images { get; private set; } = [];
 
     public static Result<Product> Create(
         CategoryId categoryId,
@@ -107,7 +107,8 @@ internal sealed class Product : AggregateRoot<ProductId>
         return Result.Success();
     }
 
-    public Result AddImage(string key)
+    // The colour must be one a SKU has (null only when a SKU has no "cor"), so a product without SKUs has no images yet.
+    public Result AddImage(string key, string? color)
     {
         ArgumentNullException.ThrowIfNull(key);
 
@@ -117,29 +118,33 @@ internal sealed class Product : AggregateRoot<ProductId>
             return CatalogErrors.InvalidImageKey;
         }
 
-        // A repeated confirm of the same upload changes nothing.
-        if (ImageKeys.Contains(key))
+        if (Images.Any(image => image.Key == key))
         {
-            return Result.Success();
+            return CatalogErrors.DuplicateImage;
         }
 
-        if (ImageKeys.Count >= MaxImages)
+        if (!_skus.Any(sku => sku.Color == color))
+        {
+            return CatalogErrors.ImageColorNotFound;
+        }
+
+        if (Images.Count(image => image.Color == color) >= MaxImagesPerColor)
         {
             return CatalogErrors.ImageLimit;
         }
 
-        ImageKeys = [.. ImageKeys, key];
+        Images = [.. Images, new ProductImage(key, color)];
         return Result.Success();
     }
 
     public Result RemoveImage(string key)
     {
-        if (!ImageKeys.Contains(key))
+        if (!Images.Any(image => image.Key == key))
         {
             return CatalogErrors.ImageNotFound;
         }
 
-        ImageKeys = [.. ImageKeys.Where(existing => existing != key)];
+        Images = [.. Images.Where(image => image.Key != key)];
         return Result.Success();
     }
 }

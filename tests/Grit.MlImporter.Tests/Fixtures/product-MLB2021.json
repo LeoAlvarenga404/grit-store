@@ -1,0 +1,63 @@
+{
+  "id": "MLB2021",
+  "status": "active",
+  "domain_id": "MLB-T_SHIRTS",
+  "name": "Camiseta Térmica Grit Verde P",
+  "family_name": "Camiseta Térmica Grit",
+  "parent_id": null,
+  "children_ids": [],
+  "pickers": [
+    {
+      "picker_id": "COLOR",
+      "picker_name": "Cor",
+      "products": [
+        {
+          "product_id": "MLB2020",
+          "picker_label": "Vermelho"
+        },
+        {
+          "product_id": "MLB2021",
+          "picker_label": "Verde"
+        }
+      ]
+    }
+  ],
+  "buy_box_winner": {
+    "item_id": "MLB3300000021",
+    "price": 99,
+    "currency_id": "BRL"
+  },
+  "pictures": [
+    {
+      "id": "710002-MLA2021",
+      "url": "https://http2.mlstatic.com/D_NQ_NP_710002-MLA2021-F.jpg"
+    }
+  ],
+  "attributes": [
+    {
+      "id": "BRAND",
+      "name": "Marca",
+      "value_id": null,
+      "value_name": "Grit",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "COLOR",
+      "name": "Cor",
+      "value_id": null,
+      "value_name": "Verde",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "SIZE",
+      "name": "Tamanho",
+      "value_id": null,
+      "value_name": "P",
+      "values": [],
+      "meta": null
+    }
+  ],
+  "short_description": null
+}

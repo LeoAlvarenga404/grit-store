@@ -137,6 +137,11 @@ namespace Grit.Modules.Ordering.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Color")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("color");
+
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uuid")
                         .HasColumnName("order_id");
@@ -147,9 +152,19 @@ namespace Grit.Modules.Ordering.Infrastructure.Migrations
                         .HasColumnType("character varying(200)")
                         .HasColumnName("product_name");
 
+                    b.Property<string>("ProductSlug")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("product_slug");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("integer")
                         .HasColumnName("quantity");
+
+                    b.Property<string>("Size")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("size");
 
                     b.Property<Guid>("SkuId")
                         .HasColumnType("uuid")

@@ -14,6 +14,10 @@ internal sealed class OrderLineConfiguration : IEntityTypeConfiguration<OrderLin
         builder.Property(line => line.SkuId);
         // Same bound as the catalog's product name, which the line copies at checkout.
         builder.Property(line => line.ProductName).HasMaxLength(200);
+        // The catalog bounds slugs and SKU attribute values at 100 characters.
+        builder.Property(line => line.ProductSlug).HasMaxLength(100);
+        builder.Property(line => line.Color).HasMaxLength(100);
+        builder.Property(line => line.Size).HasMaxLength(100);
         builder.Property(line => line.Quantity);
         builder.ComplexProperty(line => line.UnitPrice, MoneyMapping.Configure);
         builder.Ignore(line => line.LineTotal);

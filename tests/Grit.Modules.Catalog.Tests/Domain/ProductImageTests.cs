@@ -1,85 +1,160 @@
 using Grit.Modules.Catalog.Domain;
+using Grit.SharedKernel;
 
 namespace Grit.Modules.Catalog.Tests.Domain;
 
 public class ProductImageTests
 {
-    [Fact]
-    public void AddImage_KeysOfThisProduct_KeepsTheUploadOrder()
+    // One SKU per colour (null = a SKU without "cor"), each with its own size so no two SKUs repeat a variant.
+    private static Product ProductWithColors(params string?[] colors)
     {
-        var product = NewProduct();
+        var product = Product.Create(CategoryId.New(), "Camiseta Dry Fit", "", new Dictionary<string, string>()).Value;
+        for (var index = 0; index < colors.Length; index++)
+        {
+            var attributes = new Dictionary<string, string> { ["tamanho"] = $"{index + 1}" };
+            if (colors[index] is { } color)
+            {
+                attributes["cor"] = color;
+            }
 
-        product.AddImage(KeyOf(product, "a.png")).IsSuccess.ShouldBeTrue();
-        product.AddImage(KeyOf(product, "b.webp")).IsSuccess.ShouldBeTrue();
+            product.AddSku(attributes, Money.Create(99.90m, "BRL").Value).IsSuccess.ShouldBeTrue();
+        }
 
-        product.ImageKeys.ShouldBe([KeyOf(product, "a.png"), KeyOf(product, "b.webp")]);
+        return product;
+    }
+
+    private static string KeyOf(Product product, string fileName) => $"{Product.ImageKeyPrefix(product.Id)}{fileName}";
+
+    [Fact]
+    public void AddImage_KeysOfThisProduct_KeepsTheUploadOrderAndColors()
+    {
+        var product = ProductWithColors("azul", "preto");
+
+        product.AddImage(KeyOf(product, "a.png"), "azul").IsSuccess.ShouldBeTrue();
+        product.AddImage(KeyOf(product, "b.webp"), "preto").IsSuccess.ShouldBeTrue();
+
+        product.Images.ShouldBe([new ProductImage(KeyOf(product, "a.png"), "azul"), new ProductImage(KeyOf(product, "b.webp"), "preto")]);
     }
 
     [Fact]
     public void AddImage_KeyOfAnotherProduct_ReturnsInvalidImageKey()
     {
-        var product = NewProduct();
+        var product = ProductWithColors("azul");
 
-        product.AddImage(KeyOf(NewProduct(), "a.png")).Error.ShouldBe(CatalogErrors.InvalidImageKey);
+        product.AddImage(KeyOf(ProductWithColors("azul"), "a.png"), "azul").Error.ShouldBe(CatalogErrors.InvalidImageKey);
 
-        product.ImageKeys.ShouldBeEmpty();
+        product.Images.ShouldBeEmpty();
     }
 
     [Fact]
     public void AddImage_PrefixWithoutFileName_ReturnsInvalidImageKey()
     {
-        var product = NewProduct();
+        var product = ProductWithColors("azul");
 
-        product.AddImage(Product.ImageKeyPrefix(product.Id)).Error.ShouldBe(CatalogErrors.InvalidImageKey);
+        product.AddImage(Product.ImageKeyPrefix(product.Id), "azul").Error.ShouldBe(CatalogErrors.InvalidImageKey);
     }
 
     [Fact]
-    public void AddImage_SameKeyTwice_KeepsOneEntry()
+    public void AddImage_SameKeyTwice_ReturnsDuplicateImage()
     {
-        var product = NewProduct();
-        product.AddImage(KeyOf(product, "a.png"));
+        var product = ProductWithColors("azul", "preto");
+        product.AddImage(KeyOf(product, "a.png"), "azul").IsSuccess.ShouldBeTrue();
 
-        product.AddImage(KeyOf(product, "a.png")).IsSuccess.ShouldBeTrue();
+        product.AddImage(KeyOf(product, "a.png"), "preto").Error.ShouldBe(CatalogErrors.DuplicateImage);
 
-        product.ImageKeys.ShouldHaveSingleItem();
+        product.Images.ShouldBe([new ProductImage(KeyOf(product, "a.png"), "azul")]);
     }
 
     [Fact]
-    public void AddImage_PastTheLimit_ReturnsImageLimit()
+    public void AddImage_ColorNoSkuHas_ReturnsImageColorNotFound()
     {
-        var product = NewProduct();
-        for (var index = 0; index < Product.MaxImages; index++)
+        var product = ProductWithColors("azul");
+
+        product.AddImage(KeyOf(product, "a.png"), "verde").Error.ShouldBe(CatalogErrors.ImageColorNotFound);
+
+        product.Images.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void AddImage_NoColorWhenEverySkuHasOne_ReturnsImageColorNotFound()
+    {
+        var product = ProductWithColors("azul");
+
+        product.AddImage(KeyOf(product, "a.png"), null).Error.ShouldBe(CatalogErrors.ImageColorNotFound);
+    }
+
+    [Fact]
+    public void AddImage_NoColorWhenASkuHasNone_AddsIt()
+    {
+        var product = ProductWithColors([null]);
+
+        product.AddImage(KeyOf(product, "a.png"), null).IsSuccess.ShouldBeTrue();
+
+        product.Images.ShouldBe([new ProductImage(KeyOf(product, "a.png"), null)]);
+    }
+
+    [Fact]
+    public void AddImage_ProductWithoutSkus_ReturnsImageColorNotFound()
+    {
+        var product = ProductWithColors();
+
+        product.AddImage(KeyOf(product, "a.png"), "azul").Error.ShouldBe(CatalogErrors.ImageColorNotFound);
+    }
+
+    [Fact]
+    public void AddImage_ColorInAnotherCase_ReturnsImageColorNotFound()
+    {
+        var product = ProductWithColors("azul");
+
+        product.AddImage(KeyOf(product, "a.png"), "Azul").Error.ShouldBe(CatalogErrors.ImageColorNotFound);
+    }
+
+    [Fact]
+    public void AddImage_PastTheLimitOfOneColor_ReturnsImageLimit()
+    {
+        var product = ProductWithColors("azul");
+        for (var index = 0; index < Product.MaxImagesPerColor; index++)
         {
-            product.AddImage(KeyOf(product, $"{index}.png")).IsSuccess.ShouldBeTrue();
+            product.AddImage(KeyOf(product, $"{index}.png"), "azul").IsSuccess.ShouldBeTrue();
         }
 
-        product.AddImage(KeyOf(product, "extra.png")).Error.ShouldBe(CatalogErrors.ImageLimit);
+        product.AddImage(KeyOf(product, "extra.png"), "azul").Error.ShouldBe(CatalogErrors.ImageLimit);
 
-        product.ImageKeys.Count.ShouldBe(8);
+        product.Images.Count.ShouldBe(8);
+    }
+
+    [Fact]
+    public void AddImage_EightImagesOfAnotherColor_StillAddsThisOne()
+    {
+        var product = ProductWithColors("azul", "preto");
+        for (var index = 0; index < Product.MaxImagesPerColor; index++)
+        {
+            product.AddImage(KeyOf(product, $"{index}.png"), "azul").IsSuccess.ShouldBeTrue();
+        }
+
+        product.AddImage(KeyOf(product, "extra.png"), "preto").IsSuccess.ShouldBeTrue();
+
+        product.Images.Count.ShouldBe(9);
     }
 
     [Fact]
     public void RemoveImage_AttachedKey_RemovesItAndKeepsTheOrder()
     {
-        var product = NewProduct();
-        product.AddImage(KeyOf(product, "a.png"));
-        product.AddImage(KeyOf(product, "b.png"));
-        product.AddImage(KeyOf(product, "c.png"));
+        var product = ProductWithColors("azul");
+        product.AddImage(KeyOf(product, "a.png"), "azul");
+        product.AddImage(KeyOf(product, "b.png"), "azul");
+        product.AddImage(KeyOf(product, "c.png"), "azul");
 
         product.RemoveImage(KeyOf(product, "b.png")).IsSuccess.ShouldBeTrue();
 
-        product.ImageKeys.ShouldBe([KeyOf(product, "a.png"), KeyOf(product, "c.png")]);
+        product.Images.Select(image => image.Key).ShouldBe([KeyOf(product, "a.png"), KeyOf(product, "c.png")]);
     }
 
     [Fact]
     public void RemoveImage_UnknownKey_ReturnsImageNotFound()
     {
-        var product = NewProduct();
+        var product = ProductWithColors("azul");
 
         product.RemoveImage(KeyOf(product, "a.png")).Error.ShouldBe(CatalogErrors.ImageNotFound);
     }
-
-    private static Product NewProduct() => Product.Create(CategoryId.New(), "Mochila de Ataque 30 Litros", "", new Dictionary<string, string>()).Value;
-
-    private static string KeyOf(Product product, string fileName) => $"{Product.ImageKeyPrefix(product.Id)}{fileName}";
 }

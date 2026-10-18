@@ -77,7 +77,7 @@ export async function uploadImage(formData: FormData) {
     api.POST("/api/v1/admin/products/{id}/images", {
       headers,
       params: { path: { id: productId } },
-      body: { key, version: Number(formData.get("version")) },
+      body: { key, version: Number(formData.get("version")), color: String(formData.get("color") ?? "") || null },
     }),
   );
   backToProduct(productId, attached);

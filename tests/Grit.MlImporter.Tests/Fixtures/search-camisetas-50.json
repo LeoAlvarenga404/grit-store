@@ -1,0 +1,18 @@
+{
+  "keywords": "camiseta dry fit",
+  "paging": {
+    "total": 60,
+    "offset": 50,
+    "limit": 50
+  },
+  "results": [
+    {
+      "id": "MLB2020",
+      "status": "active",
+      "domain_id": "MLB-T_SHIRTS",
+      "name": "Camiseta Térmica Grit Vermelha P",
+      "parent_id": null,
+      "children_ids": []
+    }
+  ]
+}

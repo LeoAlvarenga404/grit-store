@@ -28,7 +28,7 @@ public class ProductListingTests(SearchCorpus corpus)
     [Fact]
     public async Task Search_BlankCategoryAndCursor_ListsEveryProductForSale()
     {
-        var names = await corpus.SearchNamesAsync("category=&after=");
+        var names = await corpus.SearchNamesAsync("category=&after=&sort=");
 
         names.ShouldBe(ProductsForSale, ignoreOrder: true);
     }
@@ -84,6 +84,9 @@ public class ProductListingTests(SearchCorpus corpus)
     [InlineData("q=tenis", 1)]
     [InlineData("q=camiseta", 1)]
     [InlineData("q=trilha", 1)]
+    [InlineData("sort=price_asc", 3)]
+    [InlineData("sort=price_desc", 4)]
+    [InlineData("sort=price_asc&q=camiseta", 1)]
     public async Task Search_PagesFollowingNextCursor_ReturnTheFullListOnce(string queryString, int limit)
     {
         var full = Ids(await corpus.GetAsync($"{SearchCorpus.ProductsPath}?limit=50&{queryString}"));
@@ -105,6 +108,69 @@ public class ProductListingTests(SearchCorpus corpus)
 
         paged.ShouldBe(full);
         pages.ShouldBe((full.Count + limit - 1) / limit);
+    }
+
+    // Cheapest SKU of each product: 79.90, 89.90, 100.00, 149.90, 259.90, 379.90, 549.90, 699.00, 899.00, 1199.00.
+    private static readonly string[] ByPrice =
+    [
+        "Camiseta Dry Fit Masculina", "Caneca Térmica para Café", "Lanterna de Cabeça", "Camisetas Térmicas Kit 2",
+        "Jaqueta Corta-Vento", "Tênis de Corrida Veloz", "Tênis de Trilha Serra", "Barraca Iglu 4 Pessoas",
+        "Bota Impermeável Montanha", "Mochila Cargueira 60 Litros",
+    ];
+
+    [Fact]
+    public async Task Search_SortByPriceAscending_ListsTheCheapestFirst()
+    {
+        var names = await corpus.SearchNamesAsync("sort=price_asc");
+
+        names.ShouldBe(ByPrice);
+    }
+
+    [Fact]
+    public async Task Search_SortByPriceDescending_ListsTheMostExpensiveFirst()
+    {
+        var names = await corpus.SearchNamesAsync("sort=price_desc");
+
+        names.ShouldBe([.. Enumerable.Reverse(ByPrice)]);
+    }
+
+    // With minPrice=100 the dry fit shirt costs 119.90 (its red SKU), so it comes after the head lamp (100.00).
+    [Fact]
+    public async Task Search_SortByPriceWithAMinimumPrice_UsesTheCheapestMatchingSku()
+    {
+        var names = await corpus.SearchNamesAsync("minPrice=100&sort=price_asc");
+
+        names.ShouldBe(
+        [
+            "Lanterna de Cabeça", "Camiseta Dry Fit Masculina", "Camisetas Térmicas Kit 2", "Jaqueta Corta-Vento",
+            "Tênis de Corrida Veloz", "Tênis de Trilha Serra", "Barraca Iglu 4 Pessoas", "Bota Impermeável Montanha",
+            "Mochila Cargueira 60 Litros",
+        ]);
+    }
+
+    // Colours come from every SKU of the product, not only the matching ones; without images they follow by name.
+    [Fact]
+    public async Task Search_Item_ListsTheColorsOfEverySku()
+    {
+        var page = await corpus.GetAsync($"{SearchCorpus.ProductsPath}?q=tenis&attribute=cor:preto");
+
+        var running = page.GetProperty("items").EnumerateArray().Single(item => item.GetProperty("name").GetString() == "Tênis de Corrida Veloz");
+        var colors = running.GetProperty("colors").EnumerateArray().ToList();
+        colors.Select(color => color.GetProperty("name").GetString()).ShouldBe(["azul", "preto"]);
+        colors.ShouldAllBe(color => color.GetProperty("imageUrl").ValueKind == JsonValueKind.Null);
+    }
+
+    [Theory]
+    [InlineData("q=tenis", "Tênis de Corrida Veloz", true)]
+    [InlineData("q=cafe", "Caneca Térmica para Café", false)]
+    [InlineData("q=tenis&attribute=tamanho:42", "Tênis de Corrida Veloz", false)]
+    [InlineData("q=tenis&minPrice=380", "Tênis de Corrida Veloz", false)]
+    public async Task Search_Item_FlagsWhenTheMatchingSkusHaveDifferentPrices(string queryString, string name, bool hasPriceRange)
+    {
+        var page = await corpus.GetAsync($"{SearchCorpus.ProductsPath}?{queryString}");
+
+        var item = page.GetProperty("items").EnumerateArray().Single(item => item.GetProperty("name").GetString() == name);
+        item.GetProperty("hasPriceRange").GetBoolean().ShouldBe(hasPriceRange);
     }
 
     private static List<Guid> Ids(JsonElement page) =>

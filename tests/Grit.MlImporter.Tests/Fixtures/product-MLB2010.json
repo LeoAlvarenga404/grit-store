@@ -1,0 +1,44 @@
+{
+  "id": "MLB2010",
+  "status": "active",
+  "domain_id": "MLB-T_SHIRTS",
+  "name": "Regata Básica Grit Branca",
+  "family_name": "Regata Básica Grit",
+  "parent_id": null,
+  "children_ids": [],
+  "pickers": null,
+  "buy_box_winner": null,
+  "pictures": [
+    {
+      "id": "700010-MLA2010",
+      "url": "https://http2.mlstatic.com/D_NQ_NP_700010-MLA2010-F.jpg"
+    }
+  ],
+  "attributes": [
+    {
+      "id": "BRAND",
+      "name": "Marca",
+      "value_id": null,
+      "value_name": "Grit",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "COLOR",
+      "name": "Cor",
+      "value_id": null,
+      "value_name": "Branco",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "SIZE",
+      "name": "Tamanho",
+      "value_id": null,
+      "value_name": "M",
+      "values": [],
+      "meta": null
+    }
+  ],
+  "short_description": null
+}

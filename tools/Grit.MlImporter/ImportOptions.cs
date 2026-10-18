@@ -6,16 +6,17 @@ namespace Grit.MlImporter;
 
 internal sealed record ImportOptions(IReadOnlyList<ImportCategory> Categories, int ProductsPerCategory, string OutputDirectory)
 {
-    public const int DefaultProductsPerCategory = 5;
+    public const int DefaultProductsPerCategory = 10;
 
-    // 20 products x 2 images x ~50 KB per category: the cap that keeps the committed seed small.
+    // Each product brings up to 3 photos per colour (CatalogImporter.MaxImagesPerColor): the cap keeps the committed seed small.
     public const int MaxProductsPerCategory = 20;
 
     public const string Usage = """
-        Usage: dotnet run --project tools/Grit.MlImporter -- --category "<store category>=<search terms>[@<MLB domain id>]" [--category ...] [--count 5] [--output seed]
-          --category  repeatable; the store category (existing like "Camping" or new) and the Mercado Livre search terms
-                      the optional domain (e.g. MLB-TENTS) keeps the search inside one Mercado Livre domain
-          --count     products per category, 1 to 20 (default 5)
+        Usage: dotnet run --project tools/Grit.MlImporter -- --category "<store category>=<search terms>[@<MLB domain id>]" [--category ...] [--count 10] [--output seed]
+          --category  repeatable; the store category (existing like "Tênis" or new) and the Mercado Livre search terms
+                      the optional domain (e.g. MLB-SNEAKERS) keeps the search inside one Mercado Livre domain
+                      repeat a store category to search it with other terms or domains, in the order given
+          --count     models (store products) per category, 1 to 20 (default 10)
           --output    folder that receives catalog.json and images/ (default seed)
         The access token comes from: dotnet user-secrets set "MercadoLivre:AccessToken" "<token>" --project tools/Grit.MlImporter
         """;
@@ -52,7 +53,8 @@ internal sealed record ImportOptions(IReadOnlyList<ImportCategory> Categories, i
         return Check(new ImportOptions(categories, count, output));
     }
 
-    // Two names with one slug would be one category for the seeder, which rejects the file.
+    // The same name repeated is one category with several searches; two spellings of one slug would be one category
+    // for the seeder under two names, which it rejects.
     private static Result<ImportOptions> Check(ImportOptions options)
     {
         if (options.Categories.Count == 0)
@@ -60,8 +62,8 @@ internal sealed record ImportOptions(IReadOnlyList<ImportCategory> Categories, i
             return Invalid("At least one --category is required.");
         }
 
-        var slugs = options.Categories.Select(category => Slug.FromName(category.StoreName).Value).ToList();
-        return slugs.Distinct().Count() == slugs.Count ? options : Invalid("Two --category options name the same store category.");
+        var slugs = options.Categories.Select(category => category.StoreName).Distinct().Select(name => Slug.FromName(name).Value).ToList();
+        return slugs.Distinct().Count() == slugs.Count ? options : Invalid("Two --category options spell the same store category differently.");
     }
 
     private static Error Invalid(string message) => new("importer.invalid_arguments", message, ErrorType.Validation);

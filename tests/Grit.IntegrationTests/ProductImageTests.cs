@@ -27,6 +27,7 @@ public class ProductImageTests(ProductImageHost images) : IClassFixture<ProductI
         var image = product.GetProperty("images").EnumerateArray().ShouldHaveSingleItem();
         image.GetProperty("key").GetString().ShouldBe($"products/{productId}/{ProductImageApi.FileNameOf(key)}");
         image.GetProperty("fileName").GetString().ShouldBe(ProductImageApi.FileNameOf(key));
+        image.GetProperty("color").GetString().ShouldBe("azul");
         var page = await _admin.GetFromJsonAsync<JsonElement>($"/api/v1/catalog/products/{slug}", TestContext.Current.CancellationToken);
         var url = page.GetProperty("imageUrls").EnumerateArray().ShouldHaveSingleItem().GetString();
         (await ProductImageApi.Storage.GetByteArrayAsync(url, TestContext.Current.CancellationToken)).Length.ShouldBe(100);

@@ -8,4 +8,7 @@ internal sealed record BasketLineResponse(
     decimal UnitPriceAmount,
     decimal? CurrentUnitPriceAmount,
     bool HasPriceChanged,
-    bool IsAvailable);
+    bool IsAvailable,
+    string? Color,
+    string? Size,
+    string? ImageUrl);

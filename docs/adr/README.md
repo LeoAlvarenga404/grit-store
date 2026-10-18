@@ -16,10 +16,13 @@ Cada ADR registra uma decisão no sub-plano em que ela apareceu no código. Toda
 | [0010](0010-slug-unico-e-imutavel.md) | Slug único e imutável | 1a |
 | [0011](0011-contrato-json-estrito.md) | Contrato JSON estrito | 1a |
 | [0012](0012-moeda-unica-brl.md) | Uma moeda na loja: BRL | 1a |
-| [0013](0013-busca-do-catalogo.md) | Busca do catálogo (full text + trigramas, facetas, keyset) | 1b |
+| [0013](0013-busca-do-catalogo.md) | Busca do catálogo (full text + trigramas, facetas, keyset) | 1b (emenda no 13a) |
 | [0014](0014-identidade-e-tokens.md) | Identidade e tokens (JWT, refresh com detecção de reuso) | 2a |
 | [0015](0015-checkout-com-saga.md) | Checkout com saga e compensação | 3–4d |
-| [0016](0016-imagens-de-produto-em-s3.md) | Imagens de produto em S3 com URL pré-assinada | 5a |
-| [0017](0017-cache-do-catalogo.md) | Cache do catálogo com HybridCache | 5b |
+| [0016](0016-imagens-de-produto-em-s3.md) | Imagens de produto em S3 com URL pré-assinada | 5a (emenda no 13a) |
+| [0017](0017-cache-do-catalogo.md) | Cache do catálogo com HybridCache | 5b (emenda no 13a) |
 | [0018](0018-pagamentos-com-stripe.md) | Pagamentos com Stripe (gateway por configuração, webhook idempotente) | 4c |
-| [0019](0019-importador-do-mercado-livre.md) | Importador do Mercado Livre para o seed | 1c |
+| [0019](0019-importador-do-mercado-livre.md) | Importador do Mercado Livre para o seed | 1c (emenda no 13a) |
+| [0020](0020-imagens-de-produto-por-cor.md) | Imagens de produto por cor | 13a |
+| [0021](0021-seed-misto-e-linha-propria-grit.md) | Seed misto e linha própria GRIT | 13a |
+| [0022](0022-identidade-visual-e-stack-do-front.md) | Identidade visual e stack do front | 13b |

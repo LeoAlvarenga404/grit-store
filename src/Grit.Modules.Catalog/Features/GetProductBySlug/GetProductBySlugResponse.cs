@@ -9,4 +9,5 @@ internal sealed record GetProductBySlugResponse(
     string CategorySlug,
     string CategoryName,
     IReadOnlyList<GetProductBySlugSkuResponse> Skus,
-    IReadOnlyList<string> ImageUrls);
+    IReadOnlyList<string> ImageUrls,
+    IReadOnlyList<GetProductBySlugColorResponse> Colors);

@@ -1,21 +1,23 @@
+using System.Text.Json;
+using Grit.Modules.Catalog.Domain;
 using Grit.Modules.Catalog.Infrastructure.Seed;
 
 namespace Grit.Modules.Catalog.Tests.Infrastructure.Seed;
 
 public class CatalogSeedValidationTests
 {
-    [Fact]
-    public void Validate_EightWebpImages_Passes()
-    {
-        var images = Enumerable.Range(1, 8).Select(index => $"mochila-{index}.webp").ToList();
+    private const string Name = "Mochila de Trilha";
 
-        Should.NotThrow(() => CatalogSeeder.Validate(CatalogWith(images)));
+    [Fact]
+    public void Validate_EightWebpImagesOfOneColor_Passes()
+    {
+        Should.NotThrow(() => CatalogSeeder.Validate(CatalogWith([new("preto", Files("mochila", 8))], "preto")));
     }
 
     [Fact]
     public void Validate_NoImages_Passes()
     {
-        Should.NotThrow(() => CatalogSeeder.Validate(CatalogWith(null)));
+        Should.NotThrow(() => CatalogSeeder.Validate(CatalogWith(null, "preto")));
     }
 
     [Theory]
@@ -25,21 +27,149 @@ public class CatalogSeedValidationTests
     [InlineData(".webp")]
     public void Validate_ImageThatIsNotAWebpFileName_Throws(string image)
     {
-        var exception = Should.Throw<InvalidOperationException>(() => CatalogSeeder.Validate(CatalogWith([image])));
+        var exception = Should.Throw<InvalidOperationException>(() => CatalogSeeder.Validate(CatalogWith([new("preto", [image])], "preto")));
 
-        exception.Message.ShouldBe("The seed entry 'Mochila de Trilha' must list at most 8 .webp file names.");
+        exception.Message.ShouldBe("The seed entry 'Mochila de Trilha' must list .webp file names only.");
     }
 
     [Fact]
-    public void Validate_NineImages_Throws()
+    public void Validate_NineImagesOfOneColor_Throws()
     {
-        var images = Enumerable.Range(1, 9).Select(index => $"mochila-{index}.webp").ToList();
+        var exception = Should.Throw<InvalidOperationException>(() => CatalogSeeder.Validate(CatalogWith([new("preto", Files("mochila", 9))], "preto")));
 
-        Should.Throw<InvalidOperationException>(() => CatalogSeeder.Validate(CatalogWith(images)));
+        exception.Message.ShouldBe("The seed entry 'Mochila de Trilha' is invalid: catalog.image_limit.");
     }
 
-    private static SeedCatalog CatalogWith(IReadOnlyList<string>? images) =>
+    [Fact]
+    public void Validate_EightImagesInEachOfTwoColors_Passes()
+    {
+        var images = new List<SeedColorImages> { new("preto", Files("preta", 8)), new("azul", Files("azul", 8)) };
+
+        Should.NotThrow(() => CatalogSeeder.Validate(CatalogWith(images, "preto", "azul")));
+    }
+
+    [Fact]
+    public void Validate_ColorNoSkuHas_Throws()
+    {
+        var exception = Should.Throw<InvalidOperationException>(() => CatalogSeeder.Validate(CatalogWith([new("verde", Files("mochila", 1))], "preto")));
+
+        exception.Message.ShouldBe("The seed entry 'Mochila de Trilha' is invalid: catalog.image_color_not_found.");
+    }
+
+    [Fact]
+    public void Validate_SameFileInTwoColors_Throws()
+    {
+        var images = new List<SeedColorImages> { new("preto", ["mochila.webp"]), new("azul", ["mochila.webp"]) };
+
+        var exception = Should.Throw<InvalidOperationException>(() => CatalogSeeder.Validate(CatalogWith(images, "preto", "azul")));
+
+        exception.Message.ShouldBe("The seed entry 'Mochila de Trilha' is invalid: catalog.duplicate_image.");
+    }
+
+    [Fact]
+    public void Validate_ImagesWithoutColorForASkuWithoutColor_Passes()
+    {
+        Should.NotThrow(() => CatalogSeeder.Validate(CatalogWith([new(null, Files("mochila", 2))], (string?)null)));
+    }
+
+    [Fact]
+    public void Validate_GroupWithoutFiles_Throws()
+    {
+        var exception = Should.Throw<InvalidOperationException>(() => CatalogSeeder.Validate(CatalogWith([new("preto", null!)], "preto")));
+
+        exception.Message.ShouldBe("The seed entry 'Mochila de Trilha' must list .webp file names only.");
+    }
+
+    [Fact]
+    public void Validate_InvalidFileInTheSecondGroup_Throws()
+    {
+        var images = new List<SeedColorImages> { new("preto", ["mochila.webp"]), new("azul", ["mochila-azul.webp", "../x.webp"]) };
+
+        var exception = Should.Throw<InvalidOperationException>(() => CatalogSeeder.Validate(CatalogWith(images, "preto", "azul")));
+
+        exception.Message.ShouldBe("The seed entry 'Mochila de Trilha' must list .webp file names only.");
+    }
+
+    [Fact]
+    public void Validate_NullGroup_Throws()
+    {
+        var exception = Should.Throw<InvalidOperationException>(() => CatalogSeeder.Validate(CatalogWith([null!], "preto")));
+
+        exception.Message.ShouldBe("The seed entry 'Mochila de Trilha' must list .webp file names only.");
+    }
+
+    [Fact]
+    public void Validate_NullFileName_Throws()
+    {
+        var exception = Should.Throw<InvalidOperationException>(() => CatalogSeeder.Validate(CatalogWith([new("preto", ["mochila.webp", null!])], "preto")));
+
+        exception.Message.ShouldBe("The seed entry 'Mochila de Trilha' must list .webp file names only.");
+    }
+
+    [Fact]
+    public void Validate_CommittedSeedAndOwnLine_PassAsOneCatalog()
+    {
+        var seed = Committed("seed", "catalog.json");
+        var ownLine = Committed("seed", "grit", "catalog.json");
+
+        Should.NotThrow(() => CatalogSeeder.Validate(new SeedCatalog([.. seed.Categories, .. ownLine.Categories])));
+    }
+
+    [Fact]
+    public void OwnLine_EveryModel_ComesInThreeColorsAndEverySizeWithTwoPhotosPerColor()
+    {
+        var ownLine = Committed("seed", "grit", "catalog.json");
+
+        ownLine.Categories.Select(category => category.Name).ShouldBe(["Camisetas e regatas", "Shorts e bermudas", "Calças e leggings", "Moletons e jaquetas"]);
+        ownLine.Categories.ShouldAllBe(category => category.Products.Count == 3);
+        ownLine.Categories.SelectMany(category => category.Products).Sum(product => product.Skus.Count).ShouldBe(144);
+        foreach (var product in ownLine.Categories.SelectMany(category => category.Products))
+        {
+            product.Attributes["marca"].ShouldBe("GRIT");
+            product.Attributes["genero"].ShouldBeOneOf("Masculino", "Feminino", "Unissex");
+            product.Attributes.ShouldContainKey("material");
+            var colors = product.Skus.Select(sku => sku.Attributes["cor"]).Distinct().ToList();
+            colors.Count.ShouldBe(3);
+            foreach (var color in colors)
+            {
+                var skus = product.Skus.Where(sku => sku.Attributes["cor"] == color).ToList();
+                skus.Select(sku => sku.Attributes["tamanho"]).ShouldBe(["P", "M", "G", "GG"]);
+                skus.Select(sku => sku.PriceAmount).Distinct().ShouldHaveSingleItem();
+            }
+
+            var images = product.Images.ShouldNotBeNull();
+            images.Select(group => group.Color!).ShouldBe(colors);
+            var slug = Slug.FromName(product.Name).Value.Value;
+            foreach (var group in images)
+            {
+                var colorSlug = Slug.FromName(group.Color!).Value.Value;
+                group.Files.ShouldBe([$"{slug}-{colorSlug}-1.webp", $"{slug}-{colorSlug}-2.webp"]);
+            }
+        }
+    }
+
+    private static SeedCatalog Committed(params string[] segments)
+    {
+        var path = Path.GetFullPath(Path.Combine([AppContext.BaseDirectory, "..", "..", "..", "..", "..", .. segments]));
+        return JsonSerializer.Deserialize<SeedCatalog>(File.ReadAllText(path), JsonSerializerOptions.Web)!;
+    }
+
+    // One SKU per colour (null = a SKU without "cor"), each with its own size.
+    private static SeedCatalog CatalogWith(IReadOnlyList<SeedColorImages>? images, params string?[] skuColors) =>
         new([new SeedCategory("Camping", [
-            new SeedProduct("Mochila de Trilha", "Leve.", new Dictionary<string, string>(), [new SeedSku(new Dictionary<string, string> { ["cor"] = "preto" }, 199.90m)], images),
+            new SeedProduct(Name, "Leve.", new Dictionary<string, string>(), [.. skuColors.Select(Sku)], images),
         ])]);
+
+    private static SeedSku Sku(string? color, int index)
+    {
+        var attributes = new Dictionary<string, string> { ["tamanho"] = $"{index + 1}" };
+        if (color is not null)
+        {
+            attributes["cor"] = color;
+        }
+
+        return new SeedSku(attributes, 199.90m);
+    }
+
+    private static List<string> Files(string prefix, int count) => [.. Enumerable.Range(1, count).Select(index => $"{prefix}-{index}.webp")];
 }

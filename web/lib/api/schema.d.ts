@@ -671,7 +671,7 @@ export interface paths {
         put?: never;
         /**
          * Attaches an uploaded image to the product, after its other images.
-         * @description Send the key from /images/uploads and the product version last read. The stored file is checked again: a wrong type or a file over 2 MB is deleted (400 catalog.invalid_image). At most 8 images.
+         * @description Send the key from /images/uploads, the colour the image shows (the cor value of the coloured SKU it shows; leave it out, or send null, only for an image of a SKU without cor) and the product version last read. The stored file is checked again: a wrong type or a file over 2 MB is deleted (400 catalog.invalid_image). A colour no SKU has is 400 catalog.image_color_not_found; a colour has at most 8 images (409 catalog.image_limit). The same key again with the same colour answers the current version; with another colour it is 409 catalog.duplicate_image. A new image sent with a stale version is 409 catalog.product_changed.
          */
         post: {
             parameters: {
@@ -848,7 +848,7 @@ export interface paths {
         };
         /**
          * Searches and lists the products that have at least one SKU.
-         * @description q finds words with or without accents, in the singular or the plural, and name words with a small typo (longer words tolerate more); results are ordered by relevance. Without q, the newest products come first (creation time, to the millisecond). attribute=key:value can repeat (one per key) and matches a single SKU. priceAmount is the lowest price among the SKUs that match. imageUrl is a signed URL of the product's first image, valid for an hour, or null. Pass nextCursor as after to read the next page.
+         * @description q finds words with or without accents, in the singular or the plural, and name words with a small typo (longer words tolerate more). attribute=key:value can repeat (one per key) and matches a single SKU. sort is relevance (the default: by relevance with q, newest first without), price_asc or price_desc (by priceAmount, ties by id). priceAmount is the lowest price among the SKUs that match; hasPriceRange tells whether those SKUs have different prices. imageUrl is a signed URL of the product's first image (the cover), valid for an hour, or null. colors lists every colour of the product's SKUs (the cor attribute): colours with images first, in the order of their first image, then the others by name; each imageUrl is that colour's first image or null. Pass nextCursor as after, with the same filters and sort, to read the next page; drop after whenever the filters or the sort change (only its syntax is checked).
          */
         get: {
             parameters: {
@@ -858,6 +858,7 @@ export interface paths {
                     minPrice?: number;
                     maxPrice?: number;
                     attribute?: string[];
+                    sort?: string;
                     after?: string;
                     limit?: number;
                 };
@@ -1008,7 +1009,7 @@ export interface paths {
         };
         /**
          * Gets a product page by slug: category, attributes and SKUs with prices.
-         * @description A product without SKUs is not for sale yet and answers 404, as does a slug in any other spelling.
+         * @description A product without SKUs is not for sale yet and answers 404, as does a slug in any other spelling. imageUrls is the whole gallery, cover first; colors lists every colour of the SKUs (the cor attribute), colours with images first in the order of their first image, then the others by name, each with its own image URLs. Image URLs are signed and valid for an hour.
          */
         get: {
             parameters: {
@@ -1348,7 +1349,7 @@ export interface paths {
         };
         /**
          * Gets the customer's basket with the price seen when each item was added and the current price.
-         * @description hasPriceChanged flags items whose price changed since they were added; the subtotal uses current prices of available items. Send that subtotal as expectedSubtotalAmount at checkout.
+         * @description hasPriceChanged flags items whose price changed since they were added; the subtotal uses current prices of available items. Send that subtotal as expectedSubtotalAmount at checkout. color, size and imageUrl come from the catalog when the basket is read (imageUrl is the first image of the SKU's colour, or for a SKU without colour the first image without colour, never another colour's; signed for an hour); each is null when the SKU or the value is missing.
          */
         get: {
             parameters: {
@@ -1823,7 +1824,7 @@ export interface paths {
         };
         /**
          * Gets one of the customer's orders with its lines, totals and status timeline.
-         * @description Another customer's order answers 404.
+         * @description Another customer's order answers 404. Each line keeps the product slug, colour and size bought (null on orders placed before they were kept); imageUrl is read from the catalog on each request: the first image of the SKU's colour (for a SKU without colour, the first image without colour), signed for an hour; null when there is none or the SKU is gone.
          */
         get: {
             parameters: {
@@ -2114,6 +2115,7 @@ export interface components {
             key: string;
             /** Format: uint32 */
             version: number;
+            color?: null | string;
         };
         AttributeFacetResponse: {
             key: string;
@@ -2137,6 +2139,9 @@ export interface components {
             currentUnitPriceAmount: null | number;
             hasPriceChanged: boolean;
             isAvailable: boolean;
+            color: null | string;
+            size: null | string;
+            imageUrl: null | string;
         };
         BasketResponse: {
             lines: components["schemas"]["BasketLineResponse"][];
@@ -2191,6 +2196,10 @@ export interface components {
             email: string;
             roles: string[];
         };
+        GetProductBySlugColorResponse: {
+            name: string;
+            imageUrls: string[];
+        };
         GetProductBySlugResponse: {
             /** Format: uuid */
             id: string;
@@ -2204,6 +2213,7 @@ export interface components {
             categoryName: string;
             skus: components["schemas"]["GetProductBySlugSkuResponse"][];
             imageUrls: string[];
+            colors: components["schemas"]["GetProductBySlugColorResponse"][];
         };
         GetProductBySlugSkuResponse: {
             /** Format: uuid */
@@ -2274,6 +2284,10 @@ export interface components {
             /** Format: uuid */
             skuId: string;
             productName: string;
+            productSlug: null | string;
+            color: null | string;
+            size: null | string;
+            imageUrl: null | string;
             /** Format: int32 */
             quantity: number;
             /** Format: double */
@@ -2361,6 +2375,7 @@ export interface components {
         ProductImageResponse: {
             key: string;
             fileName: string;
+            color: null | string;
             url: string;
         };
         ProductListItemResponse: {
@@ -2375,6 +2390,10 @@ export interface components {
             slug: string;
             name: string;
         };
+        ProductSummaryColorResponse: {
+            name: string;
+            imageUrl: null | string;
+        };
         ProductSummaryResponse: {
             /** Format: uuid */
             id: string;
@@ -2383,7 +2402,9 @@ export interface components {
             /** Format: double */
             priceAmount: number;
             priceCurrency: string;
+            hasPriceRange: boolean;
             imageUrl: null | string;
+            colors: components["schemas"]["ProductSummaryColorResponse"][];
         };
         ProductVersionResponse: {
             /** Format: uint32 */

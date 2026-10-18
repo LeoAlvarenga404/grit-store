@@ -12,7 +12,7 @@ internal sealed class AttachImageHandler(CatalogDbContext db, ProductImageStorag
     public async Task<Result<ProductVersionResponse>> Handle(AttachImageCommand command, CancellationToken cancellationToken)
     {
         var id = new ProductId(command.ProductId);
-        var product = await db.Products.SingleOrDefaultAsync(product => product.Id == id, cancellationToken);
+        var product = await db.Products.Include(product => product.Skus).SingleOrDefaultAsync(product => product.Id == id, cancellationToken);
         if (product is null)
         {
             return CatalogErrors.ProductNotFound;
@@ -26,13 +26,13 @@ internal sealed class AttachImageHandler(CatalogDbContext db, ProductImageStorag
 
         var key = $"{Product.ImageKeyPrefix(id)}{command.Key[uploadPrefix.Length..]}";
 
-        // A repeated confirm changes nothing, not even the stored file.
-        if (product.ImageKeys.Contains(key))
+        // A repeated confirm (same key and colour) changes nothing, not even the stored file.
+        if (product.Images.Contains(new ProductImage(key, command.Color)))
         {
             return new ProductVersionResponse(db.VersionOf(product));
         }
 
-        var added = product.AddImage(key);
+        var added = product.AddImage(key, command.Color);
         if (added.IsFailure)
         {
             return added.Error;

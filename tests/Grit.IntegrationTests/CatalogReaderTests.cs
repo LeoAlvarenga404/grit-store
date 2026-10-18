@@ -15,7 +15,7 @@ public class CatalogReaderTests(ApiFactory factory)
 
         var skus = await reader.GetSkusAsync([skuId, Guid.NewGuid()], TestContext.Current.CancellationToken);
 
-        skus.ShouldBe([new SkuSnapshot(skuId, product.GetProperty("name").GetString()!, product.GetProperty("slug").GetString()!, 99.90m, "BRL")]);
+        skus.ShouldBe([new SkuSnapshot(skuId, product.GetProperty("name").GetString()!, product.GetProperty("slug").GetString()!, 99.90m, "BRL", "azul", null, null)]);
     }
 
     [Fact]

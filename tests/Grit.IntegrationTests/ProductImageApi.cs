@@ -10,6 +10,9 @@ internal static class ProductImageApi
     // Talks to the presigned URLs directly, like the BFF does.
     internal static readonly HttpClient Storage = new();
 
+    // The colour of the SKU BasketApi.CreateSkuAsync adds.
+    public const string SkuColor = "azul";
+
     public static async Task<(Guid Id, uint Version, string Slug)> ProductWithSkuAsync(HttpClient admin)
     {
         var (productId, version, _) = await BasketApi.CreateSkuAsync(admin);
@@ -34,16 +37,16 @@ internal static class ProductImageApi
         return await Storage.PutAsync(upload.GetProperty("uploadUrl").GetString(), content, TestContext.Current.CancellationToken);
     }
 
-    public static Task<HttpResponseMessage> AttachAsync(HttpClient admin, Guid productId, string key, uint version) =>
-        admin.PostAsJsonAsync($"{CatalogAdminApi.ProductsPath}/{productId}/images", new { key, version }, TestContext.Current.CancellationToken);
+    public static Task<HttpResponseMessage> AttachAsync(HttpClient admin, Guid productId, string key, uint version, string? color = SkuColor) =>
+        admin.PostAsJsonAsync($"{CatalogAdminApi.ProductsPath}/{productId}/images", new { key, version, color }, TestContext.Current.CancellationToken);
 
     public static string FileNameOf(string key) => key[(key.LastIndexOf('/') + 1)..];
 
-    public static async Task<uint> AttachImageAsync(HttpClient admin, Guid productId, uint version, int sizeInBytes)
+    public static async Task<uint> AttachImageAsync(HttpClient admin, Guid productId, uint version, int sizeInBytes, string? color = SkuColor)
     {
         var upload = await StartUploadAsync(admin, productId, "image/png", sizeInBytes);
         await PutAsync(upload, "image/png", sizeInBytes);
-        var response = await AttachAsync(admin, productId, upload.GetProperty("key").GetString()!, version);
+        var response = await AttachAsync(admin, productId, upload.GetProperty("key").GetString()!, version, color);
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         return (await CatalogAdminApi.ReadAsync(response)).GetProperty("version").GetUInt32();
     }

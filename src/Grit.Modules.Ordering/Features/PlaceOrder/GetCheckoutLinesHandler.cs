@@ -23,5 +23,5 @@ internal sealed class GetCheckoutLinesHandler(IBasketReader basket, ICatalogRead
     }
 
     private static CheckoutLine ToLine(BasketItem item, SkuSnapshot sku) =>
-        new(sku.SkuId, sku.ProductName, item.Quantity, sku.PriceAmount, sku.PriceCurrency);
+        new(sku.SkuId, sku.ProductName, sku.ProductSlug, sku.Color, sku.Size, item.Quantity, sku.PriceAmount, sku.PriceCurrency);
 }

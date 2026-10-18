@@ -26,5 +26,8 @@ internal sealed class GetBasketHandler(BasketStore store, ICatalogReader catalog
             line.UnitPrice.Amount,
             sku?.PriceAmount,
             sku is not null && sku.PriceAmount != line.UnitPrice.Amount,
-            sku is not null);
+            sku is not null,
+            sku?.Color,
+            sku?.Size,
+            sku?.ImageUrl);
 }

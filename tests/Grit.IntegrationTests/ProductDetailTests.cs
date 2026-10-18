@@ -42,6 +42,9 @@ public class ProductDetailTests(ApiFactory factory)
         skus.Count.ShouldBe(2);
         skus[blue.Id].ShouldBe(("azul", 79.90m, "BRL"));
         skus[black.Id].ShouldBe(("preto", 119.90m, "BRL"));
+        var colors = product.GetProperty("colors").EnumerateArray().ToList();
+        colors.Select(color => color.GetProperty("name").GetString()).ShouldBe(["azul", "preto"]);
+        colors.ShouldAllBe(color => color.GetProperty("imageUrls").GetArrayLength() == 0);
     }
 
     [Fact]

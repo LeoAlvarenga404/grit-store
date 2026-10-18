@@ -1,0 +1,28 @@
+{
+  "id": "MLB2000",
+  "status": "active",
+  "domain_id": "MLB-T_SHIRTS",
+  "name": "Camiseta Dry Fit Grit",
+  "family_name": "Camiseta Dry Fit Grit",
+  "parent_id": null,
+  "children_ids": [
+    "MLB2001",
+    "MLB2002",
+    "MLB2003",
+    "MLB2004"
+  ],
+  "pickers": null,
+  "buy_box_winner": null,
+  "pictures": [],
+  "attributes": [
+    {
+      "id": "BRAND",
+      "name": "Marca",
+      "value_id": null,
+      "value_name": "Grit",
+      "values": [],
+      "meta": null
+    }
+  ],
+  "short_description": null
+}

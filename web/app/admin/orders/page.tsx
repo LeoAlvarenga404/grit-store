@@ -1,9 +1,19 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { ErrorMessage } from "@/components/error-message";
+import { OrderStatusBadge } from "@/components/order-status-badge";
+import { SubmitButton } from "@/components/submit-button";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { api } from "@/lib/api/client";
 import { callApi } from "@/lib/api/call-api";
 import { formatDateTime, formatPrice } from "@/lib/format";
-import { statusLabel } from "@/app/orders/order-labels";
+import { orderStatusLabel } from "@/lib/order-labels";
 import { shipOrder } from "./actions";
+
+export const metadata: Metadata = { title: "Pedidos" };
 
 const statuses = ["Placed", "Confirmed", "Shipped", "Cancelled"];
 
@@ -25,61 +35,64 @@ export default async function AdminOrdersPage({
   const olderPage = data.nextCursor ? new URLSearchParams({ ...(status ? { status } : {}), after: data.nextCursor }) : null;
 
   return (
-    <main>
-      <h1>Pedidos</h1>
-      {error && (
-        <p role="alert" className="error">
-          {errorMessages[error] ?? "Não foi possível alterar o pedido. Tente de novo."}
-        </p>
-      )}
-      <form className="inline-form">
-        <label>
-          Situação
-          <select name="status" defaultValue={status ?? ""}>
-            <option value="">Todas</option>
-            {statuses.map((value) => (
-              <option key={value} value={value}>
-                {statusLabel(value)}
-              </option>
+    <>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <h1 className="text-2xl font-semibold tracking-tight">Pedidos</h1>
+        <form className="flex items-end gap-2">
+          <div className="space-y-1.5">
+            <Label htmlFor="status">Situação</Label>
+            <NativeSelect id="status" name="status" defaultValue={status ?? ""} className="w-44">
+              <NativeSelectOption value="">Todas</NativeSelectOption>
+              {statuses.map((value) => (
+                <NativeSelectOption key={value} value={value}>{orderStatusLabel(value)}</NativeSelectOption>
+              ))}
+            </NativeSelect>
+          </div>
+          <Button type="submit" variant="outline" size="sm" className="h-9">Filtrar</Button>
+        </form>
+      </div>
+      {error && <ErrorMessage className="mt-6">{errorMessages[error] ?? "Não foi possível alterar o pedido. Tente de novo."}</ErrorMessage>}
+      <div className="mt-6 rounded-md border bg-background">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Pedido</TableHead>
+              <TableHead>Data</TableHead>
+              <TableHead>Situação</TableHead>
+              <TableHead className="text-right">Total</TableHead>
+              <TableHead className="text-right">Ação</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.items.map((order) => (
+              <TableRow key={order.id}>
+                <TableCell className="font-medium tabular-nums">{order.number}</TableCell>
+                <TableCell>{formatDateTime(order.placedAt)}</TableCell>
+                <TableCell><OrderStatusBadge status={order.status} /></TableCell>
+                <TableCell className="text-right tabular-nums">{formatPrice(order.totalAmount)}</TableCell>
+                <TableCell className="text-right">
+                  {order.status === "Confirmed" && (
+                    <form action={shipOrder}>
+                      <input type="hidden" name="orderId" value={order.id} />
+                      <SubmitButton size="sm" variant="outline" pendingLabel="Enviando…">Marcar como enviado</SubmitButton>
+                    </form>
+                  )}
+                </TableCell>
+              </TableRow>
             ))}
-          </select>
-        </label>
-        <button type="submit">Filtrar</button>
-      </form>
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">Pedido</th>
-            <th scope="col">Data</th>
-            <th scope="col">Situação</th>
-            <th scope="col">Total</th>
-            <th scope="col">Ação</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.items.map((order) => (
-            <tr key={order.id}>
-              <td>{order.number}</td>
-              <td>{formatDateTime(order.placedAt)}</td>
-              <td>{statusLabel(order.status)}</td>
-              <td>{formatPrice(order.totalAmount)}</td>
-              <td>
-                {order.status === "Confirmed" && (
-                  <form action={shipOrder}>
-                    <input type="hidden" name="orderId" value={order.id} />
-                    <button type="submit">Marcar como enviado</button>
-                  </form>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            {data.items.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5} className="py-10 text-center text-muted-foreground">Nenhum pedido nesta situação.</TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
       {olderPage && (
-        <p>
-          <Link href={`/admin/orders?${olderPage}`}>Pedidos mais antigos</Link>
-        </p>
+        <div className="mt-4 flex justify-end">
+          <Button asChild variant="outline" size="sm"><Link href={`/admin/orders?${olderPage}`}>Pedidos mais antigos</Link></Button>
+        </div>
       )}
-    </main>
+    </>
   );
 }

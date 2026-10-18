@@ -23,6 +23,8 @@ public class ProductSearchValidationTests(ApiFactory factory)
     [InlineData("after=0.5_not-a-uuid", "after")]
     [InlineData("after=0.5_0192f0c1d2e37b4c8a9f000000000001_2", "after")]
     [InlineData("after=0%00.5_0192f0c1d2e37b4c8a9f000000000001", "after")]
+    [InlineData("sort=cheapest", "sort")]
+    [InlineData("sort=PRICE_ASC", "sort")]
     [InlineData("limit=0", "limit")]
     [InlineData("limit=51", "limit")]
     [InlineData("limit=2147483647", "limit")]

@@ -1,0 +1,63 @@
+{
+  "id": "MLB2060",
+  "status": "active",
+  "domain_id": "MLB-T_SHIRTS",
+  "name": "Regata Leve Grit Amarela M",
+  "family_name": "Regata Leve Grit",
+  "parent_id": null,
+  "children_ids": [],
+  "pickers": [
+    {
+      "picker_id": "COLOR",
+      "picker_name": "Cor",
+      "products": [
+        {
+          "product_id": "MLB2060",
+          "picker_label": "Amarelo"
+        },
+        {
+          "product_id": "MLB2061",
+          "picker_label": "Roxo"
+        }
+      ]
+    }
+  ],
+  "buy_box_winner": {
+    "item_id": "MLB3300000060",
+    "price": 59.9,
+    "currency_id": "BRL"
+  },
+  "pictures": [
+    {
+      "id": "730060-MLA2060",
+      "url": "https://http2.mlstatic.com/D_NQ_NP_730060-MLA2060-F.jpg"
+    }
+  ],
+  "attributes": [
+    {
+      "id": "BRAND",
+      "name": "Marca",
+      "value_id": null,
+      "value_name": "Grit",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "COLOR",
+      "name": "Cor",
+      "value_id": null,
+      "value_name": "Amarelo",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "SIZE",
+      "name": "Tamanho",
+      "value_id": null,
+      "value_name": "M",
+      "values": [],
+      "meta": null
+    }
+  ],
+  "short_description": null
+}

@@ -1,0 +1,100 @@
+{
+  "id": "MLB2001",
+  "status": "active",
+  "domain_id": "MLB-T_SHIRTS",
+  "name": "Camiseta Dry Fit Grit Preta M",
+  "family_name": "Camiseta Dry Fit Grit",
+  "parent_id": "MLB2000",
+  "children_ids": [],
+  "pickers": [
+    {
+      "picker_id": "COLOR",
+      "picker_name": "Cor",
+      "products": [
+        {
+          "product_id": "MLB2001",
+          "picker_label": "Preto"
+        },
+        {
+          "product_id": "MLB2003",
+          "picker_label": "Azul"
+        }
+      ]
+    },
+    {
+      "picker_id": "SIZE",
+      "picker_name": "Tamanho",
+      "products": [
+        {
+          "product_id": "MLB2001",
+          "picker_label": "M"
+        },
+        {
+          "product_id": "MLB2002",
+          "picker_label": "G"
+        }
+      ]
+    }
+  ],
+  "buy_box_winner": {
+    "item_id": "MLB3300000001",
+    "price": 79.9,
+    "currency_id": "BRL"
+  },
+  "pictures": [
+    {
+      "id": "700001-MLA2001",
+      "url": "https://http2.mlstatic.com/D_NQ_NP_700001-MLA2001-F.jpg"
+    },
+    {
+      "id": "700002-MLA2001",
+      "url": "https://http2.mlstatic.com/D_NQ_NP_700002-MLA2001-F.jpg"
+    }
+  ],
+  "attributes": [
+    {
+      "id": "BRAND",
+      "name": "Marca",
+      "value_id": null,
+      "value_name": "Grit",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "GENDER",
+      "name": "Gênero",
+      "value_id": null,
+      "value_name": "Sem gênero",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "MAIN_COLOR",
+      "name": "Cor principal",
+      "value_id": null,
+      "value_name": "Preto",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "COLOR",
+      "name": "Cor",
+      "value_id": null,
+      "value_name": "Preto",
+      "values": [],
+      "meta": null
+    },
+    {
+      "id": "SIZE",
+      "name": "Tamanho",
+      "value_id": null,
+      "value_name": "M",
+      "values": [],
+      "meta": null
+    }
+  ],
+  "short_description": {
+    "type": "plaintext",
+    "content": "Camiseta leve que seca rápido."
+  }
+}

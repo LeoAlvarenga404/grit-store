@@ -81,6 +81,77 @@ public class CatalogSeederTests(ApiFactory api)
         (await CatalogSeedTests.CountAsync(host)).ShouldBe(CatalogSeedTests.SeedCounts);
     }
 
+    private const string ImportedSeed = """
+        {"categories": [{"name": "Tênis", "products": [{"name": "Tênis Veloz", "description": "Leve.", "attributes": {},
+          "skus": [{"attributes": {"cor": "preto", "tamanho": "40"}, "priceAmount": 299.90}]}]}]}
+        """;
+
+    [Fact]
+    public async Task SeedAsync_OwnLineFolderNextToTheSeed_SeedsBothFilesInOneRun()
+    {
+        await using var host = await HostAsync("seed_own_line", seedPath: null);
+        var path = await WriteSeedFolderAsync(ImportedSeed, OwnLine(89.90m));
+
+        var report = await SeedAsync(host, path);
+
+        report.ShouldBe(new SeedReport(2, 2));
+        (await CatalogSeedTests.CountAsync(host)).ShouldBe((2, 2, 3));
+    }
+
+    [Fact]
+    public async Task SeedAsync_BadEntryInTheOwnLine_PersistsNothingFromEitherFile()
+    {
+        await using var host = await HostAsync("seed_own_line_bad", seedPath: null);
+        var path = await WriteSeedFolderAsync(ImportedSeed, OwnLine(-1m));
+
+        var exception = await Should.ThrowAsync<InvalidOperationException>(() => SeedAsync(host, path));
+
+        exception.Message.ShouldBe("The seed entry 'Camiseta GRIT Teste' is invalid: money.negative_amount.");
+        (await CatalogSeedTests.CountAsync(host)).ShouldBe((0, 0, 0));
+    }
+
+    [Fact]
+    public async Task SeedAsync_CategoryInBothFiles_Throws()
+    {
+        await using var host = await HostAsync("seed_own_line_repeated", seedPath: null);
+        var path = await WriteSeedFolderAsync(ImportedSeed, OwnLine(89.90m).Replace("Camisetas e regatas", "Tênis", StringComparison.Ordinal));
+
+        var exception = await Should.ThrowAsync<InvalidOperationException>(() => SeedAsync(host, path));
+
+        exception.Message.ShouldBe("The seed entry 'Tênis' repeats the slug 'tenis'.");
+    }
+
+    [Fact]
+    public async Task SeedAsync_ProductInBothFiles_ThrowsAndWritesNothing()
+    {
+        await using var host = await HostAsync("seed_own_line_product", seedPath: null);
+        var path = await WriteSeedFolderAsync(ImportedSeed, OwnLine(89.90m).Replace("Camiseta GRIT Teste", "tênis veloz", StringComparison.Ordinal));
+
+        var exception = await Should.ThrowAsync<InvalidOperationException>(() => SeedAsync(host, path));
+
+        exception.Message.ShouldBe("The seed entry 'tênis veloz' repeats the slug 'tenis-veloz'.");
+        (await CatalogSeedTests.CountAsync(host)).ShouldBe((0, 0, 0));
+    }
+
+    // Two SKUs and a photo that does not exist: the own line seeds without its pictures until the user adds them.
+    private static string OwnLine(decimal price) => $$"""
+        {"categories": [{"name": "Camisetas e regatas", "products": [{"name": "Camiseta GRIT Teste", "description": "Leve.",
+          "attributes": {"marca": "GRIT"},
+          "skus": [{"attributes": {"cor": "preto", "tamanho": "P"}, "priceAmount": {{price.ToString(CultureInfo.InvariantCulture)}}},
+                   {"attributes": {"cor": "preto", "tamanho": "M"}, "priceAmount": {{price.ToString(CultureInfo.InvariantCulture)}}}],
+          "images": [{"color": "preto", "files": ["camiseta-grit-teste-preto-1.webp"]}]}]}]}
+        """;
+
+    private static async Task<string> WriteSeedFolderAsync(string seed, string ownLine)
+    {
+        var folder = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), $"grit-seed-{Guid.NewGuid():N}"));
+        var ownLineFolder = folder.CreateSubdirectory(CatalogSeeder.OwnLineFolder);
+        await File.WriteAllTextAsync(Path.Combine(ownLineFolder.FullName, "catalog.json"), ownLine, TestContext.Current.CancellationToken);
+        var path = Path.Combine(folder.FullName, "catalog.json");
+        await File.WriteAllTextAsync(path, seed, TestContext.Current.CancellationToken);
+        return path;
+    }
+
     // Reading Services starts the host: migrations run and, with a seed path, the catalog is seeded first.
     private async Task<WebApplicationFactory<Program>> HostAsync(string database, string? seedPath)
     {

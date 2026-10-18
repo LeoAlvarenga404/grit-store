@@ -1,0 +1,26 @@
+{
+  "keywords": "tenis gemeos",
+  "paging": {
+    "total": 2,
+    "offset": 0,
+    "limit": 50
+  },
+  "results": [
+    {
+      "id": "MLB2031",
+      "status": "active",
+      "domain_id": "MLB-SNEAKERS",
+      "name": "Tênis Veloz Grit Preto 40",
+      "parent_id": "MLB2030",
+      "children_ids": []
+    },
+    {
+      "id": "MLB2051",
+      "status": "active",
+      "domain_id": "MLB-SNEAKERS",
+      "name": "Tênis Veloz Grit Preto 41",
+      "parent_id": "MLB2050",
+      "children_ids": []
+    }
+  ]
+}

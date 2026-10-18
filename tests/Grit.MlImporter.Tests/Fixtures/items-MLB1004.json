@@ -1,6 +1,0 @@
-{
-  "paging": { "total": 1, "offset": 0, "limit": 10 },
-  "results": [
-    { "site_id": "MLB", "item_id": "MLB3200000040", "price": 1299, "currency_id": "BRL", "original_price": null, "seller_id": 99, "category_id": "MLB23333", "official_store_id": null, "condition": "new", "listing_type_id": "gold_special", "shipping": { "logistic_type": "fulfillment", "free_shipping": true, "mode": "me2", "tags": [] }, "sale_terms": [], "tags": [], "warranty": null, "deal_ids": [] }
-  ]
-}

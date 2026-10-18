@@ -18,8 +18,16 @@ public class ImportOptionsTests
     {
         var options = ImportOptions.Parse(["--category", "Camping=barraca"]);
 
-        options.Value.ProductsPerCategory.ShouldBe(5);
+        options.Value.ProductsPerCategory.ShouldBe(10);
         options.Value.OutputDirectory.ShouldBe("seed");
+    }
+
+    [Fact]
+    public void Parse_SameStoreCategoryTwice_KeepsBothSearches()
+    {
+        var options = ImportOptions.Parse(["--category", "Tênis=tenis corrida@MLB-SNEAKERS", "--category", "Tênis=tenis casual"]);
+
+        options.Value.Categories.ShouldBe([new ImportCategory("Tênis", "tenis corrida", "MLB-SNEAKERS"), new ImportCategory("Tênis", "tenis casual")]);
     }
 
     [Theory]

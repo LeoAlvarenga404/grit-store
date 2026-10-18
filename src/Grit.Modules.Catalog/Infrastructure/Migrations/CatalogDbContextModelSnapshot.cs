@@ -97,10 +97,10 @@ namespace Grit.Modules.Catalog.Infrastructure.Migrations
                         .HasColumnType("character varying(4000)")
                         .HasColumnName("description");
 
-                    b.PrimitiveCollection<string[]>("ImageKeys")
+                    b.Property<string>("Images")
                         .IsRequired()
-                        .HasColumnType("text[]")
-                        .HasColumnName("image_keys");
+                        .HasColumnType("jsonb")
+                        .HasColumnName("images");
 
                     b.Property<string>("Name")
                         .IsRequired()

@@ -41,5 +41,7 @@ jobs:
           test -z "$(git status --porcelain -- deploy/compose)"
       - run: npm run lint
         working-directory: web
+      - run: npm test
+        working-directory: web
       - run: npm run build
         working-directory: web
