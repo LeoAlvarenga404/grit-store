@@ -56,7 +56,8 @@ internal sealed class CatalogSeeder(CatalogDbContext db, ProductImageStorage ima
         }
     }
 
-    private static async Task<SeedCatalog> ReadAsync(string path, CancellationToken cancellationToken)
+    // Internal for tools/Grit.MlImporter, which reads the own line to keep its output compatible with it.
+    internal static async Task<SeedCatalog> ReadAsync(string path, CancellationToken cancellationToken)
     {
         await using var file = File.OpenRead(path);
         return await JsonSerializer.DeserializeAsync<SeedCatalog>(file, JsonOptions, cancellationToken)

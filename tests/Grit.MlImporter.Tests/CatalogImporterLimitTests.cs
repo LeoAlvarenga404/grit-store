@@ -14,7 +14,7 @@ public sealed class CatalogImporterLimitTests : IDisposable
     {
         var handler = RecordedCatalog.Handler();
 
-        await ImportAsync(handler, "--category", RecordedCatalog.SneakersCategory, "--count", "1");
+        await ImportAsync(handler, null, "--category", RecordedCatalog.SneakersCategory, "--count", "1");
 
         (await ReadSeedAsync()).Categories.ShouldHaveSingleItem().Products.ShouldHaveSingleItem().Name.ShouldBe("Tênis Veloz Grit");
         var urls = handler.Requests.Select(request => request.Url).ToList();
@@ -27,7 +27,7 @@ public sealed class CatalogImporterLimitTests : IDisposable
     {
         var handler = RecordedCatalog.Handler();
 
-        await ImportAsync(handler, "--category", RecordedCatalog.TwinsCategory, "--count", "5");
+        await ImportAsync(handler, null, "--category", RecordedCatalog.TwinsCategory, "--count", "5");
 
         (await ReadSeedAsync()).Categories.ShouldHaveSingleItem().Products.Select(product => product.Name)
             .ShouldBe(["Tênis Veloz Grit", "Tênis Veloz Grit Couro"]);
@@ -39,11 +39,32 @@ public sealed class CatalogImporterLimitTests : IDisposable
     {
         var handler = RecordedCatalog.Handler().Json($"{RecordedCatalog.Picture}710002-MLA2021-F.jpg", "items-not-found.json", HttpStatusCode.NotFound);
 
-        await ImportAsync(handler, "--category", RecordedCatalog.Category, "--count", "2");
+        await ImportAsync(handler, null, "--category", RecordedCatalog.Category, "--count", "2");
 
         var products = (await ReadSeedAsync()).Categories.ShouldHaveSingleItem().Products;
         products.Select(product => product.Name).ShouldBe(["Camiseta Dry Fit Grit", "Camiseta Térmica Grit"]);
         products[1].Images.ShouldNotBeNull().ShouldBeEmpty();
+    }
+
+    [Fact]
+    public async Task ImportAsync_ModelNamedLikeAnOwnLineProduct_IsSkippedBeforeItsPictures()
+    {
+        var handler = RecordedCatalog.Handler();
+
+        await ImportAsync(handler, OwnLineWith("Linha GRIT", "Camiseta Térmica Grit"), "--category", RecordedCatalog.Category, "--count", "2");
+
+        (await ReadSeedAsync()).Categories.ShouldHaveSingleItem().Products.Select(product => product.Name).ShouldBe(["Camiseta Dry Fit Grit"]);
+        handler.Requests.Select(request => request.Url).ShouldNotContain($"{RecordedCatalog.Picture}710002-MLA2021-F.jpg");
+    }
+
+    [Fact]
+    public async Task ImportAsync_CategoryOfTheOwnLine_ThrowsBeforeWriting()
+    {
+        var exception = await Should.ThrowAsync<InvalidOperationException>(
+            () => ImportAsync(RecordedCatalog.Handler(), OwnLineWith("Camisetas e regatas", "Camiseta GRIT Teste"), "--category", RecordedCatalog.Category, "--count", "2"));
+
+        exception.Message.ShouldBe("The seed entry 'Camisetas e regatas' repeats the slug 'camisetas-e-regatas'.");
+        File.Exists(Path.Combine(_output, "catalog.json")).ShouldBeFalse();
     }
 
     public void Dispose()
@@ -54,12 +75,15 @@ public sealed class CatalogImporterLimitTests : IDisposable
         }
     }
 
-    private async Task ImportAsync(FixtureHandler handler, params string[] arguments)
+    private async Task ImportAsync(FixtureHandler handler, SeedCatalog? ownLine, params string[] arguments)
     {
         var options = ImportOptions.Parse([.. arguments, "--output", _output]).Value;
         using var http = new HttpClient(handler, disposeHandler: false);
-        await new CatalogImporter(new MercadoLivreClient(http, "test-token", TimeSpan.Zero), TextWriter.Null).ImportAsync(options, TestContext.Current.CancellationToken);
+        await new CatalogImporter(new MercadoLivreClient(http, "test-token", TimeSpan.Zero), TextWriter.Null, ownLine: ownLine).ImportAsync(options, TestContext.Current.CancellationToken);
     }
+
+    private static SeedCatalog OwnLineWith(string category, string product) =>
+        new([new SeedCategory(category, [new SeedProduct(product, "Leve.", new Dictionary<string, string>(), [new SeedSku(new Dictionary<string, string> { ["cor"] = "preto" }, 99.90m)])])]);
 
     private async Task<SeedCatalog> ReadSeedAsync()
     {

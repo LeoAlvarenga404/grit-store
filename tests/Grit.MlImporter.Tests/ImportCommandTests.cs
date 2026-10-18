@@ -104,6 +104,23 @@ public sealed class ImportCommandTests : IDisposable
         handler.Requests.Count(request => request.Url == RecordedCatalog.FirstPage).ShouldBe(3);
     }
 
+    [Fact]
+    public async Task RunAsync_CategoryOfTheOwnLine_Returns1AndCallsNothing()
+    {
+        var ownLine = Path.Combine(_output, "grit", "catalog.json");
+        Directory.CreateDirectory(Path.GetDirectoryName(ownLine)!);
+        await File.WriteAllTextAsync(ownLine, """{"categories": [{"name": "camisetas e regatas", "products": []}]}""", TestContext.Current.CancellationToken);
+        var handler = new FixtureHandler();
+        var error = new StringWriter();
+
+        var exitCode = await ImportCommand.RunAsync(Arguments, "test-token", handler, TextWriter.Null, error, retryDelay: TimeSpan.Zero);
+
+        exitCode.ShouldBe(ImportCommand.InvalidArguments);
+        error.ToString().ShouldContain("GRIT own line");
+        handler.Requests.ShouldBeEmpty();
+        File.Exists(Path.Combine(_output, "catalog.json")).ShouldBeFalse();
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_output))

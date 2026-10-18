@@ -28,6 +28,42 @@ public sealed class SeedSwapTests : IDisposable
         (await File.ReadAllTextAsync(Path.Combine(output, "catalog.json"), TestContext.Current.CancellationToken)).ShouldBe("new");
     }
 
+    [Fact]
+    public void Move_PersistentIOException_TriesFiveTimesThenThrows()
+    {
+        var attempts = 0;
+        var waits = new List<TimeSpan>();
+
+        Should.Throw<IOException>(() => SeedSwap.Move("a", "b", (_, _) => { attempts++; throw new IOException("locked"); }, waits.Add));
+
+        attempts.ShouldBe(5);
+        waits.ShouldBe([TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(500)]);
+    }
+
+    [Fact]
+    public void Move_PersistentUnauthorizedAccess_TriesFiveTimesThenThrows()
+    {
+        var attempts = 0;
+        var waits = new List<TimeSpan>();
+
+        Should.Throw<UnauthorizedAccessException>(() => SeedSwap.Move("a", "b", (_, _) => { attempts++; throw new UnauthorizedAccessException("denied"); }, waits.Add));
+
+        attempts.ShouldBe(5);
+        waits.Count.ShouldBe(4);
+    }
+
+    [Fact]
+    public void Move_UnrelatedFailure_ThrowsAtOnce()
+    {
+        var attempts = 0;
+        var waits = new List<TimeSpan>();
+
+        Should.Throw<ArgumentException>(() => SeedSwap.Move("a", "b", (_, _) => { attempts++; throw new ArgumentException("bad path"); }, waits.Add));
+
+        attempts.ShouldBe(1);
+        waits.ShouldBeEmpty();
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_root))

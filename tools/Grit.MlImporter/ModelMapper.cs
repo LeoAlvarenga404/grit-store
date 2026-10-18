@@ -28,7 +28,7 @@ internal static class ModelMapper
                 .Distinct()
                 .Take(maxPerColor)]))];
 
-    public static Result<SeedProduct> Map(IReadOnlyList<PricedLeaf> leaves, IReadOnlyList<SeedColorImages> images)
+    public static Result<SeedProduct> Map(IReadOnlyList<PricedLeaf> leaves)
     {
         var colored = leaves.Where(leaf => ColorOf(leaf.Product) is not null).ToList();
         if (ColorsOf(colored).Count < MinColors)
@@ -46,7 +46,7 @@ internal static class ModelMapper
         var description = colored
             .Select(leaf => SeedMapper.Clean(leaf.Product.ShortDescription?.Content, SeedMapper.MaxDescriptionLength))
             .FirstOrDefault(text => text.Length > 0) ?? name;
-        return new SeedProduct(name, description, CommonAttributes(colored), Variants(colored), images);
+        return new SeedProduct(name, description, CommonAttributes(colored), Variants(colored));
     }
 
     // Two leaves with the same colour and size are one variant listed twice: the cheaper price wins, in the order first seen.

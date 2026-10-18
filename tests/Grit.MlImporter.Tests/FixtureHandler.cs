@@ -22,9 +22,9 @@ internal sealed class FixtureHandler : HttpMessageHandler
         return this;
     }
 
-    public FixtureHandler Bytes(string url, byte[] bytes)
+    public FixtureHandler Bytes(string url, byte[] bytes, HttpStatusCode status = HttpStatusCode.OK)
     {
-        _responses[url] = () => new HttpResponseMessage(HttpStatusCode.OK) { Content = new ByteArrayContent(bytes) };
+        _responses[url] = () => new HttpResponseMessage(status) { Content = new ByteArrayContent(bytes) };
         return this;
     }
 

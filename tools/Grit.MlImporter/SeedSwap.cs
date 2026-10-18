@@ -70,18 +70,21 @@ internal static class SeedSwap
 
     private static bool Exists(string path) => Directory.Exists(path) || File.Exists(path);
 
-    private static void Move(string source, string destination)
+    private static void Move(string source, string destination) => Move(source, destination, MoveOnce, Thread.Sleep);
+
+    // The seams let a test count attempts and waits without a real locked file.
+    internal static void Move(string source, string destination, Action<string, string> moveOnce, Action<TimeSpan> wait)
     {
         for (var attempt = 1; ; attempt++)
         {
             try
             {
-                MoveOnce(source, destination);
+                moveOnce(source, destination);
                 return;
             }
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException && attempt < MoveAttempts)
             {
-                Thread.Sleep(MoveRetryDelay);
+                wait(MoveRetryDelay);
             }
         }
     }

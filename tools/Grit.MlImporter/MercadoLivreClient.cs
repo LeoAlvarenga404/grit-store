@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace Grit.MlImporter;
 
-internal sealed class MercadoLivreClient(HttpClient http, string accessToken, TimeSpan retryDelay)
+internal sealed class MercadoLivreClient(HttpClient http, string accessToken, TimeSpan retryDelay, Func<TimeSpan, CancellationToken, Task>? wait = null)
 {
     public const int MaxAttempts = 5;
 
@@ -15,6 +15,9 @@ internal sealed class MercadoLivreClient(HttpClient http, string accessToken, Ti
     public static readonly Uri ApiAddress = new("https://api.mercadolibre.com/");
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
+
+    // A seam so tests can capture the waits instead of sleeping 50 s.
+    private readonly Func<TimeSpan, CancellationToken, Task> _wait = wait ?? Task.Delay;
 
     // 429 and the gateway errors are passing states of the API: retried with a growing wait. Anything else ends the run.
     private static readonly HashSet<HttpStatusCode> RetriedStatuses =
@@ -78,7 +81,7 @@ internal sealed class MercadoLivreClient(HttpClient http, string accessToken, Ti
             }
 
             response.Dispose();
-            await Task.Delay(retryDelay * attempt, cancellationToken);
+            await _wait(retryDelay * attempt, cancellationToken);
         }
     }
 

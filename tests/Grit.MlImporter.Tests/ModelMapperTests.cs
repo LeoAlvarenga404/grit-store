@@ -1,5 +1,3 @@
-using Grit.Modules.Catalog.Infrastructure.Seed;
-
 namespace Grit.MlImporter.Tests;
 
 public class ModelMapperTests
@@ -9,7 +7,7 @@ public class ModelMapperTests
     {
         PricedLeaf[] leaves = [Leaf("Preto", "40", 100m), Leaf("Preto", "41", 110m), Leaf("Azul", "40", 120m)];
 
-        var skus = ModelMapper.Map(leaves, []).Value.Skus;
+        var skus = ModelMapper.Map(leaves).Value.Skus;
 
         skus.Select(sku => (sku.Attributes["cor"], sku.Attributes["tamanho"], sku.PriceAmount))
             .ShouldBe([("preto", "40", 100m), ("preto", "41", 110m), ("azul", "40", 120m)]);
@@ -20,7 +18,7 @@ public class ModelMapperTests
     {
         PricedLeaf[] leaves = [Leaf("Preto", "40", 110m), Leaf("Azul", "40", 90m), Leaf("Preto", "40", 100m)];
 
-        var skus = ModelMapper.Map(leaves, []).Value.Skus;
+        var skus = ModelMapper.Map(leaves).Value.Skus;
 
         skus.Select(sku => (sku.Attributes["cor"], sku.PriceAmount)).ShouldBe([("preto", 100m), ("azul", 90m)]);
     }
@@ -28,7 +26,7 @@ public class ModelMapperTests
     [Fact]
     public void Map_OneColor_FailsWithTooFewColors()
     {
-        ModelMapper.Map([Leaf("Preto", "40"), Leaf("Preto", "41")], []).Error.ShouldBe(ModelMapper.TooFewColors);
+        ModelMapper.Map([Leaf("Preto", "40"), Leaf("Preto", "41")]).Error.ShouldBe(ModelMapper.TooFewColors);
     }
 
     [Fact]
@@ -36,7 +34,7 @@ public class ModelMapperTests
     {
         PricedLeaf[] leaves = [Leaf(null, "40", familyName: "Outro"), Leaf("Preto", "40"), Leaf("Azul", "41")];
 
-        var mapped = ModelMapper.Map(leaves, []).Value;
+        var mapped = ModelMapper.Map(leaves).Value;
 
         mapped.Skus.Select(sku => sku.Attributes["cor"]).ShouldBe(["preto", "azul"]);
         mapped.Name.ShouldBe("Tênis Veloz");
@@ -45,7 +43,7 @@ public class ModelMapperTests
     [Fact]
     public void Map_OneColorAndALeafWithoutColor_FailsWithTooFewColors()
     {
-        ModelMapper.Map([Leaf(null, "40"), Leaf("Preto", "41")], []).Error.ShouldBe(ModelMapper.TooFewColors);
+        ModelMapper.Map([Leaf(null, "40"), Leaf("Preto", "41")]).Error.ShouldBe(ModelMapper.TooFewColors);
     }
 
     [Fact]
@@ -53,7 +51,7 @@ public class ModelMapperTests
     {
         PricedLeaf[] leaves = [Leaf("Preto", "40", name: "Tênis Veloz Preto 40", familyName: "Tênis Veloz"), Leaf("Azul", "40")];
 
-        ModelMapper.Map(leaves, []).Value.Name.ShouldBe("Tênis Veloz");
+        ModelMapper.Map(leaves).Value.Name.ShouldBe("Tênis Veloz");
     }
 
     [Fact]
@@ -61,7 +59,7 @@ public class ModelMapperTests
     {
         PricedLeaf[] leaves = [Leaf("Preto", "40", name: "Tênis Veloz Preto 40", familyName: " "), Leaf("Azul", "40")];
 
-        ModelMapper.Map(leaves, []).Value.Name.ShouldBe("Tênis Veloz Preto 40");
+        ModelMapper.Map(leaves).Value.Name.ShouldBe("Tênis Veloz Preto 40");
     }
 
     [Fact]
@@ -69,7 +67,7 @@ public class ModelMapperTests
     {
         PricedLeaf[] leaves = [Leaf("Preto", "40", familyName: "--- ***"), Leaf("Azul", "40")];
 
-        ModelMapper.Map(leaves, []).Error.ShouldBe(SeedMapper.NoName);
+        ModelMapper.Map(leaves).Error.ShouldBe(SeedMapper.NoName);
     }
 
     [Fact]
@@ -82,7 +80,7 @@ public class ModelMapperTests
             Leaf("Azul", "41", extra: [new("BRAND", "Marca", "Grit"), new("MAIN_COLOR", "Cor principal", "Azul"), new("GENDER", "Gênero", "Masculino")]),
         ];
 
-        ModelMapper.Map(leaves, []).Value.Attributes.ShouldBe(new Dictionary<string, string> { ["marca"] = "Grit", ["genero"] = "Masculino" });
+        ModelMapper.Map(leaves).Value.Attributes.ShouldBe(new Dictionary<string, string> { ["marca"] = "Grit", ["genero"] = "Masculino" });
     }
 
     [Fact]
@@ -90,7 +88,7 @@ public class ModelMapperTests
     {
         PricedLeaf[] leaves = [Leaf("Preto", "40", description: " "), Leaf("Azul", "40", description: "Leve e respirável."), Leaf("Azul", "41", description: "Outra descrição.")];
 
-        ModelMapper.Map(leaves, []).Value.Description.ShouldBe("Leve e respirável.");
+        ModelMapper.Map(leaves).Value.Description.ShouldBe("Leve e respirável.");
     }
 
     [Fact]
@@ -98,7 +96,7 @@ public class ModelMapperTests
     {
         PricedLeaf[] leaves = [Leaf("Preto", "40", familyName: "Tênis Veloz"), Leaf("Azul", "40")];
 
-        ModelMapper.Map(leaves, []).Value.Description.ShouldBe("Tênis Veloz");
+        ModelMapper.Map(leaves).Value.Description.ShouldBe("Tênis Veloz");
     }
 
     [Fact]
@@ -106,20 +104,10 @@ public class ModelMapperTests
     {
         PricedLeaf[] leaves = [Leaf("Preto", "40", familyName: new string('a', 250), description: new string('b', 5000)), Leaf("Azul", "40")];
 
-        var mapped = ModelMapper.Map(leaves, []).Value;
+        var mapped = ModelMapper.Map(leaves).Value;
 
         mapped.Name.Length.ShouldBe(SeedMapper.MaxNameLength);
         mapped.Description.Length.ShouldBe(SeedMapper.MaxDescriptionLength);
-    }
-
-    [Fact]
-    public void Map_Images_AreKeptAsGiven()
-    {
-        SeedColorImages[] images = [new("preto", ["veloz-1-1.webp"]), new("azul", ["veloz-2-1.webp"])];
-
-        var mapped = ModelMapper.Map([Leaf("Preto", "40"), Leaf("Azul", "40")], images).Value;
-
-        mapped.Images.ShouldBeSameAs(images);
     }
 
     [Fact]

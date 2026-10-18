@@ -6,8 +6,8 @@ using Grit.Modules.Catalog.Infrastructure.Seed;
 
 namespace Grit.MlImporter;
 
-// Calls are sequential; the client retries 429 and 5xx answers and skips a dead picture, any other failure ends the run.
-internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log, Func<string, byte[], CancellationToken, Task>? writeFile = null)
+// Calls are sequential; the client retries 429, 500, 502, 503 and 504 (5 attempts, 5/10/15/20 s apart) and skips a dead picture; any other failure ends the run.
+internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log, Func<string, byte[], CancellationToken, Task>? writeFile = null, SeedCatalog? ownLine = null)
 {
     // 3 photos x ~3 colours x 10 models x 2 imported categories x ~30 KB: about 6 MB of committed images.
     public const int MaxImagesPerColor = 3;
@@ -26,7 +26,10 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log,
 
     private readonly FamilyReader _families = new(client, log);
 
-    private readonly HashSet<Slug> _productSlugs = [];
+    // An own-line product name is taken from the start, so a model with the same slug is skipped like a repeat.
+    private readonly HashSet<Slug> _productSlugs = [.. (ownLine?.Categories ?? []).SelectMany(category => category.Products).Select(product => Slug.FromName(product.Name).Value)];
+
+    private readonly SeedCatalog _ownLine = ownLine ?? new SeedCatalog([]);
 
     private readonly Dictionary<string, byte[]> _images = [];
 
@@ -50,7 +53,8 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log,
         }
 
         var catalog = new SeedCatalog(categories);
-        CatalogSeeder.Validate(catalog);
+        // The seeder validates both files as one catalogue; checking the same union here keeps a bad seed from being written.
+        CatalogSeeder.Validate(new SeedCatalog([.. catalog.Categories, .. _ownLine.Categories]));
         await WriteAsync(options.OutputDirectory, catalog, cancellationToken);
     }
 
@@ -103,7 +107,7 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log,
         }
 
         var priced = await PriceAsync(leaves, cancellationToken);
-        var mapped = ModelMapper.Map(priced, []);
+        var mapped = ModelMapper.Map(priced);
         if (mapped.IsFailure)
         {
             await log.WriteLineAsync($"  skipped {modelId}: {mapped.Error.Message}");
@@ -113,7 +117,7 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log,
         var slug = Slug.FromName(mapped.Value.Name).Value;
         if (!_productSlugs.Add(slug))
         {
-            await log.WriteLineAsync($"  skipped {modelId}: {slug.Value} already imported");
+            await log.WriteLineAsync($"  skipped {modelId}: {slug.Value} already imported or in the own line");
             return null;
         }
 
@@ -140,7 +144,7 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log,
         return priced;
     }
 
-    // "{slug}-{colour}-{photo}.webp", both 1-based; a colour whose pictures all fail is left without images.
+    // "{slug}-{colour number}-{photo number}.webp", both 1-based, numbering only colours that got pictures; a colour whose pictures all fail is left without images.
     private async Task<List<SeedColorImages>> DownloadImagesAsync(Slug slug, IReadOnlyList<ColorPictures> colors, CancellationToken cancellationToken)
     {
         var groups = new List<SeedColorImages>();
