@@ -4,11 +4,14 @@ A linguagem ubíqua do Grit Store. O termo em português é o usado na conversa 
 
 | Termo | No código | Significado |
 |---|---|---|
-| Categoria | `Category` | Agrupa produtos (ex.: Camping, Corrida). Tem slug único. |
+| Categoria | `Category` | Agrupa produtos (ex.: Tênis, Acessórios). Tem slug único. |
 | Produto | `Product` | O que o cliente vê na vitrine: nome, descrição, categoria, atributos. Só fica público quando tem ao menos um SKU. |
-| SKU (variante) | `Sku` | A unidade vendável de um produto: uma combinação de atributos (cor × tamanho) com preço próprio. Estoque, carrinho e pedido falam em SKU. |
+| SKU (variante) | `Sku` | A unidade vendável de um produto: uma combinação de atributos (cor × tamanho) com preço próprio. Estoque, carrinho e pedido falam em SKU. A cor do SKU escolhe as fotos que a vitrine e o carrinho mostram. |
+| Cor | `cor` / `Sku.Color` | O valor do atributo `cor` de um SKU (`Sku.ColorAttribute`), comparado ao pé da letra (o seed grava em minúsculas). As cores de um produto são as dos seus SKUs; cada uma tem até 8 fotos (ADR 0020). |
+| Imagem do produto | `ProductImage` | Uma foto do produto: a chave no armazenamento e a cor que ela mostra (nula só para SKUs sem cor). Ficam em ordem; a primeira é a capa (ADR 0020). |
+| Linha própria GRIT | `seed/grit/catalog.json` | As quatro categorias de roupa da loja: 12 modelos escritos à mão, com fotos geradas com IA, ao lado do seed importado do Mercado Livre, que não tem roupas (ADR 0021). |
 | Slug | `Slug` | Identificador legível e imutável gerado do nome, usado na URL (ADR 0010). |
-| Atributos | `Attributes` | Pares chave–valor do produto ou do SKU (aro, capacidade, tamanho), em `jsonb`. O atributo do SKU vence o do produto. |
+| Atributos | `Attributes` | Pares chave–valor do produto ou do SKU (marca, gênero, tamanho), em `jsonb`. O atributo do SKU vence o do produto. |
 | Preço | `Money` | Valor em BRL com no máximo duas casas, sem arredondamento (ADR 0001, 0012). |
 | Carrinho | `CustomerBasket` | Linhas (SKU, quantidade, preço visto) de um cliente autenticado, no Redis. |
 | Snapshot de preço | `UnitPrice` na linha | O preço que o cliente viu ao adicionar; o checkout confere com o preço atual. |

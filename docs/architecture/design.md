@@ -4,7 +4,9 @@ Fonte da verdade de todas as decisões do projeto. Fechado em 2026-10-14 numa se
 
 ## 1. Objetivo
 
-E-commerce de esportes e outdoor para portfolio: backend .NET maduro, rápido e fácil de manter, com front Next.js mínimo. Não vai para produção, mas a infraestrutura fica pronta para subir (Aspire gera o compose).
+E-commerce de roupas e tênis esportivos para portfolio: backend .NET maduro, rápido e fácil de manter, com uma vitrine Next.js completa. Não vai para produção, mas a infraestrutura fica pronta para subir (Aspire gera o compose).
+
+- **Emenda 2026-10-17 (ruling UI-STORE, M13).** O nicho deixa de ser "esportes e outdoor" e passa a ser uma loja séria de roupas e calçados esportivos: camping, bike e outdoor saíram. O front deixa de ser mínimo: o M13 entrega a vitrine inteira (seção 11).
 
 ## 2. Arquitetura
 
@@ -60,6 +62,11 @@ E-commerce de esportes e outdoor para portfolio: backend .NET maduro, rápido e 
 
 **Catálogo e busca**
 - Produto com **SKUs** (cor × tamanho), cada SKU com preço e estoque próprios. Atributos heterogêneos por categoria em `jsonb`.
+- **Cores com fotos próprias (emenda 2026-10-17, 13a, ADR 0020).** As cores de um produto são os valores do atributo `cor` dos SKUs. Cada cor tem até 8 fotos, e a primeira imagem da galeria é a capa.
+- **Item da listagem:** o menor preço entre os SKUs que casam com os filtros; `hasPriceRange`, verdadeiro quando esses SKUs têm preços diferentes (a vitrine mostra "a partir de"); e todas as cores, cada uma com a primeira foto dela.
+- **Ordenação da listagem:** `relevance` (padrão), `price_asc` ou `price_desc` (ADR 0013).
+- **Página do produto:** a galeria inteira e uma galeria por cor.
+- O gênero (Masculino, Feminino, Unissex) é uma faceta de atributo do produto (`genero`).
 - **Busca full-text em português:** `tsvector` com dicionário `portuguese`, `unaccent` ("cafe" acha "café"), `pg_trgm` (tolerância a erro de digitação).
 - **Autocomplete** (prefixo + trigram, cache no Redis).
 - **Facetas com contagem:** categoria, faixa de preço, atributos (`Azul (12)`).
@@ -67,6 +74,7 @@ E-commerce de esportes e outdoor para portfolio: backend .NET maduro, rápido e 
 
 **Carrinho**
 - Anônimo, com **merge no login**. **Snapshot de preço**: o checkout avisa se o preço mudou desde que o item entrou no carrinho.
+- A linha mostra a cor, o tamanho e a foto da cor do SKU (emenda 2026-10-17, 13a). Os três são lidos do catálogo a cada leitura, com a URL assinada na hora; o carrinho não guarda nenhum deles.
 
 **Checkout e pedido**
 - **`Idempotency-Key`** no checkout: dois cliques geram um pedido.
@@ -81,7 +89,7 @@ E-commerce de esportes e outdoor para portfolio: backend .NET maduro, rápido e 
 - **Webhook com verificação de assinatura e processamento idempotente** (o Stripe reenvia eventos).
 
 **Admin mínimo**
-- Cadastro de produto/SKU, ajuste de estoque, lista de pedidos com mudança de status, upload de imagens.
+- Cadastro de produto/SKU, ajuste de estoque, lista de pedidos com mudança de status, upload de imagens. O upload escolhe uma das cores dos SKUs do produto (emenda 2026-10-17, 13a).
 
 **Fica para v2:** cupons e promoções, avaliações, frete real por API, parcelamento, notificações por e-mail, wishlist, relatórios, recomendações, devolução e troca, rastreio, Mercado Pago (segunda implementação do `IPaymentGateway`).
 
@@ -89,6 +97,8 @@ E-commerce de esportes e outdoor para portfolio: backend .NET maduro, rápido e 
 
 - **HybridCache** (L1 memória + L2 Redis) com proteção contra stampede e **invalidação por tag** (`catalog`), disparada por um filtro no grupo admin do Catalog depois do commit (emenda 2026-10-17, ADR 0017). **Estoque nunca vai para o cache.**
 - **Sem output caching** (emenda 2026-10-17, ADR 0017): redundante com o HybridCache e congelaria as URLs pré-assinadas das imagens.
+- **Chaves de cache versionadas (emenda 2026-10-17, 13a, ADR 0017).** Quando o registro guardado muda de forma, o tipo da chave ganha uma versão (`product-v2`, `search-page-v2`), para que uma entrada deixada no Redis pela versão anterior nunca seja lida.
+- **Custo de assinatura:** cada item da listagem assina 1 + o número de cores URLs (a capa e a primeira foto de cada cor), contra 1 antes do 13a. Medir no k6.
 - Compiled queries no EF Core onde o perfil mostrar ganho.
 - **k6** em `bench/`: carga no catálogo e no checkout, números (p95, req/s, com e sem cache) publicados no README.
 - **Fora:** CDN, réplicas de leitura (uma linha no README diz onde entrariam), AOT.
@@ -102,17 +112,28 @@ E-commerce de esportes e outdoor para portfolio: backend .NET maduro, rápido e 
 
 ## 11. Front (Next.js)
 
-- **App Router.** UI **mínima** na v1: só o necessário para validar os fluxos. UI/UX completa (Tailwind, shadcn, estado no cliente) é uma fase posterior; a decisão de estilo e estado está em aberto.
+- **App Router.** A vitrine completa chega no M13 (emenda 2026-10-17, ruling UI-STORE), no lugar da UI mínima da v1:
+  - **Tailwind v4 + shadcn**, com os tokens nas variáveis do shadcn;
+  - fonte **Archivo** variável, com o eixo de largura (`wdth`): títulos expandidos em caixa alta, texto normal, preços com algarismos tabulares;
+  - **preto e branco:** fundo branco, tinta `#111111` e cinzas, sem cor de destaque; vermelho e verde só com significado (erro, sucesso);
+  - **sem biblioteca de estado no cliente:** Server Components, Server Actions e filtros na URL; ícones do `lucide-react` e avisos com o `sonner`;
+  - **banners estáticos** em `web/public/banners/`, descritos em `web/lib/banners.ts` (título, link, imagem de desktop e de celular, texto alternativo, tamanho); um arquivo que ainda não existe vira um espaço reservado do mesmo tamanho;
+  - **bolinhas de cor** a partir de um dicionário nome → hex no front (`web/lib/color-swatches.ts`), dividida em duas para "A/B", com a foto da cor quando o nome não está no dicionário;
+  - admin neutro, sem os elementos da vitrine.
 - **Tipos gerados do OpenAPI:** `openapi-typescript` + `openapi-fetch`. `npm run gen:api` regenera; o CI falha se o arquivo gerado estiver desatualizado.
 - Server Components chamam a API direto do servidor (catálogo, SEO). Ações autenticadas passam pelo BFF (seção 7).
 - Convenção TS: kebab-case em pastas e arquivos.
 
 ## 12. Seed
 
-- Nicho **esportes e outdoor**, com variantes cor × tamanho (vestuário, calçados) e atributos técnicos por categoria (barraca: capacidade, peso; bike: aro, marchas; garrafa: litros).
-- **Seed atual:** `seed/catalog.json` gerado pelo importador do Mercado Livre (2026-10-17), com 5 categorias, 37 produtos e 37 SKUs, com imagens versionadas em `seed/`. Quem clona roda sem token nenhum.
-- **Seeder idempotente** (`CatalogSeedService`, só em Development): o AppHost passa o caminho em `Seed:Path`; tudo passa pelo domínio, numa transação só, e o que já existe (por slug) é pulado.
-- **Importador** `tools/Grit.MlImporter` (emenda 2026-10-17, ADR 0019): busca por termo com a categoria da loja na linha de comando (`/products/search`, `/products/{id}`, `/products/{id}/items`), token por `dotnet user-secrets`, imagens WebP de até 800 px. O formato do seed ganha `images` (até 8 `.webp`), e o seeder de Development envia ao S3 as imagens que existirem. Os testes de integração usam uma cópia congelada do seed escrito à mão. Rodar o importador substitui o `seed/` versionado.
+- Nicho **roupas e tênis esportivos** (emenda 2026-10-17, ruling UI-STORE), com variantes cor × tamanho e preço por SKU. Seis categorias: Tênis; Camisetas e regatas; Shorts e bermudas; Calças e leggings; Moletons e jaquetas; Acessórios.
+- **Fonte mista (emenda 2026-10-17, 13a, ADR 0021).** O catálogo do Mercado Livre não tem roupas, então:
+  - **Tênis e Acessórios** vêm do importador do Mercado Livre (domínios `MLB-SNEAKERS`, `MLB-HATS_AND_CAPS` e `MLB-TRAVEL_AND_TRAINING_BAGS`), em `seed/catalog.json` e `seed/images/`;
+  - as quatro categorias de roupa são a **linha própria GRIT**, escrita à mão em `seed/grit/catalog.json`: 12 modelos (3 por categoria), 3 cores × P, M, G e GG = 144 SKUs, um preço por cor, atributos `marca` (GRIT), `genero` e `material`. As fotos, 2 por cor e geradas com IA, ficam em `seed/grit/images/` com o nome `{slug}-{cor}-{1|2}.webp`: `{cor}` é a cor em formato de slug (`azul-marinho`), a foto 1 é a frente e a 2 é o detalhe ou as costas. `seed/grit/raw/` (as folhas brutas da IA) não é versionado.
+- **Seed atual:** <!-- TODO: contagem após a rodada real do importador --> Quem clona roda sem token nenhum.
+- **Formato do seed:** `images: [{ color?, files }]`, com no máximo 8 arquivos `.webp` por cor. `color` é o valor de `cor` dos SKUs; fica de fora só para as fotos de SKUs sem cor.
+- **Seeder idempotente** (`CatalogSeedService`, só em Development): o AppHost passa o caminho em `Seed:Path`, e o seeder também lê `grit/catalog.json` ao lado dele, quando existe. Os dois arquivos são validados como um catálogo só (um slug de categoria ou de produto pertence a um arquivo só) e gravados numa transação só. Tudo passa pelo domínio, o que já existe (por slug) é pulado e uma foto listada que não existe também. Por isso uma foto adicionada depois só aparece com o banco novo (com o AppHost, basta reiniciar).
+- **Importador** `tools/Grit.MlImporter` (emendas 2026-10-17, ADR 0019): busca por termo e domínio, percorre a família de cada resultado e grava um produto da loja por modelo, com até 3 fotos WebP de até 800 px por cor. Substitui só `seed/catalog.json` e `seed/images/`, nunca toca em `seed/grit/` e recusa uma categoria da linha GRIT. Token por `dotnet user-secrets`. Os testes de integração usam uma cópia congelada do seed escrito à mão.
 - **Bogus** (pt_BR): volume de produtos para o k6 com `--Seed:VolumeProducts` (5b).
 
 ## 13. Testes
