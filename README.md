@@ -17,7 +17,7 @@ cd web && npm ci && cd ..
 dotnet run --project src/Grit.AppHost
 ```
 
-O AppHost sobe Postgres, Redis, a API e o Next.js, e abre o dashboard do Aspire. Em Development, a API aplica as migrations, carrega o catálogo de `seed/catalog.json` (Tênis e Acessórios, importados do Mercado Livre) e de `seed/grit/catalog.json` (a linha própria GRIT de roupas: 12 modelos e 144 SKUs) <!-- TODO: contagem após a rodada real do importador --> e dá 10 unidades de estoque para cada SKU. A chave de assinatura do JWT é gerada pelo próprio AppHost: não há segredo para configurar.
+O AppHost sobe Postgres, Redis, a API e o Next.js, e abre o dashboard do Aspire. Em Development, a API aplica as migrations, carrega o catálogo de `seed/catalog.json` (Tênis e Acessórios importados do Mercado Livre: 20 modelos e 145 SKUs) e de `seed/grit/catalog.json` (a linha própria GRIT de roupas: 12 modelos e 144 SKUs) e dá 10 unidades de estoque para cada SKU. A chave de assinatura do JWT é gerada pelo próprio AppHost: não há segredo para configurar.
 
 A loja abre pelo link do recurso `web` no dashboard (a porta muda a cada execução; a 3000 é a do compose). Para testar o checkout: crie uma conta, adicione itens ao carrinho e finalize. Com o gateway fake (padrão), o cartão `tok_decline` é recusado, a reserva de estoque é liberada e o pedido é cancelado; qualquer outro valor, como o `pm_card_visa` que vem preenchido, é aprovado.
 
@@ -76,17 +76,19 @@ A API não sobe com `Payments:Provider=Stripe` sem as duas chaves. O compose sem
 ## Como regerar o seed
 
 O seed tem duas fontes (ADR 0021):
-- `seed/catalog.json` e `seed/images/`: Tênis e Acessórios, gerados pelo importador `tools/Grit.MlImporter` a partir da API de catálogo do Mercado Livre <!-- TODO: contagem após a rodada real do importador -->;
+- `seed/catalog.json` e `seed/images/`: Tênis e Acessórios, gerados pelo importador `tools/Grit.MlImporter` a partir da API de catálogo do Mercado Livre (rodada de 2026-10-17: 10 tênis e 10 bonés, 145 SKUs, 202 fotos);
 - `seed/grit/catalog.json` e `seed/grit/images/`: a linha própria GRIT (camisetas e regatas, shorts e bermudas, calças e leggings, moletons e jaquetas), escrita à mão, porque o catálogo do Mercado Livre não tem roupas.
 
 O importador grava um produto da loja por modelo, com as cores e os tamanhos que têm preço e até 3 fotos WebP por cor (ADR 0019). A busca do catálogo é por palavra-chave e traz itens de outros ramos, então cada fonte leva um domínio do Mercado Livre depois do `@`; o domínio de um termo sai de `/sites/MLB/domain_discovery/search?q=<termo>`. O token precisa ser de usuário (fluxo authorization code), porque o de aplicação recebe 403, e vale 6 horas:
 
 ```bash
 dotnet user-secrets set "MercadoLivre:AccessToken" "<token>" --project tools/Grit.MlImporter
-dotnet run --project tools/Grit.MlImporter --   --category "Tênis=tenis corrida@MLB-SNEAKERS"   --category "Tênis=tenis casual@MLB-SNEAKERS"   --category "Tênis=tenis treino@MLB-SNEAKERS"   --category "Acessórios=bone esportivo@MLB-HATS_AND_CAPS"   --category "Acessórios=mochila esportiva@MLB-TRAVEL_AND_TRAINING_BAGS"   --count 10 --output seed
+dotnet run --project tools/Grit.MlImporter -- --category "Tênis=tenis new balance@MLB-SNEAKERS" --category "Tênis=tenis mizuno@MLB-SNEAKERS" --category "Tênis=tenis puma@MLB-SNEAKERS" --category "Tênis=tenis kappa@MLB-SNEAKERS" --category "Tênis=tenis olympikus@MLB-SNEAKERS" --category "Tênis=tenis masculino@MLB-SNEAKERS" --category "Tênis=tenis corrida@MLB-SNEAKERS" --category "Acessórios=bone aba curva@MLB-HATS_AND_CAPS" --category "Acessórios=mochila academia@MLB-TRAVEL_AND_TRAINING_BAGS" --category "Acessórios=bone trucker@MLB-HATS_AND_CAPS" --category "Acessórios=bolsa academia@MLB-TRAVEL_AND_TRAINING_BAGS" --category "Acessórios=mochila esportiva@MLB-TRAVEL_AND_TRAINING_BAGS" --count 10 --output seed
 ```
 
 - `--count` é o número de modelos por categoria (padrão 10, no máximo 20). Uma categoria repetida tem várias fontes, tentadas na ordem até completar os modelos; se todas acabarem antes, a categoria fica com menos, e o log diz quantos vieram.
+- Poucos produtos do catálogo têm anúncio ativo (preço): numa amostra de 2026-10-17, "tenis olympikus" teve 28 de 50, "tenis new balance" 8, "mochila academia" 14, "bone aba curva" 11, e "tenis nike"/"tenis adidas" nenhum. Por isso as fontes vêm em ordem de rendimento, e cada uma rende no máximo 150 resultados (a busca recusa offset acima de 100).
+- Cada fonte é usada até completar a categoria antes da próxima: na rodada de 2026-10-17 os bonés completaram Acessórios antes das mochilas.
 - A estimativa é de 10 a 25 minutos por categoria. Comece com `--count 2` para conferir o token e o resultado antes da rodada inteira; essa rodada curta também troca o seed, então rode a completa depois.
 - 429, 500, 502, 503 e 504 são repetidos até 5 tentativas, com esperas de 5, 10, 15 e 20 s. Uma foto que falha é pulada.
 - Códigos de saída: 0 ok, 1 argumentos inválidos, 2 sem token, 3 falha HTTP (a mensagem traz a URL que falhou). Uma falha não grava nada.
