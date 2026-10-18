@@ -1867,7 +1867,7 @@
           "Ordering"
         ],
         "summary": "Gets one of the customer's orders with its lines, totals and status timeline.",
-        "description": "Another customer's order answers 404. Each line keeps the product slug, colour and size bought (null on orders placed before they were kept); imageUrl is the current first image of the SKU's colour, signed for an hour, or null.",
+        "description": "Another customer's order answers 404. Each line keeps the product slug, colour and size bought (null on orders placed before they were kept); imageUrl is read from the catalog on each request: the first image of the SKU's colour (for a SKU without colour, the first image without colour), signed for an hour; null when there is none or the SKU is gone.",
         "parameters": [
           {
             "name": "id",
