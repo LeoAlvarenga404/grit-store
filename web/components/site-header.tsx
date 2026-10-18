@@ -1,18 +1,16 @@
-import { ChevronDown, ShoppingBag, User } from "lucide-react";
+import { ChevronDown, User } from "lucide-react";
 import Link from "next/link";
+import { BasketLink } from "@/components/basket-count";
 import { MobileMenu } from "@/components/mobile-menu";
 import { SearchField } from "@/components/search-field";
 import { Wordmark } from "@/components/wordmark";
 import { logOut } from "@/lib/session/actions";
 import { menuShortcuts, storeCategories } from "@/lib/store-navigation";
-import { getVisitor } from "@/lib/storefront";
 
 const navLink = "inline-flex h-16 items-center border-b-2 border-transparent text-[13px] font-semibold tracking-[0.08em] uppercase hover:border-foreground";
 const iconLink = "relative inline-flex size-10 items-center justify-center rounded-full hover:bg-muted";
 
-export async function SiteHeader() {
-  const visitor = await getVisitor();
-
+export function SiteHeader({ isSignedIn }: { isSignedIn: boolean }) {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-screen-2xl items-center gap-4 px-4 lg:gap-8 lg:px-8">
@@ -44,29 +42,23 @@ export async function SiteHeader() {
         </nav>
         <SearchField className="ml-auto hidden w-full max-w-xs md:block" />
         <div className="ml-auto flex items-center gap-1 md:ml-0">
-          {visitor.isSignedIn ? (
-            <form action={logOut}>
-              <button type="submit" className="px-2 text-sm font-medium hover:underline">
-                Sair
-              </button>
-            </form>
+          {isSignedIn ? (
+            <>
+              <Link href="/orders" aria-label="Meus pedidos" className={iconLink}>
+                <User className="size-5" />
+              </Link>
+              <form action={logOut}>
+                <button type="submit" className="px-2 text-sm font-medium hover:underline">
+                  Sair
+                </button>
+              </form>
+            </>
           ) : (
             <Link href="/login" aria-label="Entrar" className={iconLink}>
               <User className="size-5" />
             </Link>
           )}
-          <Link
-            href="/basket"
-            aria-label={`Sacola, ${visitor.basketItemCount} ${visitor.basketItemCount === 1 ? "item" : "itens"}`}
-            className={iconLink}
-          >
-            <ShoppingBag className="size-5" />
-            {visitor.basketItemCount > 0 && (
-              <span className="absolute top-0.5 right-0.5 flex min-w-4 items-center justify-center rounded-full bg-foreground px-1 text-[10px] leading-4 font-semibold text-background tabular-nums">
-                {visitor.basketItemCount}
-              </span>
-            )}
-          </Link>
+          <BasketLink className={iconLink} />
         </div>
       </div>
     </header>

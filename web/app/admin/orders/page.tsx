@@ -2,7 +2,7 @@ import Link from "next/link";
 import { api } from "@/lib/api/client";
 import { callApi } from "@/lib/api/call-api";
 import { formatDateTime, formatPrice } from "@/lib/format";
-import { statusLabel } from "@/app/orders/order-labels";
+import { orderStatusLabel } from "@/lib/order-labels";
 import { shipOrder } from "./actions";
 
 const statuses = ["Placed", "Confirmed", "Shipped", "Cancelled"];
@@ -39,7 +39,7 @@ export default async function AdminOrdersPage({
             <option value="">Todas</option>
             {statuses.map((value) => (
               <option key={value} value={value}>
-                {statusLabel(value)}
+                {orderStatusLabel(value)}
               </option>
             ))}
           </select>
@@ -61,7 +61,7 @@ export default async function AdminOrdersPage({
             <tr key={order.id}>
               <td>{order.number}</td>
               <td>{formatDateTime(order.placedAt)}</td>
-              <td>{statusLabel(order.status)}</td>
+              <td>{orderStatusLabel(order.status)}</td>
               <td>{formatPrice(order.totalAmount)}</td>
               <td>
                 {order.status === "Confirmed" && (

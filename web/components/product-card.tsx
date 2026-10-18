@@ -3,30 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { ColorSwatch } from "@/components/color-swatch";
+import type { components } from "@/lib/api/schema";
 import { cn } from "@/lib/cn";
-import { swatchFor } from "@/lib/color-swatches";
 import { formatPrice } from "@/lib/format";
 
-type Product = {
-  slug: string;
-  name: string;
-  priceAmount: number;
-  hasPriceRange?: boolean;
-  imageUrl: null | string;
-  colors?: { name: string; imageUrl: null | string }[];
-};
+type Product = Pick<components["schemas"]["ProductSummaryResponse"], "slug" | "name" | "priceAmount" | "hasPriceRange" | "imageUrl" | "colors">;
 
 const maxSwatches = 5;
 
-function Swatch({ name, imageUrl }: { name: string; imageUrl: null | string }) {
-  const swatch = swatchFor(name);
-  const background = swatch ?? (imageUrl ? `center / cover url("${imageUrl}")` : "#d4d4d4");
-  return <span aria-hidden="true" className="block size-3.5 rounded-full ring-1 ring-black/15" style={{ background }} />;
-}
-
 // Seller photos have white backgrounds of uneven size: contain them on a light grey 4:5 tile so the grid stays even.
 export function ProductCard({ product, className }: { product: Product; className?: string }) {
-  const colors = product.colors ?? [];
+  const colors = product.colors;
   const [activeImage, setActiveImage] = useState(product.imageUrl);
   const href = `/products/${product.slug}`;
 
@@ -58,7 +46,7 @@ export function ProductCard({ product, className }: { product: Product; classNam
                 onFocus={() => color.imageUrl && setActiveImage(color.imageUrl)}
                 className="flex size-6 items-center justify-center rounded-full hover:ring-1 hover:ring-foreground"
               >
-                <Swatch name={color.name} imageUrl={color.imageUrl} />
+                <ColorSwatch name={color.name} imageUrl={color.imageUrl} />
               </button>
             </li>
           ))}

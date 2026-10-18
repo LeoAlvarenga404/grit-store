@@ -2,7 +2,7 @@ import Link from "next/link";
 import { api } from "@/lib/api/client";
 import { callApi } from "@/lib/api/call-api";
 import { formatDateTime, formatPrice } from "@/lib/format";
-import { statusLabel } from "./order-labels";
+import { orderStatusLabel } from "@/lib/order-labels";
 
 export default async function OrdersPage() {
   const { data: orders, response } = await callApi((headers) => api.GET("/api/v1/orders", { headers }));
@@ -32,7 +32,7 @@ export default async function OrdersPage() {
                   <Link href={`/orders/${order.id}`}>{order.number}</Link>
                 </td>
                 <td>{formatDateTime(order.placedAt)}</td>
-                <td>{statusLabel(order.status)}</td>
+                <td>{orderStatusLabel(order.status)}</td>
                 <td>{formatPrice(order.totalAmount)}</td>
               </tr>
             ))}

@@ -40,7 +40,7 @@ export function BannerImage({
       width={widthInPixels}
       height={heightInPixels}
       sizes={sizes}
-      priority={isPriority}
+      preload={isPriority}
       className={cn("object-cover", className)}
     />
   );

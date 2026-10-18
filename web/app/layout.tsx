@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo } from "next/font/google";
 import type { ReactNode } from "react";
-import { AnnouncementBar } from "@/components/announcement-bar";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const archivo = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-archivo" });
@@ -13,14 +11,13 @@ export const metadata: Metadata = {
   description: "Roupas e tênis esportivos.",
 };
 
+// The storefront chrome lives in app/(store)/layout.tsx, so the admin and the 404/error pages render without it.
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="pt-BR" className={archivo.variable}>
       <body className="flex min-h-dvh flex-col">
-        <AnnouncementBar />
-        <SiteHeader />
-        <div className="flex-1">{children}</div>
-        <SiteFooter />
+        {children}
+        <Toaster position="top-center" containerAriaLabel="Notificações" />
       </body>
     </html>
   );

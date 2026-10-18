@@ -1,4 +1,9 @@
-export const flatShippingLabel = "R$ 19,90";
+import { formatPrice } from "@/lib/format";
+
+// Same flat rate as Ordering's Order.FlatShipping: the API adds it to every order total.
+export const flatShippingAmount = 19.9;
+
+export const flatShippingLabel = formatPrice(flatShippingAmount);
 
 // The six store categories are fixed by the catalogue ruling (UI-STORE); their banners are named after the slug.
 export const storeCategories = [

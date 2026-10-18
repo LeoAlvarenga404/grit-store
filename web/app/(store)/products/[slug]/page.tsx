@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { api } from "@/lib/api/client";
 import { formatPrice } from "@/lib/format";
-import { addToBasket } from "@/app/basket/actions";
+import { addToBasket } from "@/app/(store)/basket/actions";
 
 const errorMessages: Record<string, string> = {
   "basket.quantity_limit": "No máximo 10 unidades por item.",

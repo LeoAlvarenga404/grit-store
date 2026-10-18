@@ -1,7 +1,8 @@
+import type { components } from "@/lib/api/schema";
 import { SectionHeading } from "@/components/home/section-heading";
 import { ProductCard } from "@/components/product-card";
 
-type Product = { id: string; slug: string; name: string; priceAmount: number; hasPriceRange: boolean; imageUrl: null | string; colors: { name: string; imageUrl: null | string }[] };
+type Product = components["schemas"]["ProductSummaryResponse"];
 
 export function ProductGridSection({ id, title, href, products }: { id: string; title: string; href: string; products: Product[] }) {
   if (products.length === 0) return null;

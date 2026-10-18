@@ -76,3 +76,16 @@ export const promoBanners: Banner[] = [
 ];
 
 export const categoryCardImage = (slug: string) => `category-${slug}.webp`;
+
+// Top banner of a store category in the catalog (briefing: 1920×400 desktop, 1080×540 mobile).
+export const catalogBanner = (slug: string) => ({
+  desktopImage: `catalog-${slug}-desktop.webp`,
+  mobileImage: `catalog-${slug}-mobile.webp`,
+});
+
+export const authBanner = {
+  file: "auth.webp",
+  alt: "Atleta em pausa durante o treino",
+  widthInPixels: 960,
+  heightInPixels: 1200,
+};

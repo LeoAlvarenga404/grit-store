@@ -11,7 +11,7 @@ const cancellationReasonLabels: Record<string, string> = {
   customer_request: "a seu pedido",
 };
 
-export function statusLabel(status: string): string {
+export function orderStatusLabel(status: string): string {
   return statusLabels[status] ?? status;
 }
 

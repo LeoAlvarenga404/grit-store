@@ -4,7 +4,7 @@ import { api } from "@/lib/api/client";
 import { callApi } from "@/lib/api/call-api";
 import { formatDateTime, formatPrice } from "@/lib/format";
 import { cancelOrder } from "../actions";
-import { cancellationReasonLabel, statusLabel } from "../order-labels";
+import { cancellationReasonLabel, orderStatusLabel } from "@/lib/order-labels";
 
 const errorMessages: Record<string, string> = {
   "ordering.order_not_cancellable": "Só pedidos confirmados podem ser cancelados.",
@@ -40,7 +40,7 @@ export default async function OrderPage({
         </p>
       )}
       <p aria-live="polite">
-        Situação: <strong>{statusLabel(order.status)}</strong>
+        Situação: <strong>{orderStatusLabel(order.status)}</strong>
         {order.cancellationReason && ` (${cancellationReasonLabel(order.cancellationReason)})`}
       </p>
       <table>
@@ -72,7 +72,7 @@ export default async function OrderPage({
       <ol className="timeline">
         {order.history.map((change) => (
           <li key={`${change.status}-${change.occurredAt}`}>
-            {statusLabel(change.status)} em {formatDateTime(change.occurredAt)}
+            {orderStatusLabel(change.status)} em {formatDateTime(change.occurredAt)}
           </li>
         ))}
       </ol>
