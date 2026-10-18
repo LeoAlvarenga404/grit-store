@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { AuthShell } from "@/components/auth-shell";
+import { ErrorMessage } from "@/components/error-message";
+import { SubmitButton } from "@/components/submit-button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { register } from "@/lib/session/actions";
+
+export const metadata: Metadata = { title: "Criar conta" };
 
 const errorMessages: Record<string, string> = {
   "identity.email_taken": "Este e-mail já tem uma conta.",
@@ -11,21 +19,14 @@ export default async function RegisterPage({ searchParams }: { searchParams: Pro
   const { error } = await searchParams;
 
   return (
-    <main className="legacy narrow">
-      <h1>Criar conta</h1>
-      {error && (
-        <p role="alert" className="error">
-          {errorMessages[error] ?? "Não foi possível criar a conta. Tente de novo."}
-        </p>
-      )}
-      <form action={register} className="stack">
-        <label>
-          E-mail
-          <input name="email" type="email" autoComplete="email" required />
-        </label>
-        <label>
-          Senha
-          <input
+    <AuthShell title="Criar conta" subtitle="Leva um minuto: e-mail e senha.">
+      {error && <ErrorMessage className="mb-6">{errorMessages[error] ?? "Não foi possível criar a conta. Tente de novo."}</ErrorMessage>}
+      <form action={register} className="space-y-5">
+        <div className="space-y-2"><Label htmlFor="email">E-mail</Label><Input id="email" name="email" type="email" autoComplete="email" required className="h-11" /></div>
+        <div className="space-y-2">
+          <Label htmlFor="password">Senha</Label>
+          <Input
+            id="password"
             name="password"
             type="password"
             autoComplete="new-password"
@@ -33,16 +34,13 @@ export default async function RegisterPage({ searchParams }: { searchParams: Pro
             maxLength={128}
             required
             aria-describedby="password-hint"
+            className="h-11"
           />
-        </label>
-        <p id="password-hint" className="hint">
-          De 8 a 128 caracteres.
-        </p>
-        <button type="submit">Criar conta</button>
+          <p id="password-hint" className="text-xs text-muted-foreground">De 8 a 128 caracteres.</p>
+        </div>
+        <SubmitButton size="lg" className="w-full" pendingLabel="Criando conta…">Criar conta</SubmitButton>
       </form>
-      <p>
-        Já tem conta? <Link href="/login">Entre</Link>.
-      </p>
-    </main>
+      <p className="mt-6 text-center text-sm text-muted-foreground">Já tem conta? <Link href="/login" className="font-medium text-foreground underline underline-offset-4">Entrar</Link></p>
+    </AuthShell>
   );
 }

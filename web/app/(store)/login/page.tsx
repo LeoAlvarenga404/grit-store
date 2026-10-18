@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { AuthShell } from "@/components/auth-shell";
+import { ErrorMessage } from "@/components/error-message";
+import { SubmitButton } from "@/components/submit-button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { logIn } from "@/lib/session/actions";
+
+export const metadata: Metadata = { title: "Entrar" };
 
 const errorMessages: Record<string, string> = {
   "identity.invalid_credentials": "E-mail ou senha incorretos.",
@@ -12,27 +20,14 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const { error } = await searchParams;
 
   return (
-    <main className="legacy narrow">
-      <h1>Entrar</h1>
-      {error && (
-        <p role="alert" className="error">
-          {errorMessages[error] ?? "Não foi possível entrar. Tente de novo."}
-        </p>
-      )}
-      <form action={logIn} className="stack">
-        <label>
-          E-mail
-          <input name="email" type="email" autoComplete="email" required />
-        </label>
-        <label>
-          Senha
-          <input name="password" type="password" autoComplete="current-password" required />
-        </label>
-        <button type="submit">Entrar</button>
+    <AuthShell title="Entrar" subtitle="Acesse sua conta para ver a sacola e os pedidos.">
+      {error && <ErrorMessage className="mb-6">{errorMessages[error] ?? "Não foi possível entrar. Tente de novo."}</ErrorMessage>}
+      <form action={logIn} className="space-y-5">
+        <div className="space-y-2"><Label htmlFor="email">E-mail</Label><Input id="email" name="email" type="email" autoComplete="email" required className="h-11" /></div>
+        <div className="space-y-2"><Label htmlFor="password">Senha</Label><Input id="password" name="password" type="password" autoComplete="current-password" required className="h-11" /></div>
+        <SubmitButton size="lg" className="w-full" pendingLabel="Entrando…">Entrar</SubmitButton>
       </form>
-      <p>
-        Não tem conta? <Link href="/register">Crie uma</Link>.
-      </p>
-    </main>
+      <p className="mt-6 text-center text-sm text-muted-foreground">Não tem conta? <Link href="/register" className="font-medium text-foreground underline underline-offset-4">Criar conta</Link></p>
+    </AuthShell>
   );
 }
