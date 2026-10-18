@@ -67,6 +67,26 @@ public sealed class CatalogImporterLimitTests : IDisposable
         File.Exists(Path.Combine(_output, "catalog.json")).ShouldBeFalse();
     }
 
+    [Fact]
+    public async Task ImportAsync_SourceLongerThanTheOffsetCap_MovesToTheNextSourceAfterOffset100()
+    {
+        var handler = RecordedCatalog.Handler();
+        foreach (var offset in new[] { 0, 50, 100, 150, 200, 250, 300, 350, 400, 450 })
+        {
+            handler.Json(RecordedCatalog.SearchUrl("tenis%20infinito", offset, "MLB-SNEAKERS"), "search-endless.json");
+        }
+
+        await ImportAsync(handler, null,
+            "--category", "Tênis=tenis infinito@MLB-SNEAKERS",
+            "--category", RecordedCatalog.SneakersCategory,
+            "--count", "1");
+
+        var urls = handler.Requests.Select(request => request.Url).ToList();
+        urls.ShouldContain(RecordedCatalog.SearchUrl("tenis%20infinito", 100, "MLB-SNEAKERS"));
+        urls.ShouldNotContain(RecordedCatalog.SearchUrl("tenis%20infinito", 150, "MLB-SNEAKERS"));
+        (await ReadSeedAsync()).Categories.ShouldHaveSingleItem().Products.ShouldHaveSingleItem().Name.ShouldBe("Tênis Veloz Grit");
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_output))

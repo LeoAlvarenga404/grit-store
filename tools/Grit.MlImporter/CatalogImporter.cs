@@ -12,8 +12,9 @@ internal sealed class CatalogImporter(MercadoLivreClient client, TextWriter log,
     // 3 photos x ~3 colours x 10 models x 2 imported categories x ~30 KB: about 6 MB of committed images.
     public const int MaxImagesPerColor = 3;
 
-    // ponytail: at most 10 search pages per source, then the next source; widen it if a category comes out short.
-    public const int MaxSearchOffset = 500;
+    // /products/search rejects an offset above 100 (400 Bad Request), so a source gives at most three pages
+    // (offsets 0, 50 and 100) before the next source is tried.
+    public const int MaxSearchOffset = 150;
 
     // The seeder reads the web defaults; accents stay readable in the committed file.
     private static readonly JsonSerializerOptions SeedJsonOptions = new(JsonSerializerDefaults.Web)
