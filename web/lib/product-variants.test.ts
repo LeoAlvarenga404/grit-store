@@ -1,6 +1,16 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { galleryOf, isSingleOption, lowestPrice, productDetails, selectColor, sizeOptions, skusOfColor } from "./product-variants.ts";
+import {
+  galleryOf,
+  isSingleOption,
+  lowestPrice,
+  productDetails,
+  productHref,
+  selectColor,
+  sizeOptions,
+  skusOfColor,
+  variantLabel,
+} from "./product-variants.ts";
 
 const sku = (id: string, attributes: Record<string, string>, priceAmount = 219.9) => ({ id, attributes, priceAmount, priceCurrency: "BRL" });
 const colors = [
@@ -51,4 +61,16 @@ test("productDetails humanises keys and hides seller bookkeeping", () => {
     { label: "Materiais da sola", value: "EVA" },
     { label: "Marca", value: "GRIT" },
   ]);
+});
+
+test("variantLabel names the colour, every word capitalised, and the size", () => {
+  assert.equal(variantLabel("azul marinho", "M"), "Cor: Azul Marinho · Tamanho: M");
+  assert.equal(variantLabel("preto/branco", null), "Cor: Preto/Branco");
+  assert.equal(variantLabel(null, "42"), "Tamanho: 42");
+  assert.equal(variantLabel(null, null), "");
+});
+
+test("productHref opens the product on the line's colour, encoded for the URL", () => {
+  assert.equal(productHref("tenis-corrida", "off white"), "/products/tenis-corrida?cor=off%20white");
+  assert.equal(productHref("tenis-corrida", null), "/products/tenis-corrida");
 });

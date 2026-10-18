@@ -20,7 +20,8 @@ export function ProductGrid({ query, initialProducts, initialCursor }: { query: 
   function loadMore() {
     if (!cursor) return;
     startTransition(async () => {
-      const page = await loadMoreProducts(query, cursor);
+      // A network failure rejects the Server Function; caught here it shows the retry message instead of the error page, and the cursor stays for the retry.
+      const page = await loadMoreProducts(query, cursor).catch(() => null);
       startTransition(() => {
         setHasFailed(!page);
         if (!page) return;

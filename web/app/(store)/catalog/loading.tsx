@@ -13,7 +13,7 @@ export default function Loading() {
           </div>
         ))}
       </div>
-      <span className="sr-only">Carregando produtos…</span>
+      <span role="status" className="sr-only">Carregando produtos…</span>
     </div>
   );
 }

@@ -55,3 +55,16 @@ export function productDetails(attributes: Record<string, string>): { label: str
     .filter(([key]) => !hiddenDetails.has(key))
     .map(([key, value]) => ({ label: key.charAt(0).toUpperCase() + key.slice(1).replaceAll("-", " "), value }));
 }
+
+// Colour values are stored in lowercase (ADR 0020); every screen shows each word capitalised: "azul marinho" → "Azul Marinho", "preto/branco" → "Preto/Branco".
+export function colorLabel(color: string): string {
+  return color.replace(/(^|[\s/])\S/g, (wordStart) => wordStart.toUpperCase());
+}
+
+export function variantLabel(color: string | null, size: string | null): string {
+  return [color && `Cor: ${colorLabel(color)}`, size && `Tamanho: ${size}`].filter(Boolean).join(" · ");
+}
+
+export function productHref(slug: string, color: string | null): string {
+  return color ? `/products/${slug}?cor=${encodeURIComponent(color)}` : `/products/${slug}`;
+}

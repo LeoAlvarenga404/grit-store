@@ -4,18 +4,19 @@ import Link from "next/link";
 import type { components } from "@/lib/api/schema";
 import { cn } from "@/lib/cn";
 import { formatPrice } from "@/lib/format";
+import { productHref, variantLabel } from "@/lib/product-variants";
 import { changeQuantity, removeLine } from "./actions";
 
 type Line = components["schemas"]["BasketLineResponse"];
 
 export function BasketLine({ line }: { line: Line }) {
   const unitPrice = line.currentUnitPriceAmount ?? line.unitPriceAmount;
-  const productHref = line.color ? `/products/${line.productSlug}?cor=${encodeURIComponent(line.color)}` : `/products/${line.productSlug}`;
-  const variant = [line.color && `Cor: ${line.color}`, line.size && `Tamanho: ${line.size}`].filter(Boolean).join(" · ");
+  const href = productHref(line.productSlug, line.color);
+  const variant = variantLabel(line.color, line.size);
 
   return (
     <li className={cn("flex gap-4 py-6", !line.isAvailable && "opacity-70")}>
-      <Link href={productHref} className="relative aspect-[4/5] w-24 shrink-0 overflow-hidden bg-muted sm:w-28" tabIndex={-1} aria-hidden="true">
+      <Link href={href} className="relative aspect-[4/5] w-24 shrink-0 overflow-hidden bg-muted sm:w-28" tabIndex={-1} aria-hidden="true">
         {line.imageUrl ? (
           <Image src={line.imageUrl} alt="" fill sizes="112px" className="object-contain p-2 mix-blend-multiply" unoptimized />
         ) : (
@@ -27,10 +28,10 @@ export function BasketLine({ line }: { line: Line }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <Link href={productHref} className="font-medium hover:underline">
+            <Link href={href} className="font-medium hover:underline">
               {line.productName}
             </Link>
-            {variant && <p className="mt-1 text-sm text-muted-foreground first-letter:uppercase">{variant}</p>}
+            {variant && <p className="mt-1 text-sm text-muted-foreground">{variant}</p>}
             <p className="mt-1 text-sm text-muted-foreground tabular-nums">{formatPrice(unitPrice)} cada</p>
           </div>
           <p className="font-semibold tabular-nums">{formatPrice(unitPrice * line.quantity)}</p>

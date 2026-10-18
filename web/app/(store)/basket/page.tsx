@@ -22,11 +22,14 @@ export default async function BasketPage({ searchParams }: { searchParams: Promi
   const { error } = await searchParams;
   const { data: basket, response } = await callApi((headers) => api.GET("/api/v1/basket", { headers }));
   if (!basket) throw new Error(`The basket answered ${response.status}.`);
+  const errorText = error && (errorMessages[error] ?? "Não foi possível alterar a sacola. Tente de novo.");
 
+  // A stale quantity form can empty the basket and come back with an error, so the empty state still shows it.
   if (basket.lines.length === 0) {
     return (
       <main className="mx-auto max-w-screen-2xl px-4 lg:px-8">
         <h1 className="sr-only">Sacola</h1>
+        {errorText && <ErrorMessage className="mx-auto mt-10 max-w-md">{errorText}</ErrorMessage>}
         <EmptyState
           icon={ShoppingBag}
           title="Sua sacola está vazia"
@@ -47,7 +50,7 @@ export default async function BasketPage({ searchParams }: { searchParams: Promi
       <p className="mt-2 text-sm text-muted-foreground">
         {itemCount} {itemCount === 1 ? "item" : "itens"}
       </p>
-      {error && <ErrorMessage className="mt-6">{errorMessages[error] ?? "Não foi possível alterar a sacola. Tente de novo."}</ErrorMessage>}
+      {errorText && <ErrorMessage className="mt-6">{errorText}</ErrorMessage>}
       <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_24rem]">
         <ul className="divide-y border-y">
           {basket.lines.map((line) => (

@@ -1,7 +1,7 @@
 import type { components, paths } from "@/lib/api/schema";
 
 export type SearchQuery = NonNullable<paths["/api/v1/catalog/products"]["get"]["parameters"]["query"]>;
-export type FacetQuery = NonNullable<paths["/api/v1/catalog/facets"]["get"]["parameters"]["query"]>;
+type FacetQuery = NonNullable<paths["/api/v1/catalog/facets"]["get"]["parameters"]["query"]>;
 type PriceRange = components["schemas"]["PriceFacetResponse"];
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -14,7 +14,7 @@ export type Filters = {
   sort?: string;
 };
 
-export const productsPerPage = 24;
+const productsPerPage = 24;
 
 export const sortOptions = [
   { value: "relevance", label: "Relevância" },

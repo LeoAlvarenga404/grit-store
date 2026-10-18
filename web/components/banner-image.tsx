@@ -25,8 +25,8 @@ export function BannerImage({
 }) {
   if (!existsSync(path.join(bannersFolder, file))) {
     return (
-      <div aria-hidden="true" className={cn("flex items-start justify-end bg-neutral-300 p-3", className)}>
-        <span className="font-mono text-[11px] text-neutral-600">
+      <div aria-hidden="true" className={cn("flex items-start justify-end bg-input p-3", className)}>
+        <span className="font-mono text-[11px] text-muted-foreground">
           {file} · {widthInPixels}×{heightInPixels}
         </span>
       </div>

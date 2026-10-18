@@ -15,7 +15,7 @@ export default function Loading() {
           <Skeleton className="mt-8 h-14 w-full" />
         </div>
       </div>
-      <span className="sr-only">Carregando produto…</span>
+      <span role="status" className="sr-only">Carregando produto…</span>
     </main>
   );
 }

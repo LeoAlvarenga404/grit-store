@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import Link from "next/link";
 import type { components } from "@/lib/api/schema";
 import { formatPrice } from "@/lib/format";
+import { colorLabel } from "@/lib/product-variants";
 import { attributeGroups } from "./filter-panel";
 import { catalogHref, toggleAttribute, type Filters } from "./catalog-href";
 
@@ -21,7 +22,7 @@ export function ActiveFilters({ filters, facets }: { filters: Filters; facets: F
           href={chip.href}
           scroll={false}
           aria-label={`Remover filtro ${chip.label}`}
-          className="inline-flex h-9 items-center gap-2 rounded-full border px-3 text-sm hover:border-foreground"
+          className="inline-flex h-10 items-center gap-2 rounded-full border px-3 text-sm hover:border-foreground"
         >
           {chip.label}
           <X aria-hidden="true" className="size-3.5" />
@@ -31,7 +32,7 @@ export function ActiveFilters({ filters, facets }: { filters: Filters; facets: F
         <Link
           href={catalogHref(filters, { category: undefined, minPrice: undefined, maxPrice: undefined, attributes: [] })}
           scroll={false}
-          className="text-sm underline underline-offset-4"
+          className="inline-flex min-h-10 items-center text-sm underline underline-offset-4"
         >
           Limpar filtros
         </Link>
@@ -75,7 +76,7 @@ function attributeChips(filters: Filters): Chip[] {
     const title = attributeGroups.find((group) => group.key === key)?.title ?? key;
     return {
       id: pair,
-      label: `${title}: ${value}`,
+      label: `${title}: ${key === "cor" ? colorLabel(value) : value}`,
       href: catalogHref(filters, { attributes: toggleAttribute(filters, key, value) }),
     };
   });

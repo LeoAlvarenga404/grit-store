@@ -1,9 +1,11 @@
+import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ColorSwatch } from "@/components/color-swatch";
 import type { components } from "@/lib/api/schema";
 import { cn } from "@/lib/cn";
 import { formatPrice } from "@/lib/format";
+import { colorLabel } from "@/lib/product-variants";
 import { compareSizes } from "@/lib/sizes";
 import { attributeValue, catalogHref, priceRangeHref, toggleAttribute, type Filters } from "./catalog-href";
 
@@ -17,7 +19,7 @@ export const attributeGroups = [
   { key: "marca", title: "Marca" },
 ];
 
-export function priceRangeLabel(range: { minAmount: number; maxAmount: number | null }): string {
+function priceRangeLabel(range: { minAmount: number; maxAmount: number | null }): string {
   return range.maxAmount === null
     ? `A partir de ${formatPrice(range.minAmount)}`
     : `${formatPrice(range.minAmount)} a ${formatPrice(range.maxAmount)}`;
@@ -102,10 +104,10 @@ function ColorValues({ filters, groupKey, title, values }: AttributeProps) {
                 href={catalogHref(filters, { attributes: toggleAttribute(filters, groupKey, item.value) })}
                 scroll={false}
                 aria-current={isActive ? "true" : undefined}
-                className="flex min-h-9 items-center gap-2 text-sm capitalize"
+                className="flex min-h-10 items-center gap-2 text-sm"
               >
                 <ColorSwatch name={item.value} imageUrl={null} className={cn("size-5", isActive && "ring-2 ring-foreground ring-offset-2")} />
-                {item.value}
+                {colorLabel(item.value)}
                 <span className="text-muted-foreground tabular-nums">({item.count})</span>
               </Link>
             </li>
@@ -147,8 +149,11 @@ function SizeValues({ filters, groupKey, title, values }: AttributeProps) {
 
 function FacetGroup({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <details open className="border-b pb-6">
-      <summary className="text-eyebrow cursor-pointer list-none py-4">{title}</summary>
+    <details open className="group/facet border-b pb-6">
+      <summary className="text-eyebrow flex cursor-pointer list-none items-center justify-between py-4 [&::-webkit-details-marker]:hidden">
+        {title}
+        <ChevronDown aria-hidden="true" className="size-4 transition-transform group-open/facet:rotate-180" />
+      </summary>
       {children}
     </details>
   );
@@ -160,7 +165,7 @@ function FacetLink({ href, isActive, label, count }: { href: string; isActive: b
       href={href}
       scroll={false}
       aria-current={isActive ? "true" : undefined}
-      className={cn("flex min-h-9 items-center justify-between gap-2 text-sm hover:underline", isActive && "font-semibold")}
+      className={cn("flex min-h-10 items-center justify-between gap-2 text-sm hover:underline", isActive && "font-semibold")}
     >
       {label}
       <span className="text-muted-foreground tabular-nums">({count})</span>

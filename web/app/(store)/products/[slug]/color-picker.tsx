@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ColorSwatch } from "@/components/color-swatch";
 import type { components } from "@/lib/api/schema";
 import { cn } from "@/lib/cn";
+import { colorLabel, productHref } from "@/lib/product-variants";
 
 type Color = components["schemas"]["GetProductBySlugColorResponse"];
 
@@ -13,7 +14,7 @@ export function ColorPicker({ slug, colors, selected }: { slug: string; colors: 
   return (
     <div>
       <p className="text-sm">
-        <span className="font-semibold">Cor:</span> <span className="capitalize">{selected}</span>
+        <span className="font-semibold">Cor:</span> {selected && colorLabel(selected)}
       </p>
       <ul className="mt-3 flex flex-wrap gap-2">
         {colors.map((color) => {
@@ -21,7 +22,7 @@ export function ColorPicker({ slug, colors, selected }: { slug: string; colors: 
           return (
             <li key={color.name}>
               <Link
-                href={`/products/${slug}?cor=${encodeURIComponent(color.name)}`}
+                href={productHref(slug, color.name)}
                 replace
                 scroll={false}
                 aria-label={`Cor ${color.name}`}

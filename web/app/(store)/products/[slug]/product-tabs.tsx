@@ -1,14 +1,16 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { productDetails } from "@/lib/product-variants";
 
-const trigger = "flex-none rounded-none px-0 pb-3 text-sm font-semibold tracking-[0.08em] uppercase";
+// The tabs primitive sets the list height and the underline offset under the group-data orientation variant, so the overrides use the same variant.
+const trigger =
+  "h-11 flex-none rounded-none px-0 py-0 text-sm font-semibold tracking-[0.08em] uppercase group-data-[orientation=horizontal]/tabs:after:bottom-[-2px]";
 
 export function ProductTabs({ description, attributes }: { description: string; attributes: Record<string, string> }) {
   const details = productDetails(attributes);
 
   return (
     <Tabs defaultValue="description" className="mt-16 max-w-3xl">
-      <TabsList variant="line" className="h-auto w-full justify-start gap-8 border-b p-0">
+      <TabsList variant="line" className="w-full justify-start gap-8 border-b p-0 group-data-[orientation=horizontal]/tabs:h-auto">
         <TabsTrigger value="description" className={trigger}>
           Descrição
         </TabsTrigger>
