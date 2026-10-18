@@ -1,10 +1,20 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import { ErrorMessage } from "@/components/error-message";
+import { OrderStatusBadge } from "@/components/order-status-badge";
+import { PriceSummary } from "@/components/price-summary";
+import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api/client";
 import { callApi } from "@/lib/api/call-api";
-import { formatDateTime, formatPrice } from "@/lib/format";
-import { cancelOrder } from "../actions";
-import { cancellationReasonLabel, orderStatusLabel } from "@/lib/order-labels";
+import { formatDateTime } from "@/lib/format";
+import { CancelOrderDialog } from "./cancel-order-dialog";
+import { OrderLineItem } from "./order-line-item";
+import { OrderStatusPanel } from "./order-status-panel";
+import { OrderTimeline } from "./order-timeline";
+
+export const metadata: Metadata = { title: "Pedido" };
 
 const errorMessages: Record<string, string> = {
   "ordering.order_not_cancellable": "Só pedidos confirmados podem ser cancelados.",
@@ -27,62 +37,44 @@ export default async function OrderPage({
   const isProcessing = order.status === "Placed";
 
   return (
-    <main className="legacy">
+    <main className="mx-auto max-w-3xl px-4 py-10 lg:px-8">
       {/* The checkout saga confirms or cancels the order in the background; reload until it settles. */}
       {isProcessing && <meta httpEquiv="refresh" content="2" />}
-      <p>
-        <Link href="/orders">Meus pedidos</Link>
-      </p>
-      <h1>Pedido {order.number}</h1>
-      {error && (
-        <p role="alert" className="error">
-          {errorMessages[error] ?? "Não foi possível cancelar o pedido. Tente de novo."}
-        </p>
-      )}
-      <p aria-live="polite">
-        Situação: <strong>{orderStatusLabel(order.status)}</strong>
-        {order.cancellationReason && ` (${cancellationReasonLabel(order.cancellationReason)})`}
-      </p>
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">Produto</th>
-            <th scope="col">Quantidade</th>
-            <th scope="col">Preço</th>
-            <th scope="col">Total</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Link href="/orders" className="inline-flex items-center gap-1 text-sm hover:underline">
+        <ArrowLeft aria-hidden="true" className="size-4" /> Meus pedidos
+      </Link>
+      <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-display text-3xl">Pedido {order.number}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Feito em <time dateTime={order.placedAt}>{formatDateTime(order.placedAt)}</time>
+          </p>
+        </div>
+        <OrderStatusBadge status={order.status} />
+      </div>
+      {error && <ErrorMessage className="mt-6">{errorMessages[error] ?? "Não foi possível cancelar o pedido. Tente de novo."}</ErrorMessage>}
+      <div className="mt-6">
+        <OrderStatusPanel status={order.status} cancellationReason={order.cancellationReason} />
+      </div>
+      <section aria-labelledby="items-title" className="mt-10">
+        <h2 id="items-title" className="text-display text-lg">
+          Itens
+        </h2>
+        <ul className="mt-2 divide-y border-y">
           {order.lines.map((line) => (
-            <tr key={line.skuId}>
-              <td>{line.productName}</td>
-              <td>{line.quantity}</td>
-              <td>{formatPrice(line.unitPriceAmount)}</td>
-              <td>{formatPrice(line.lineTotalAmount)}</td>
-            </tr>
+            <OrderLineItem key={line.skuId} line={line} />
           ))}
-        </tbody>
-      </table>
-      <p>Subtotal: {formatPrice(order.subtotalAmount)}</p>
-      <p>Frete: {formatPrice(order.shippingAmount)}</p>
-      <p>
-        Total: <strong>{formatPrice(order.totalAmount)}</strong>
-      </p>
-      <h2>Histórico</h2>
-      <ol className="timeline">
-        {order.history.map((change) => (
-          <li key={`${change.status}-${change.occurredAt}`}>
-            {orderStatusLabel(change.status)} em {formatDateTime(change.occurredAt)}
-          </li>
-        ))}
-      </ol>
-      {order.status === "Confirmed" && (
-        <form action={cancelOrder}>
-          <input type="hidden" name="orderId" value={order.id} />
-          <button type="submit" className="secondary">
-            Cancelar pedido
-          </button>
-        </form>
+        </ul>
+        <PriceSummary className="mt-6 ml-auto max-w-sm" subtotalAmount={order.subtotalAmount} shippingAmount={order.shippingAmount} />
+      </section>
+      <div className="mt-10 grid gap-10 sm:grid-cols-[1fr_auto] sm:items-start">
+        <OrderTimeline history={order.history} />
+        {order.status === "Confirmed" && <CancelOrderDialog orderId={order.id} orderNumber={order.number} />}
+      </div>
+      {order.status !== "Placed" && (
+        <Button asChild variant="link" className="mt-10 px-0">
+          <Link href="/catalog">Continuar comprando</Link>
+        </Button>
       )}
     </main>
   );
