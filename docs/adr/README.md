@@ -25,3 +25,4 @@ Cada ADR registra uma decisão no sub-plano em que ela apareceu no código. Toda
 | [0019](0019-importador-do-mercado-livre.md) | Importador do Mercado Livre para o seed | 1c (emenda no 13a) |
 | [0020](0020-imagens-de-produto-por-cor.md) | Imagens de produto por cor | 13a |
 | [0021](0021-seed-misto-e-linha-propria-grit.md) | Seed misto e linha própria GRIT | 13a |
+| [0022](0022-identidade-visual-e-stack-do-front.md) | Identidade visual e stack do front | 13b |

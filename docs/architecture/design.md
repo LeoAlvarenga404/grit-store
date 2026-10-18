@@ -73,7 +73,8 @@ E-commerce de roupas e tênis esportivos para portfolio: backend .NET maduro, r�
 - **Slugs** para SEO e **paginação por keyset**.
 
 **Carrinho**
-- Anônimo, com **merge no login**. **Snapshot de preço**: o checkout avisa se o preço mudou desde que o item entrou no carrinho.
+- **Exige sessão** (emenda 2026-10-17, 13b): a API do Basket só atende autenticado, e o front manda quem não tem sessão para `/login`. O carrinho anônimo com **merge no login**, previsto aqui, não foi implementado (pendente).
+- **Snapshot de preço**: o checkout avisa se o preço mudou desde que o item entrou no carrinho.
 - A linha mostra a cor, o tamanho e a foto da cor do SKU (emenda 2026-10-17, 13a). Os três são lidos do catálogo a cada leitura, com a URL assinada na hora; o carrinho não guarda nenhum deles.
 
 **Checkout e pedido**
@@ -83,6 +84,10 @@ E-commerce de roupas e tênis esportivos para portfolio: backend .NET maduro, r�
 - **Saga do checkout:** pedido criado → estoque reservado (expira em 15 min, mensagem agendada) → pagamento confirmado → estoque baixado → pedido confirmado. Pagamento recusado ou reserva expirada → reserva liberada, pedido cancelado.
 - **Cancelamento antes do envio:** estorno + liberação de estoque (o saga ao contrário).
 - **Linha do tempo do pedido** (cada mudança de estado registrada) e **número legível** (`#2026-000123`) separado do ID interno.
+- **A linha do pedido guarda a variante comprada (emenda 2026-10-17, 13b).**
+  - Slug do produto, cor e tamanho (`product_slug`, `color`, `size`, `varchar(100)`, anuláveis; migration `OrderLineVariant`), copiados no checkout do `SkuSnapshot` do catálogo, a mesma fonte do nome e do preço unitário. Pedidos feitos antes da migration respondem `null`.
+  - A foto não é guardada: `GET /orders/{id}` a lê a cada request por `ICatalogReader.GetSkusAsync`, o contrato sem cache que o carrinho e o checkout já usam. É a primeira foto atual da cor do SKU, assinada por uma hora, e `null` quando a cor não tem foto ou o SKU não existe mais. O motivo: as URLs do catálogo valem uma hora e só o Catalog as assina (ADR 0016).
+  - Limite: a lista `GET /orders` e a lista do admin não trazem foto nem variante.
 
 **Pagamento**
 - `IPaymentGateway` (ACL) com duas implementações: **Stripe** (modo de teste, Stripe CLI para webhooks) e `FakePaymentGateway` (testes e uso offline).
@@ -112,16 +117,38 @@ E-commerce de roupas e tênis esportivos para portfolio: backend .NET maduro, r�
 
 ## 11. Front (Next.js)
 
-- **App Router.** A vitrine completa chega no M13 (emenda 2026-10-17, ruling UI-STORE), no lugar da UI mínima da v1:
-  - **Tailwind v4 + shadcn**, com os tokens nas variáveis do shadcn;
-  - fonte **Archivo** variável, com o eixo de largura (`wdth`): títulos expandidos em caixa alta, texto normal, preços com algarismos tabulares;
-  - **preto e branco:** fundo branco, tinta `#111111` e cinzas, sem cor de destaque; vermelho e verde só com significado (erro, sucesso);
-  - **sem biblioteca de estado no cliente:** Server Components, Server Actions e filtros na URL; ícones do `lucide-react` e avisos com o `sonner`;
-  - **banners estáticos** em `web/public/banners/`, descritos em `web/lib/banners.ts` (título, link, imagem de desktop e de celular, texto alternativo, tamanho); um arquivo que ainda não existe vira um espaço reservado do mesmo tamanho;
-  - **bolinhas de cor** a partir de um dicionário nome → hex no front (`web/lib/color-swatches.ts`), dividida em duas para "A/B", com a foto da cor quando o nome não está no dicionário;
-  - admin neutro, sem os elementos da vitrine.
+- **App Router.** A vitrine completa chega no M13 (emenda 2026-10-17, ruling UI-STORE), no lugar da UI mínima da v1. Identidade visual e stack no ADR 0022: Tailwind v4 + shadcn, Archivo variável, preto e branco, sem biblioteca de estado no cliente.
+- **Rotas (emenda 2026-10-17, 13b):**
+  - o grupo `app/(store)/` reúne todas as páginas da loja (início, catálogo, produto, sacola, checkout, pedidos, login e cadastro). O `layout.tsx` dele desenha a barra de anúncio, o cabeçalho fixo e o rodapé, e lê o visitante (com sessão ou não, itens na sacola);
+  - o layout raiz guarda só `<html>`, a fonte e o `Toaster` (`sonner`, no topo, região "Notificações");
+  - `/admin` tem um shell neutro próprio: wordmark com o selo "Admin", navegação Produtos e Pedidos, e-mail, "Ver loja" e "Sair", conteúdo em cards brancos sobre `bg-muted/50` e tabelas do shadcn. É pensado para desktop;
+  - `not-found.tsx` e `error.tsx` ficam na raiz, fora da loja, só com a barra do wordmark (`StatusPage`); a página de erro oferece "Tentar de novo" (`retry`).
+- **Contagem da sacola no cabeçalho:** um contexto no cliente (`components/basket-count.tsx`) guarda o número com `useOptimistic`, alimentado pela contagem que o layout lê do servidor.
+  - "Adicionar à sacola" chama uma Server Function dentro de uma transição e soma a quantidade na hora. A função devolve `{ errorCode }` (mostrado num aviso) e chama `refresh()`, que traz a contagem real.
+  - As ações da sacola chamam `revalidatePath("/", "layout")` antes do redirect. Login e logout gravam cookies, o que já renderiza o layout de novo.
+- **Catálogo:**
+  - a URL é o único estado dos filtros: `q`, `category`, `attribute=chave:valor` repetido, `minPrice`/`maxPrice` e `sort` (a relevância, padrão da API, fica fora da URL);
+  - facetas: categoria, gênero, cor (bolinhas), tamanho (P → GG, depois números), marca e preço; uma faixa de preço é cruzada com o filtro de preço já aplicado. Os filtros ativos aparecem como chips, com "Limpar filtros";
+  - 24 produtos por página. "Carregar mais" é uma grade no cliente que pede a próxima página por uma Server Function, porque o navegador não alcança a API; ela recomeça quando a URL muda (`key`);
+  - categoria da loja ganha banner no topo; no celular, os filtros abrem numa gaveta (`Sheet`).
+- **Página do produto:**
+  - a cor é `?cor=` (links com `replace` e `scroll={false}`): o servidor desenha a galeria e os SKUs dessa cor. Cor desconhecida cai na primeira; cor sem foto cai na galeria do produto;
+  - galeria com miniaturas na vertical, foto principal com zoom num diálogo e arraste com scroll-snap no celular;
+  - tamanhos em radios nativos, só com os SKUs que a cor tem, obrigatórios (com uma opção só, ela já vem escolhida);
+  - preço do SKU escolhido; sem escolha, o menor da cor, com "a partir de" quando os preços diferem;
+  - quantidade de 1 a 10, abas Descrição e Detalhes (sem os atributos de controle do vendedor) e 4 produtos relacionados da categoria.
+- **Sacola e checkout:**
+  - a linha mostra foto, cor e tamanho lidos do catálogo (seção 8), avisa quando o preço mudou e, indisponível, bloqueia "Finalizar compra";
+  - o resumo usa um frete fixo (`lib/store-navigation.ts`, R$ 19,90), que precisa ser igual a `Order.FlatShipping`;
+  - o checkout oferece dois cartões de teste: aprovado (`pm_card_visa`, "•••• 4242") e recusado (`tok_decline`, "•••• 0002"). Os dois gateways tratam esses tokens do mesmo jeito, então o front não sabe qual gateway está ativo;
+  - a `Idempotency-Key` é gerada a cada renderização da página.
+- **Página do pedido:** painel de situação, selo (verde ou vermelho só para confirmado ou cancelado), linhas com foto e variante que levam de volta ao produto com `?cor=`, totais e linha do tempo. "Cancelar pedido" fica atrás de um diálogo de confirmação, só enquanto o pedido está `Confirmed`. Enquanto `Placed`, a página se recarrega a cada 2 s (`<meta http-equiv="refresh">`).
+- **Formulários:** `<form>` com Server Action, que postam sem JavaScript, com `select` nativo (`NativeSelect`) e radios nativos estilizados com `peer`/`has-[:checked]`. `SubmitButton` se desabilita enquanto a ação roda. Os erros voltam como `?error=<código>`, viram texto em pt-BR em cada página e aparecem em `ErrorMessage` (`role="alert"`).
+- **Peças compartilhadas:** `ProductCard` (bolinhas de cor; passar o mouse ou focar troca a foto), `ColorSwatch`, `EmptyState`, `PriceSummary`, `OrderStatusBadge`, `StatusPage` e `AuthShell` (formulário + banner). Regras puras em `lib/`: `sizes.ts`, `product-variants.ts` (cor, tamanhos e variantes), `order-labels.ts` e `banners.ts`.
+- **Imagens:** as fotos de produto são URLs S3 pré-assinadas, então o `next/image` roda com `unoptimized`. Ficam com `object-contain` e `mix-blend-multiply` sobre `bg-muted`, em proporção 4:5, porque as fotos dos vendedores têm fundos brancos de tamanhos diferentes. Os banners são arquivos estáticos (ADR 0022).
 - **Tipos gerados do OpenAPI:** `openapi-typescript` + `openapi-fetch`. `npm run gen:api` regenera; o CI falha se o arquivo gerado estiver desatualizado.
-- Server Components chamam a API direto do servidor (catálogo, SEO). Ações autenticadas passam pelo BFF (seção 7).
+- Server Components chamam a API direto do servidor (catálogo, SEO). Ações autenticadas passam pelo BFF (seção 7). O navegador nunca chama a API: as sugestões da busca passam por um route handler (`app/api/suggestions`).
+- **Testes:** sem framework de teste de UI. Os helpers puros (ordem de tamanhos, estado da URL do catálogo, variantes do produto) rodam no runner do próprio Node (`npm test` → `node --test`, arquivos `.test.ts` pela remoção de tipos do Node 24, com `allowImportingTsExtensions`); o CI os roda depois do lint. As telas são aceitas no navegador.
 - Convenção TS: kebab-case em pastas e arquivos.
 
 ## 12. Seed
@@ -143,9 +170,10 @@ E-commerce de roupas e tênis esportivos para portfolio: backend .NET maduro, r�
 | Domínio | Invariantes dos agregados, puro, sem mock | xUnit + Shouldly |
 | Integração por módulo | Da request HTTP ao banco real: handler, EF, outbox, consumer | `WebApplicationFactory` + Testcontainers (Postgres, Redis) |
 | Arquitetura | Fronteiras entre camadas e entre módulos | NetArchTest |
+| Front (helpers puros) | Ordem de tamanhos, estado da URL do catálogo, variantes do produto | `node --test` |
 
 - **Teste vitrine:** o saga do checkout inteiro (caminho feliz e pagamento recusado com liberação da reserva).
-- **Fora:** testes unitários de handler com mock de repositório, meta de cobertura em %, E2E com Playwright (fica para a fase de UI).
+- **Fora:** testes unitários de handler com mock de repositório, meta de cobertura em %, E2E com Playwright e framework de teste de UI (emenda 2026-10-17, 13b: as telas são aceitas no navegador, ADR 0022).
 - FluentAssertions não é usado (licença comercial a partir da v8).
 
 ## 14. Repositório e qualidade
@@ -153,7 +181,7 @@ E-commerce de roupas e tênis esportivos para portfolio: backend .NET maduro, r�
 - **Monorepo:** `src/`, `tests/`, `web/`, `tools/`, `seed/`, `bench/`, `docs/`.
 - **Central Package Management** (`Directory.Packages.props`), **`Directory.Build.props`** com `Nullable`, `TreatWarningsAsErrors` e analisadores no nível recomendado, **`.editorconfig`** verificado no CI com `dotnet format --verify-no-changes`.
 - **Solution** no formato `.slnx`: `Grit.slnx`.
-- **GitHub Actions** a cada push e PR: build, as 3 camadas de teste, formatação, tipos do OpenAPI atualizados, lint e build do Next.js. Badge no README.
+- **GitHub Actions** a cada push e PR: build, as 3 camadas de teste, formatação, tipos do OpenAPI atualizados, lint, testes dos helpers e build do Next.js. Badge no README.
 - **Conventional Commits.**
 - **Documentação:** README vitrine (resumo em inglês no topo, diagrama, GIF do trace no Aspire, números do k6, como rodar, decisões); ADRs em `docs/adr/`; C4 e o diagrama de sequência do saga em Mermaid; glossário da linguagem ubíqua em `docs/glossary.md`.
 - **Fora:** Husky e hooks de pre-commit, SonarCloud, CHANGELOG automatizado.
