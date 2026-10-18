@@ -1,79 +1,82 @@
-import Image from "next/image";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
+import { storeValues } from "@/components/home/value-strip";
 import { api } from "@/lib/api/client";
-import { formatPrice } from "@/lib/format";
-import { addToBasket } from "@/app/(store)/basket/actions";
+import { galleryOf, selectColor, skusOfColor } from "@/lib/product-variants";
+import { ColorPicker } from "./color-picker";
+import { ProductGallery } from "./product-gallery";
+import { ProductTabs } from "./product-tabs";
+import { PurchasePanel } from "./purchase-panel";
+import { RelatedProducts } from "./related-products";
 
-const errorMessages: Record<string, string> = {
-  "basket.quantity_limit": "No máximo 10 unidades por item.",
-  "basket.line_limit": "O carrinho aceita até 50 itens diferentes.",
-  "basket.sku_not_found": "Esta variante não está mais à venda.",
-  "validation.failed": "Escolha uma variante e uma quantidade de 1 a 10.",
-};
+type PageProps = { params: Promise<{ slug: string }>; searchParams: Promise<{ cor?: string | string[] }> };
 
-function describe(attributes: Record<string, string>): string {
-  return Object.entries(attributes)
-    .map(([key, value]) => `${key}: ${value}`)
-    .join(" · ");
+// generateMetadata and the page read the same product in one request.
+const getProduct = cache((slug: string) => api.GET("/api/v1/catalog/products/{slug}", { params: { path: { slug } } }));
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { data } = await getProduct((await params).slug);
+  return { title: data?.name ?? "Produto" };
 }
 
-export default async function ProductPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<{ error?: string }>;
-}) {
+export default async function ProductPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
-  const { error } = await searchParams;
-  const { data: product, response } = await api.GET("/api/v1/catalog/products/{slug}", {
-    params: { path: { slug } },
-  });
+  const { cor } = await searchParams;
+  const { data: product, response } = await getProduct(slug);
   if (response.status === 404) notFound();
   if (!product) throw new Error(`The catalog answered ${response.status} for the product ${slug}.`);
+  const color = selectColor(product.colors, Array.isArray(cor) ? cor[0] : cor);
+  const colorKey = color?.name ?? "";
 
   return (
-    <main className="legacy narrow">
-      <p>
-        <Link href={`/?category=${encodeURIComponent(product.categorySlug)}`}>{product.categoryName}</Link>
-      </p>
-      <h1>{product.name}</h1>
-      {product.imageUrls.length > 0 && (
-        <ul className="gallery">
-          {product.imageUrls.map((url, index) => (
-            <li key={url}>
-              <Image src={url} alt={`${product.name}, imagem ${index + 1}`} width={320} height={320} unoptimized />
-            </li>
-          ))}
-        </ul>
-      )}
-      <p>{product.description}</p>
-      {Object.keys(product.attributes).length > 0 && <p className="hint">{describe(product.attributes)}</p>}
-      {error && (
-        <p role="alert" className="error">
-          {errorMessages[error] ?? "Não foi possível adicionar ao carrinho. Tente de novo."}
-        </p>
-      )}
-      <form action={addToBasket} className="stack">
-        <input type="hidden" name="slug" value={product.slug} />
-        <fieldset>
-          <legend>Variante</legend>
-          {product.skus.map((sku, index) => (
-            <label key={sku.id} className="option">
-              <input type="radio" name="skuId" value={sku.id} defaultChecked={index === 0} required />
-              {describe(sku.attributes) || "Única"} — {formatPrice(sku.priceAmount)}
-            </label>
-          ))}
-        </fieldset>
-        <label>
-          Quantidade
-          <input name="quantity" type="number" min={1} max={10} defaultValue={1} required />
-        </label>
-        <button type="submit">
-          Adicionar ao carrinho
-        </button>
-      </form>
+    <main className="mx-auto max-w-screen-2xl px-4 py-6 lg:px-8">
+      <nav aria-label="Trilha" className="text-sm text-muted-foreground">
+        <ol className="flex flex-wrap items-center gap-2">
+          <li>
+            <Link href="/" className="hover:text-foreground hover:underline">
+              Início
+            </Link>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li>
+            <Link href={`/catalog?category=${encodeURIComponent(product.categorySlug)}`} className="hover:text-foreground hover:underline">
+              {product.categoryName}
+            </Link>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" className="text-foreground">
+            {product.name}
+          </li>
+        </ol>
+      </nav>
+      <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
+        <ProductGallery key={colorKey} images={galleryOf(product.imageUrls, color)} productName={product.name} />
+        <div>
+          <p className="text-eyebrow text-muted-foreground">{product.attributes["marca"] ?? product.categoryName}</p>
+          <h1 className="text-display mt-2 text-3xl md:text-4xl">{product.name}</h1>
+          <PurchasePanel
+            key={colorKey}
+            skus={skusOfColor(product.skus, color)}
+            colorPicker={<ColorPicker slug={product.slug} colors={product.colors} selected={color?.name ?? null} />}
+          >
+            <ul className="grid gap-3 border-t pt-6 text-xs sm:grid-cols-3">
+              {storeValues.map(({ icon: Icon, title, text }) => (
+                <li key={title} className="flex items-start gap-2">
+                  <Icon aria-hidden="true" className="size-5 shrink-0" strokeWidth={1.5} />
+                  <span>
+                    <span className="block font-semibold">{title}</span>
+                    <span className="text-muted-foreground">{text}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </PurchasePanel>
+        </div>
+      </div>
+      <ProductTabs description={product.description} attributes={product.attributes} />
+      <RelatedProducts categorySlug={product.categorySlug} productId={product.id} />
     </main>
   );
 }
