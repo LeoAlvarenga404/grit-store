@@ -1,5 +1,6 @@
 using Dapper;
 using Grit.Modules.Catalog.Contracts;
+using Grit.Modules.Catalog.Domain;
 using Npgsql;
 
 namespace Grit.Modules.Catalog.Infrastructure;
@@ -7,15 +8,14 @@ namespace Grit.Modules.Catalog.Infrastructure;
 // Opens its own connection: callers use it from queries, or from commands that open no other connection (ADR 0005).
 internal sealed class CatalogReader(NpgsqlDataSource dataSource, ProductImageStorage storage) : ICatalogReader
 {
-    // 'cor' and 'tamanho' are Sku.ColorAttribute and Sku.SizeAttribute. The image is the first one of the SKU's colour;
-    // IS NOT DISTINCT FROM also matches a SKU without colour to the images without colour.
-    private const string SkusSql = """
+    // The image is the first one of the SKU's colour; IS NOT DISTINCT FROM also matches a SKU without colour to the images without colour.
+    private const string SkusSql = $"""
         SELECT s.id AS "SkuId", p.name AS "ProductName", p.slug AS "ProductSlug",
                s.price_amount AS "PriceAmount", s.price_currency AS "PriceCurrency",
-               s.attributes ->> 'cor' AS "Color", s.attributes ->> 'tamanho' AS "Size",
+               s.attributes ->> '{Sku.ColorAttribute}' AS "Color", s.attributes ->> '{Sku.SizeAttribute}' AS "Size",
                (SELECT e.image ->> 'key'
                 FROM jsonb_array_elements(p.images) WITH ORDINALITY AS e(image, position)
-                WHERE e.image ->> 'color' IS NOT DISTINCT FROM s.attributes ->> 'cor'
+                WHERE e.image ->> 'color' IS NOT DISTINCT FROM s.attributes ->> '{Sku.ColorAttribute}'
                 ORDER BY e.position
                 LIMIT 1) AS "ImageKey"
         FROM catalog.skus s

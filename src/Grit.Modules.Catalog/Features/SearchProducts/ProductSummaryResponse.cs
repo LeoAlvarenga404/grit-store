@@ -8,4 +8,4 @@ internal sealed record ProductSummaryResponse(
     string PriceCurrency,
     bool HasPriceRange,
     string? ImageUrl,
-    IReadOnlyList<ProductColorResponse> Colors);
+    IReadOnlyList<ProductSummaryColorResponse> Colors);

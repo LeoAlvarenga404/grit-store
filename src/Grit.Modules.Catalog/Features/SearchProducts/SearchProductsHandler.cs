@@ -54,9 +54,9 @@ internal sealed class SearchProductsHandler(NpgsqlDataSource dataSource, Product
         )
         SELECT page.id, p.slug, p.name, page.price AS priceAmount, page.price <> page.highest_price AS hasPriceRange,
             page.sort_value AS sortValue, p.images::text AS images,
-            coalesce((SELECT jsonb_agg(DISTINCT s.attributes ->> 'cor')
+            coalesce((SELECT jsonb_agg(DISTINCT s.attributes ->> '{Sku.ColorAttribute}')
                 FROM catalog.skus s
-                WHERE s.product_id = page.id AND s.attributes ->> 'cor' IS NOT NULL), '[]')::text AS colors
+                WHERE s.product_id = page.id AND s.attributes ->> '{Sku.ColorAttribute}' IS NOT NULL), '[]')::text AS colors
         FROM page
         JOIN catalog.products p ON p.id = page.id
         ORDER BY page.sort_value {direction}, page.id {direction}
@@ -107,7 +107,7 @@ internal sealed class SearchProductsHandler(NpgsqlDataSource dataSource, Product
             Product.StoreCurrency,
             row.HasPriceRange,
             ImageUrl: null,
-            [.. colors.Select(color => new ProductColorResponse(color.Name, ImageUrl: null))]);
+            [.. colors.Select(color => new ProductSummaryColorResponse(color.Name, ImageUrl: null))]);
         var imageKeys = new SearchItemImageKeys(
             images is [var cover, ..] ? cover.Key : null,
             [.. colors.Select(color => color.ImageKeys is [var first, ..] ? first : null)]);
@@ -121,7 +121,7 @@ internal sealed class SearchProductsHandler(NpgsqlDataSource dataSource, Product
         {
             var item = page.Response.Items[index];
             var keys = page.ImageKeys[index];
-            var colors = new List<ProductColorResponse>(item.Colors.Count);
+            var colors = new List<ProductSummaryColorResponse>(item.Colors.Count);
             for (var colorIndex = 0; colorIndex < item.Colors.Count; colorIndex++)
             {
                 colors.Add(item.Colors[colorIndex] with { ImageUrl = await UrlOfAsync(keys.Colors[colorIndex]) });

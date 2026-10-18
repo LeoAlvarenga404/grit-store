@@ -671,7 +671,7 @@ export interface paths {
         put?: never;
         /**
          * Attaches an uploaded image to the product, after its other images.
-         * @description Send the key from /images/uploads, the colour the image shows (a value of the SKUs' cor attribute; leave it out only when the product's SKUs have no cor) and the product version last read. The stored file is checked again: a wrong type or a file over 2 MB is deleted (400 catalog.invalid_image). A colour no SKU has is 400 catalog.image_color_not_found; a colour has at most 8 images (409 catalog.image_limit). The same key again with the same colour answers the current version; with another colour it is 409 catalog.duplicate_image. A new image sent with a stale version is 409 catalog.product_changed.
+         * @description Send the key from /images/uploads, the colour the image shows (the cor value of the coloured SKU it shows; leave it out, or send null, only for an image of a SKU without cor) and the product version last read. The stored file is checked again: a wrong type or a file over 2 MB is deleted (400 catalog.invalid_image). A colour no SKU has is 400 catalog.image_color_not_found; a colour has at most 8 images (409 catalog.image_limit). The same key again with the same colour answers the current version; with another colour it is 409 catalog.duplicate_image. A new image sent with a stale version is 409 catalog.product_changed.
          */
         post: {
             parameters: {
@@ -2368,10 +2368,6 @@ export interface components {
                 [key: string]: string[];
             };
         };
-        ProductColorResponse: {
-            name: string;
-            imageUrl: null | string;
-        };
         ProductImageResponse: {
             key: string;
             fileName: string;
@@ -2390,6 +2386,10 @@ export interface components {
             slug: string;
             name: string;
         };
+        ProductSummaryColorResponse: {
+            name: string;
+            imageUrl: null | string;
+        };
         ProductSummaryResponse: {
             /** Format: uuid */
             id: string;
@@ -2400,7 +2400,7 @@ export interface components {
             priceCurrency: string;
             hasPriceRange: boolean;
             imageUrl: null | string;
-            colors: components["schemas"]["ProductColorResponse"][];
+            colors: components["schemas"]["ProductSummaryColorResponse"][];
         };
         ProductVersionResponse: {
             /** Format: uint32 */
