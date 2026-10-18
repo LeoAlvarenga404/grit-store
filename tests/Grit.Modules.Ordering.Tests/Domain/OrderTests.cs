@@ -170,5 +170,5 @@ public class OrderTests
         Order.Place(Guid.NewGuid(), "2026-000001", "key-1", lines, expectedSubtotalAmount, Now);
 
     private static OrderLine Line(decimal price, int quantity) =>
-        OrderLine.Create(Guid.NewGuid(), "Camiseta Dry Fit", quantity, Money.Create(price, "BRL").Value);
+        OrderLine.Create(Guid.NewGuid(), "Camiseta Dry Fit", "camiseta-dry-fit", "azul", "M", quantity, Money.Create(price, "BRL").Value);
 }

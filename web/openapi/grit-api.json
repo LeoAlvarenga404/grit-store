@@ -1867,7 +1867,7 @@
           "Ordering"
         ],
         "summary": "Gets one of the customer's orders with its lines, totals and status timeline.",
-        "description": "Another customer's order answers 404.",
+        "description": "Another customer's order answers 404. Each line keeps the product slug, colour and size bought (null on orders placed before they were kept); imageUrl is the current first image of the SKU's colour, signed for an hour, or null.",
         "parameters": [
           {
             "name": "id",
@@ -2811,6 +2811,10 @@
         "required": [
           "skuId",
           "productName",
+          "productSlug",
+          "color",
+          "size",
+          "imageUrl",
           "quantity",
           "unitPriceAmount",
           "lineTotalAmount"
@@ -2823,6 +2827,30 @@
           },
           "productName": {
             "type": "string"
+          },
+          "productSlug": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "color": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "size": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "imageUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "quantity": {
             "type": "integer",

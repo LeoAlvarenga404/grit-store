@@ -59,7 +59,7 @@ internal sealed class PlaceOrderHandler(
     private static PlaceOrderResponse ToResponse(Order order) => new(order.Id.Value, order.Number);
 
     private static OrderLine ToOrderLine(CheckoutLine line) =>
-        OrderLine.Create(line.SkuId, line.ProductName, line.Quantity, Money.Create(line.UnitPriceAmount, line.Currency).Value);
+        OrderLine.Create(line.SkuId, line.ProductName, line.ProductSlug, line.Color, line.Size, line.Quantity, Money.Create(line.UnitPriceAmount, line.Currency).Value);
 
     private static OrderPlaced ToOrderPlaced(Order order, string paymentToken) =>
         new(

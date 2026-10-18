@@ -13,7 +13,7 @@ internal static class GetOrderEndpoint
     public static void MapGetOrder(this IEndpointRouteBuilder orders) =>
         orders.MapGet("/{id:guid}", GetOrder)
             .WithSummary("Gets one of the customer's orders with its lines, totals and status timeline.")
-            .WithDescription("Another customer's order answers 404.")
+            .WithDescription("Another customer's order answers 404. Each line keeps the product slug, colour and size bought (null on orders placed before they were kept); imageUrl is the current first image of the SKU's colour, signed for an hour, or null.")
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound);
 

@@ -1824,7 +1824,7 @@ export interface paths {
         };
         /**
          * Gets one of the customer's orders with its lines, totals and status timeline.
-         * @description Another customer's order answers 404.
+         * @description Another customer's order answers 404. Each line keeps the product slug, colour and size bought (null on orders placed before they were kept); imageUrl is the current first image of the SKU's colour, signed for an hour, or null.
          */
         get: {
             parameters: {
@@ -2284,6 +2284,10 @@ export interface components {
             /** Format: uuid */
             skuId: string;
             productName: string;
+            productSlug: null | string;
+            color: null | string;
+            size: null | string;
+            imageUrl: null | string;
             /** Format: int32 */
             quantity: number;
             /** Format: double */
