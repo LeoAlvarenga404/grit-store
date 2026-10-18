@@ -1,48 +1,275 @@
 {
   "categories": [
     {
-      "name": "Calçados",
+      "name": "Tênis",
       "products": [
         {
-          "name": "Tênis Olympikus Beats",
-          "description": "O Olympikus Beats é o tênis ideal para quem busca estilo para os seus corres diários. \n\nO seu solado possui dupla camada da Tecnologia Evasense, que proporciona conforto e amortecimento. \n\nConta também com estabilizador traseiro em material injetado, com a Tecnologia Supporter que proporciona maior estabilidade nas passadas. \n\nVisual em detalhes brilho, fosco. \n\nJá o cabedal é feito em Tecido Jacquard bicolor, que proporciona respirabilidade, flexibilidade e leveza. \n\nConta com vista e logotipo em high frequency com detalhes de cor e relevo. \n\nPossui ainda atacador e forro em poliéster, lingueta em tecido jacquard bicolor, puxador traseiro em fita na horizontal para auxiliar no calce e palmilha anatômica composta por tecido poliéster e EVA, com aplicação gráfica. \n\nTECNOLOGIA:  \nSUPPORTER - A tecnologia da Olympikus com estabilizador para uma pisada mais segura.  \nEVASENSE - A tecnologia da Olympikus em EVA para máxima maciez e conforto absoluto.",
+          "name": "Tênis New Balance 530",
+          "description": "Os tênis New Balance 530 MR530SG são uma combinação perfeita de estilo retrô e funcionalidade moderna. Inspirados no design clássico dos anos 90, eles oferecem uma estética atemporal que combina tanto com looks esportivos quanto casuais. Seu cabedal é confeccionado em mesh respirável com reforços sintéticos que garantem durabilidade e bom ajuste. Incorpora a tecnologia ABZORB na entressola, que proporciona excelente amortecimento e absorção de impactos, ideal para longos períodos de uso. A sola de borracha durável proporciona tração e estabilidade em diversas superfícies. Estes tênis foram projetados para quem busca conforto sem abrir mão do estilo. Além disso, seu design unissex os torna versáteis e adequados para diferentes estilos e preferências. Perfeito para caminhadas, atividades diárias ou simplesmente para complementar um look urbano com um toque esportivo. O New Balance 530 é uma excelente escolha para quem valoriza o equilíbrio entre design, conforto e desempenho.",
+          "attributes": {
+            "marca": "New Balance",
+            "modelo": "530",
+            "genero": "Feminino",
+            "idade": "Adultos",
+            "modelo-alfanumerico": "35/39",
+            "tipo-de-largura": "Padrão",
+            "usos-recomendados": "Uso diário",
+            "id-da-guia-de-tamanhos": "258094",
+            "materiais-do-interior": "Tecido",
+            "materiais-da-sola": "Borracha",
+            "tecnologias-do-calcado": "Encap",
+            "tipos-de-ajuste": "Cadarços",
+            "com-materiais-reciclados": "Não",
+            "cor-principal": "Branco",
+            "materiais-da-entressola": "Poliuretano, Borracha"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "branco",
+                "tamanho": "5.5 US"
+              },
+              "priceAmount": 220
+            },
+            {
+              "attributes": {
+                "cor": "branco",
+                "tamanho": "3 US"
+              },
+              "priceAmount": 380
+            },
+            {
+              "attributes": {
+                "cor": "branco/cinza",
+                "tamanho": "5.5 US"
+              },
+              "priceAmount": 600
+            },
+            {
+              "attributes": {
+                "cor": "branco",
+                "tamanho": "7 US"
+              },
+              "priceAmount": 849.9
+            },
+            {
+              "attributes": {
+                "cor": "branco",
+                "tamanho": "9.5 US"
+              },
+              "priceAmount": 743.9
+            },
+            {
+              "attributes": {
+                "cor": "branco",
+                "tamanho": "10 US"
+              },
+              "priceAmount": 743.9
+            },
+            {
+              "attributes": {
+                "cor": "branco",
+                "tamanho": "12 US"
+              },
+              "priceAmount": 824.4
+            },
+            {
+              "attributes": {
+                "cor": "branco/cinza",
+                "tamanho": "4.5 US"
+              },
+              "priceAmount": 500
+            },
+            {
+              "attributes": {
+                "cor": "branco/cinza",
+                "tamanho": "7 US"
+              },
+              "priceAmount": 699.9
+            },
+            {
+              "attributes": {
+                "cor": "branco/cinza",
+                "tamanho": "3 US"
+              },
+              "priceAmount": 380
+            },
+            {
+              "attributes": {
+                "cor": "branco/cinza",
+                "tamanho": "6.5 US"
+              },
+              "priceAmount": 400
+            }
+          ],
+          "images": [
+            {
+              "color": "branco",
+              "files": [
+                "tenis-new-balance-530-1-1.webp",
+                "tenis-new-balance-530-1-2.webp",
+                "tenis-new-balance-530-1-3.webp"
+              ]
+            },
+            {
+              "color": "branco/cinza",
+              "files": [
+                "tenis-new-balance-530-2-1.webp",
+                "tenis-new-balance-530-2-2.webp",
+                "tenis-new-balance-530-2-3.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Tênis New Balance 411v3 - adulto",
+          "description": "Ideal para todos os tipos de rotinas e atividades. Seu design e conforto fazem deles o calçado perfeito. \n \n Sola de borracha \n Os tênis feitos com sola de borracha têm maior resistência ao desgaste, são naturalmente impermeáveis e flexíveis, além de prolongar a estabilidade da contração.",
+          "attributes": {
+            "marca": "New Balance",
+            "modelo": "411v3",
+            "genero": "Masculino",
+            "idade": "Adultos",
+            "id-da-guia-de-tamanhos": "258166",
+            "materiais-do-exterior": "Tecido",
+            "materiais-do-interior": "Tecido",
+            "materiais-da-sola": "Borracha",
+            "cor-principal": "Preto",
+            "tipos-de-ajuste": "Cadarços",
+            "com-materiais-reciclados": "Não",
+            "com-palmilhas-removiveis": "Sim",
+            "materiais-da-entressola": "Borracha EVA"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "4.5 US"
+              },
+              "priceAmount": 120
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "8.5 US"
+              },
+              "priceAmount": 332.4
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "10 US"
+              },
+              "priceAmount": 332.4
+            },
+            {
+              "attributes": {
+                "cor": "preto/azul",
+                "tamanho": "7.5 US"
+              },
+              "priceAmount": 332.49
+            },
+            {
+              "attributes": {
+                "cor": "preto/azul",
+                "tamanho": "9.5 US"
+              },
+              "priceAmount": 332.49
+            },
+            {
+              "attributes": {
+                "cor": "preto/azul",
+                "tamanho": "10 US"
+              },
+              "priceAmount": 332.49
+            },
+            {
+              "attributes": {
+                "cor": "preto/azul",
+                "tamanho": "8.5 US"
+              },
+              "priceAmount": 332.49
+            }
+          ],
+          "images": [
+            {
+              "color": "preto",
+              "files": [
+                "tenis-new-balance-411v3-adulto-1-1.webp",
+                "tenis-new-balance-411v3-adulto-1-2.webp",
+                "tenis-new-balance-411v3-adulto-1-3.webp"
+              ]
+            },
+            {
+              "color": "preto/azul",
+              "files": [
+                "tenis-new-balance-411v3-adulto-2-1.webp",
+                "tenis-new-balance-411v3-adulto-2-2.webp",
+                "tenis-new-balance-411v3-adulto-2-3.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Tênis Olympikus Reflect Feminino",
+          "description": "O Olympikus Reflect é o tênis ideal para quem busca estilo no dia a dia. \n\nSeu solado é desenvolvido em tecnologia de amortecimento Evasense, em um único bloco de EVA que proporciona leveza, maciez e flexibilidade nas passadas. \n\nO acabamento flocado e seu design com linhas do estilo casual, combinados à tecnologia dos tênis esportivos, transmitem leveza e sofisticação. \n\nO cabedal conta com elementos em degradê para compor o visual do modelo. \n\nPossui tecido Jacquard bicolor com perfuros para auxiliar na transpiração, detalhes em high frequency com visual de alto relevo, vista em costura zig e cordão com função de passador para o atacador, feito em poliéster texturizado. \n\nApresenta puxador traseiro em fita para auxiliar no calce e forro em tecido poliéster com espuma. \n\nAlém disso, possui palmilha plana em poliéster e EVA, com aplicação gráfica. \n\nTecnologias: Evasense - A tecnologia da Olympikus em EVA para máxima maciez e conforto absoluto.",
           "attributes": {
             "marca": "Olympikus",
-            "modelo": "Beats",
-            "genero": "Sem gênero",
-            "modelo-alfanumerico": "43701259",
+            "modelo": "Reflect",
+            "genero": "Feminino",
+            "modelo-alfanumerico": "43576296",
+            "desenho-do-tecido": "Liso",
             "tipo-de-largura": "Padrão",
-            "id-da-linha-da-guia-de-tamanhos": "4088692:9",
             "usos-recomendados": "Caminhada",
-            "id-da-guia-de-tamanhos": "4088692",
+            "id-da-guia-de-tamanhos": "4088358",
             "materiais-do-exterior": "Tecido",
             "materiais-do-interior": "Tecido",
             "materiais-da-sola": "Borracha",
             "tipos-de-ajuste": "Cadarços",
             "com-materiais-reciclados": "Não",
-            "cor-principal": "Bege",
+            "e-impermeavel": "Não",
             "com-sola-antiderrapante": "Sim",
-            "com-luzes": "Não",
-            "tipo-de-cano": "Curto",
-            "materiais-da-entressola": "Borracha EVA",
-            "com-lingueta-acolchoada": "Sim",
-            "temporada-de-lancamento": "Todas as estações"
+            "com-plataforma": "Não",
+            "com-palmilhas-removiveis": "Sim",
+            "com-palmilhas-respiraveis": "Sim"
           },
           "skus": [
             {
               "attributes": {
-                "cor": "bege",
+                "cor": "preto",
                 "tamanho": "40 BR"
               },
-              "priceAmount": 238
+              "priceAmount": 237.99
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "35 BR"
+              },
+              "priceAmount": 249.99
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "38 BR"
+              },
+              "priceAmount": 237.99
             }
           ],
           "images": [
             {
-              "color": "bege",
+              "color": "preto",
               "files": [
-                "tenis-olympikus-beats-1.webp",
-                "tenis-olympikus-beats-2.webp"
+                "tenis-olympikus-reflect-feminino-1-1.webp",
+                "tenis-olympikus-reflect-feminino-1-2.webp",
+                "tenis-olympikus-reflect-feminino-1-3.webp"
+              ]
+            },
+            {
+              "color": "azul",
+              "files": [
+                "tenis-olympikus-reflect-feminino-2-1.webp",
+                "tenis-olympikus-reflect-feminino-2-2.webp",
+                "tenis-olympikus-reflect-feminino-2-3.webp"
               ]
             }
           ]
@@ -58,16 +285,13 @@
             "modelo-alfanumerico": "43538342",
             "desenho-do-tecido": "Liso",
             "tipo-de-largura": "Padrão",
-            "id-da-linha-da-guia-de-tamanhos": "2676737:8",
             "usos-recomendados": "Corrida",
-            "id-da-guia-de-tamanhos": "2676737",
             "materiais-do-exterior": "Couro sintético",
             "materiais-do-interior": "Tecido",
             "materiais-da-sola": "EVA EVASENSE",
             "tecnologias-do-calcado": "Evasense",
             "tipos-de-ajuste": "Cadarços",
             "com-materiais-reciclados": "Não",
-            "cor-principal": "Preto",
             "composicao-do-exterior": "CABEDAL PU LAMINADO",
             "composicao-da-sola": "Borracha EVA",
             "e-impermeavel": "Não"
@@ -78,6 +302,160 @@
                 "cor": "preto/dourado",
                 "tamanho": "40 BR"
               },
+              "priceAmount": 199.99
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "40 BR"
+              },
+              "priceAmount": 212.49
+            },
+            {
+              "attributes": {
+                "cor": "preto/preto",
+                "tamanho": "40 BR"
+              },
+              "priceAmount": 237.37
+            },
+            {
+              "attributes": {
+                "cor": "preto/dourado",
+                "tamanho": "37 BR"
+              },
+              "priceAmount": 237.37
+            },
+            {
+              "attributes": {
+                "cor": "preto/dourado",
+                "tamanho": "38 BR"
+              },
+              "priceAmount": 212.49
+            },
+            {
+              "attributes": {
+                "cor": "preto/dourado",
+                "tamanho": "39 BR"
+              },
+              "priceAmount": 237.37
+            },
+            {
+              "attributes": {
+                "cor": "preto/dourado",
+                "tamanho": "41 BR"
+              },
+              "priceAmount": 209.79
+            },
+            {
+              "attributes": {
+                "cor": "preto/dourado",
+                "tamanho": "43 BR"
+              },
+              "priceAmount": 212.49
+            },
+            {
+              "attributes": {
+                "cor": "preto/dourado",
+                "tamanho": "44 BR"
+              },
+              "priceAmount": 237.37
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "38 BR"
+              },
+              "priceAmount": 211
+            },
+            {
+              "attributes": {
+                "cor": "preto/preto",
+                "tamanho": "41 BR"
+              },
+              "priceAmount": 212.49
+            },
+            {
+              "attributes": {
+                "cor": "chumbo/preto",
+                "tamanho": "38 BR"
+              },
+              "priceAmount": 212.49
+            },
+            {
+              "attributes": {
+                "cor": "chumbo/preto",
+                "tamanho": "41 BR"
+              },
+              "priceAmount": 212.49
+            },
+            {
+              "attributes": {
+                "cor": "chumbo/preto",
+                "tamanho": "43 BR"
+              },
+              "priceAmount": 212.49
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "39 BR"
+              },
+              "priceAmount": 212.49
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "41 BR"
+              },
+              "priceAmount": 212.49
+            },
+            {
+              "attributes": {
+                "cor": "preto/preto",
+                "tamanho": "44 BR"
+              },
+              "priceAmount": 237.37
+            },
+            {
+              "attributes": {
+                "cor": "preto/dourado",
+                "tamanho": "42 BR"
+              },
+              "priceAmount": 237.37
+            },
+            {
+              "attributes": {
+                "cor": "preto/preto",
+                "tamanho": "38 BR"
+              },
+              "priceAmount": 209.99
+            },
+            {
+              "attributes": {
+                "cor": "preto/preto",
+                "tamanho": "43 BR"
+              },
+              "priceAmount": 237.37
+            },
+            {
+              "attributes": {
+                "cor": "chumbo/preto",
+                "tamanho": "39 BR"
+              },
+              "priceAmount": 212.49
+            },
+            {
+              "attributes": {
+                "cor": "preto/preto",
+                "tamanho": "42 BR"
+              },
+              "priceAmount": 237.37
+            },
+            {
+              "attributes": {
+                "cor": "preto/preto",
+                "tamanho": "39 BR"
+              },
               "priceAmount": 237.37
             }
           ],
@@ -85,988 +463,614 @@
             {
               "color": "preto/dourado",
               "files": [
-                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-1.webp",
-                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-2.webp"
+                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-1-1.webp",
+                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-1-2.webp",
+                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-1-3.webp"
               ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Camping",
-      "products": [
-        {
-          "name": "Barraca Camping Hawapi Barraca Wasi Verde",
-          "description": "A barraca Wasi possui alta resistência e flexibilidade, é de fácil montagem e conta com um eficiente sistema de zíper. Abriga até duas pessoas confortavelmente e possui 100% do material interno em poliéster. Acompanha conjunto de estacas e cordas para fixação, varetas e sacolas para transporte.\n\nDescrição Técnica\n\nCódigo: HWP0029\n\nAltura: 106 mm\n\nMedidas: 105x150x205+50 cm\n\nPeso: 2,75kg\n\nColuna d'água: 2500mm\n\nVaretas: Fibra de vidro 7.9mm\n\nMaterial: 190T poliéster\n\nCor: Verde",
-          "attributes": {
-            "marca": "Hawapi",
-            "modelo": "Moray",
-            "modelo-alfanumerico": "HWP00027",
-            "capacidade-maxima-de-pessoas": "2",
-            "material-de-piso": "Poliéster",
-            "tipo": "Acampar",
-            "material-de-parede": "Poliéster",
-            "peso": "2.75 kg",
-            "altura": "105 m",
-            "profundidade": "205 m",
-            "largura": "150 m",
-            "inclui-mosquiteiro": "Sim",
-            "impermeabilidade": "2500 mm"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "verde"
-              },
-              "priceAmount": 539
-            }
-          ],
-          "images": [
-            {
-              "color": "verde",
-              "files": [
-                "barraca-camping-hawapi-barraca-wasi-verde-1.webp",
-                "barraca-camping-hawapi-barraca-wasi-verde-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Barraca Camping 4 Lugares - Antares",
-          "description": "Barraca Camping 4 Lugares - Antares",
-          "attributes": {
-            "marca": "Antares",
-            "modelo": "Barraca camping",
-            "capacidade-maxima-de-pessoas": "4",
-            "tipo": "Iglu",
-            "compartimentos-divisorios": "1",
-            "altura": "1.3 m",
-            "profundidade": "2.1 m",
-            "largura": "1.5 m",
-            "mpn": "37830"
-          },
-          "skus": [
-            {
-              "attributes": {},
-              "priceAmount": 340.33
-            }
-          ],
-          "images": [
-            {
-              "files": [
-                "barraca-camping-4-lugares-antares-1.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Barraca Camping Stranger 1 Azteq - Vermelho",
-          "description": "Pertencente à linha de barracas Buen Amigo, esse modelo de barraca foi criado para atender ao mais exigente público, seguindo o mais alto padrão de qualidade em mão de obra e materiais.\n\nFabricada com materiais de última geração, o modelo Stranger 1 da Azteq é uma barraca de camping e aventura que combina peso e resistência em uma só peça.  \nDisponível em duas cores: vermelho e verde, a Stranger 1 possui coluna d'água de 3000mm, pesa apenas 1,9kg e conta com estrutura em duralumínio.\n\nAlém disso, conta com tela mosquiteiro para reter os menores insetos, ventilação estrategicamente posicionada para proporcionar maior conforto e o kit completo de montagem, com estacas, cordinhas e sacola para transporte.  \nA barraca Stranger 1 da Azteq vem com 1 porta e sobreteto completo para maior segurança.\n\nMaterial do sobreteto: Poliéster 21OT ripstop  \nMaterial do dormitório: Poliéster 190T  \nMaterial do piso: Poliéster Oxford 150D  \nCapacidade: 1 pessoa  \nColuna d'água: 3000mm  \nPeso: 1,9kg  \nDimensões: 2,55 x 1,40 x 1,00m  \nEstrutura: Duralumínio  \nMarca: Azteq",
-          "attributes": {
-            "marca": "Azteq",
-            "modelo": "Stranger",
-            "capacidade-maxima-de-pessoas": "1",
-            "material-de-piso": "Poliéster Oxford 150D",
-            "tipo": "Iglu",
-            "compartimentos-divisorios": "1",
-            "peso": "1.9 kg",
-            "altura": "1 m",
-            "profundidade": "2.55 m",
-            "largura": "1.4 m",
-            "inclui-mosquiteiro": "Sim",
-            "com-cobertura-de-teto": "Sim",
-            "impermeabilidade": "3000 mm",
-            "e-impermeavel": "Sim"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "vermelho"
-              },
-              "priceAmount": 726.65
-            }
-          ],
-          "images": [
-            {
-              "color": "vermelho",
-              "files": [
-                "barraca-camping-stranger-1-azteq-vermelho-1.webp",
-                "barraca-camping-stranger-1-azteq-vermelho-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Sandiario Barraca Camping MP2 Barraca Impermeável 2-3 Pessoas",
-          "description": "A barraca é fácil de montar. Mesmo iniciantes conseguem montá-la sem dificuldade.\n\nJanelas laterais com design especial evitam a condensação e mantêm o interior seco e fresco.\n\nVaras de alumínio ultraleves oferecem resistência e estabilidade sem adicionar peso.\n\nA camada externa é feita de poliéster 190T com impermeabilidade de 2000 mm, e a camada interna é feita de tecido Oxford PU com impermeabilidade de 2000 mm.\n\nA barraca para 2 pessoas pesa apenas 3 kg e, quando dobrada, mede 40×18×18 cm, perfeita para levar em viagens e acampamentos.\n\nInclui uma barraca externa removível que também pode ser usada como um mini toldo, e uma barraca interna com mosquiteiro para proteção contra insetos.\n\nOs acessórios e as especificações do produto estão nas tabelas a seguir.\n\nParâmetros: Barraca de trilha para 2 pessoas RG-SA-00778\nMaterial da estrutura: Alumínio\nMaterial externo: Poliéster 190T PU2000\nMaterial interno: Tecido Oxford PU2000\nUso em: 4 estações\nImpermeabilidade: 3000 mm\nNúmero de portas: 2\nDimensões (aberta): 210 cm * 145 cm * 115 cm\nDimensões (fechada): 40 cm * 18 cm * 18 cm\nPeso: 3 kg\n\nConteúdo da embalagem:\nBolsa\nTenda\nCapa para a estrutura\nCapa para as estacas\nEstacas\n4 cordas de fixação\n14 estacas",
-          "attributes": {
-            "marca": "sandiario",
-            "modelo": "MP2",
-            "capacidade-maxima-de-pessoas": "3",
-            "material-de-piso": "Poliéster",
-            "tipo": "2 a 3 Pessoas,",
-            "material-de-parede": "Poliéster",
-            "peso": "3 kg",
-            "altura": "1.2 m",
-            "profundidade": "2.1 m",
-            "largura": "2.1 m",
-            "inclui-mosquiteiro": "Sim",
-            "com-piso": "Sim",
-            "impermeabilidade": "3000 mm",
-            "e-impermeavel": "Sim"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "preto"
-              },
-              "priceAmount": 664.04
-            }
-          ],
-          "images": [
+            },
             {
               "color": "preto",
               "files": [
-                "sandiario-barraca-camping-mp2-barraca-impermeavel-2-3-pessoas-1.webp",
-                "sandiario-barraca-camping-mp2-barraca-impermeavel-2-3-pessoas-2.webp"
+                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-2-1.webp",
+                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-2-2.webp",
+                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-2-3.webp"
+              ]
+            },
+            {
+              "color": "preto/preto",
+              "files": [
+                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-3-1.webp",
+                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-3-2.webp",
+                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-3-3.webp"
+              ]
+            },
+            {
+              "color": "chumbo/preto",
+              "files": [
+                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-4-1.webp",
+                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-4-2.webp",
+                "tenis-olympikus-volcan-2-olympikus-preto-dourado-liso-40-br-4-3.webp"
               ]
             }
           ]
         },
         {
-          "name": "Sandiario An4 Barraca Camping Barraca Grande 4 Pessoas Upf50 Preto",
-          "description": "Amplo espaço: A barraca hexagonal Sandiario tem uma área de 4,4 metros quadrados e acomoda de 3 a 4 pessoas. Comporta até 3 sacos de dormir, ideal para pernoites e atividades ao ar livre.\n\nDesign funcional e respirável: A barraca hexagonal Sandiario possui 2 portas que podem ser fechadas com as hastes inclusas para criar um mini toldo. Conta com 4 telas mosquiteiras para ventilação e proteção contra insetos. O teto removível permite a entrada de luz natural.\n\nImpermeável e resistente ao sol: Fabricada com tecido Oxford 210D impermeável com classificação de impermeabilidade de 3000 mm, adequada para chuva leve. Uma camada gráfica de PU resistente ao sol foi adicionada à superfície, garantindo proteção solar eficaz e sombra sem causar superaquecimento, e o revestimento anti-UV bloqueia 99% da luz solar.\n\nFácil de montar e estável: Monta e desmonta automaticamente em menos de 10 segundos com a ajuda de um botão hidráulico, perfeita para iniciantes. Os cabos de fixação em ABS e fibra de vidro, juntamente com os 4 cabos de fixação e 8 estacas, garantem estabilidade em ventos de classe 5 na escala Beaufort.\n\nOutras comodidades: Possui um gancho no teto para pendurar uma luz noturna e um bolso na parede para guardar objetos pessoais. As portas e janelas podem ser totalmente fechadas para maior privacidade e proteção à noite ou em dias de chuva.\n\nExcelente ventilação: Apresenta um design com tela em cinco lados, proporcionando ventilação tridimensional, circulação de ar rápida e boa respirabilidade. As grandes aberturas frontais e traseiras oferecem fluxo de ar ideal para ventilação cruzada. As claraboias em tela permitem que você aprecie a paisagem sem insetos.",
+          "name": "Tênis Olympikus Orbita",
+          "description": "Para quem busca um tênis que combina resistência e versatilidade, o Olympikus Orbita é a escolha certa. \n\nSua sola é desenvolvida em tecnologia de amortecimento Evasense, que proporciona leveza, maciez e flexibilidade nas passadas. \n\nPossui gáspea confeccionada em tecido jacquard e arte gráfica com linhas orgânicas. \n\nConta ainda com detalhes em laminado que levam a tecnologia High Frequency. \n\nA lingueta surge em confortável combinação de tecido dupla frontura + espuma. \n\nSeu atacador é composto por tecido poliéster texturizado e o forro em poliéster com espuma. \n\nAlém disso, conta com palmilha anatômica composta por poliéster e EVA, com aplicação gráfica.",
           "attributes": {
-            "marca": "sandiario",
-            "linha": "Camping",
-            "modelo": "AN4,camping casa de campana",
-            "modelo-alfanumerico": "3-4 pessoas",
-            "capacidade-maxima-de-pessoas": "4",
-            "material-de-piso": "Tecido de poliéster criptografado 210D+malha de alta densidade",
-            "tipo": "Acampar",
-            "material-de-parede": "210D",
-            "compartimentos-divisorios": "4",
-            "peso": "4.6 kg",
-            "altura": "1.6 m",
-            "profundidade": "2.8 m",
-            "largura": "2.4 m",
-            "inclui-mosquiteiro": "Sim",
-            "quantidade-de-janelas": "4",
-            "com-piso": "Não",
-            "com-cobertura-de-teto": "Sim",
-            "impermeabilidade": "3000 mm"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "preto"
-              },
-              "priceAmount": 795.42
-            }
-          ],
-          "images": [
-            {
-              "color": "preto",
-              "files": [
-                "sandiario-an4-barraca-camping-barraca-grande-4-pessoas-upf50-preto-1.webp",
-                "sandiario-an4-barraca-camping-barraca-grande-4-pessoas-upf50-preto-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Sandiario Ah6 Barraca Camping Barraca Grande 4-6 Pessoas Preto",
-          "description": "Esta carpa villa oferece uma área de 6 metros quadrados, ideal para 4-6 pessoas, e pode acomodar até 4 sacos de dormir juntos. É perfeita tanto para pernoitar quanto para atividades ao ar livre, proporcionando espaço suficiente para se mover e relaxar confortavelmente durante o dia ou a noite.\n\nCom uma porta que pode ser fixada com varillas para criar um mini toldo.\n\nA casa de campanha é fácil de montar e desmontar, pois os suportes estão integrados, tornando-a uma opção ideal para iniciantes. Sua altura de 190 cm permite mover-se comodamente em seu interior, facilitando diversas atividades em seu amplo espaço.\n\n4 janelas com mosquiteiro, a tenda possibilita uma excelente ventilação, mantendo proteção contra insetos e garantindo um fluxo de ar constante para evitar a sensação de abafado.\n\nA carpa inclui um gancho no teto para pendurar uma lâmpada noturna e bolsos nas paredes para guardar objetos pessoais. A porta e janelas podem ser fechadas completamente para garantir privacidade e proteção durante a noite ou em condições de chuva. As estacas fluorescentes permitem localizá-las facilmente no escuro, evitando acidentes noturnos.\n\nFabricada com tecido Oxford 210D, esta tenda é resistente à água com um nível de impermeabilidade de 3000mm, perfeita para chuvas leves e médias.\n\nAlém disso, conta com um revestimento anti-UV que bloqueia 99% dos raios solares, protegendo durante atividades ao ar livre. Pode ser usada em 4 estações.\n\nParâmetros:\nCarpa Canadense de 6-8 Pessoas/ML1-1-002890\nMaterial de Suportes: Liga de alumínio\nMaterial da Carpa: Tecido Oxford 210D + Poliéster 190T\nUso em 4 estações\nImpermeabilidade 3000MM\nNúmero de Portas: 2\nTamanho em Uso: 260cm*230cm*190cm\nTamanho Plegado: 97cm*25cm*25cm\nPeso: 12,5kg",
-          "attributes": {
-            "marca": "sandiario",
-            "modelo": "casa de campaña 6-8 personas",
-            "modelo-alfanumerico": "ML1-1-002890",
-            "capacidade-maxima-de-pessoas": "8",
-            "material-de-piso": "Tecido Oxford 210D+Poliéster 190T",
-            "tipo": "Barraca de acampamento",
-            "material-de-parede": "210D",
-            "compartimentos-divisorios": "4",
-            "peso": "12.5 kg",
-            "altura": "1.9 m",
-            "profundidade": "2.6 m",
-            "largura": "2.3 m",
-            "inclui-mosquiteiro": "Não",
-            "quantidade-de-janelas": "4",
-            "com-piso": "Sim",
-            "impermeabilidade": "3000 mm",
-            "requer-montagem": "Sim",
-            "e-impermeavel": "Sim"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "preto"
-              },
-              "priceAmount": 1939.9
-            }
-          ],
-          "images": [
-            {
-              "color": "preto",
-              "files": [
-                "sandiario-ah6-barraca-camping-barraca-grande-4-6-pessoas-preto-1.webp",
-                "sandiario-ah6-barraca-camping-barraca-grande-4-6-pessoas-preto-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Barraca Camping Impermeável Monta Sozinha",
-          "description": "Esta barraca é ideal para aventureiros que buscam praticidade e conforto em suas jornadas, seja em climas frios ou quentes.\n\nO design de camada dupla destacável é uma característica prática que permite ao usuário adaptar o equipamento de acordo com suas necessidades específicas. Quando usada como uma barraca, proporciona proteção completa contra os elementos, enquanto a opção de destacá-la das laterais transforma o equipamento em um abrigo solar, ideal para dias ensolarados ou para atividades.\n\nSua estrutura leve e compacta facilita o transporte e a montagem automática, tornando-a uma excelente escolha para acampamentos.\n\nFabricada com tecido de alta qualidade, é impermeável e possui revestimento, garantindo proteção contra raios UV e a prova d'água.\n\nAs costuras seladas invertidas oferecem resistência adicional contra vazamentos.\n\nPara maior segurança, a barraca pode ser fixada no solo com as estacas incluídas. A estrutura de fibra de vidro e o tecido de poliéster asseguram durabilidade e resistência.",
-          "attributes": {
-            "marca": "Oi Vida",
-            "linha": "Camping",
-            "modelo": "LB-HW002",
-            "capacidade-maxima-de-pessoas": "3",
-            "material-de-piso": "Náilon",
-            "tipo": "Acampar",
-            "material-de-parede": "Náilon",
-            "peso": "1.32 kg",
-            "largura": "1.2 m",
-            "inclui-mosquiteiro": "Sim",
-            "instantanea": "Sim",
-            "e-impermeavel": "Sim"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "azul-turquesa"
-              },
-              "priceAmount": 231.9
-            }
-          ],
-          "images": [
-            {
-              "color": "azul-turquesa",
-              "files": [
-                "barraca-camping-impermeavel-monta-sozinha-1.webp",
-                "barraca-camping-impermeavel-monta-sozinha-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Barraca Camping Acampamento Impermeável 5 Pessoas Benoá",
-          "description": "A Barraca Camping Acampamento Impermeável 5 Pessoas Benoá é perfeita para quem busca aventuras ao ar livre com conforto e praticidade. Com uma profundidade de 240 cm, ela oferece espaço suficiente para acomodar até 5 pessoas, garantindo uma experiência de acampamento incrível.\n\nFabricada pela renomada marca Benoá, essa barraca é sinônimo de qualidade e durabilidade. Seu modelo foi projetado para resistir a condições climáticas adversas, sendo totalmente impermeável. Assim, você pode acampar tranquilamente, mesmo em dias chuvosos.\n\nAlém disso, a Barraca Camping Acampamento Impermeável 5 Pessoas Benoá é muito fácil de montar e desmontar, graças ao seu sistema prático e eficiente. Com ela, você economiza tempo e esforço, podendo aproveitar ao máximo o seu tempo de lazer.\n\nSeja para uma viagem em família ou uma aventura com amigos, essa barraca é a escolha ideal. Sua capacidade de acomodação e resistência a intempéries garantem conforto e segurança durante toda a estadia.\n\nInvista em momentos inesquecíveis ao ar livre com a Barraca Camping Acampamento Impermeável 5 Pessoas Benoá. Garanta já a sua e desfrute de uma experiência única de acampamento.",
-          "attributes": {
-            "marca": "Benoá",
-            "modelo": "Barraca 5 Pessoas Benoá",
-            "material-de-piso": "Polietileno",
-            "material-de-parede": "Poliéster",
-            "peso": "3 kg",
-            "altura": "2.4 m",
-            "profundidade": "2.4 m",
-            "largura": "1.3 m",
-            "inclui-mosquiteiro": "Sim",
-            "e-impermeavel": "Sim"
-          },
-          "skus": [
-            {
-              "attributes": {},
-              "priceAmount": 519.41
-            }
-          ],
-          "images": [
-            {
-              "files": [
-                "barraca-camping-acampamento-impermeavel-5-pessoas-benoa-1.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Barraca Camping Iglu 3 Pessoas Mor",
-          "description": "Especificações Barraca:\n\nMarca: Mor\nMaterial: Poliéster\nCor Predominante: Azul\nCapacidade: 3 pessoas\n\nAltura: 1,30 Metros\nLargura: 2,10 Metros\nComprimento: 2,10 Metros\nPeso: 1,50 Kilogramas\n\nA barraca não oferece proteção integral contra chuva.\n\nEspecificações do Colchão:\n\nMaterial: PVC\nCor predominante: Azul Marinho\nCapacidade: 160kg\nDimensões:\nAltura: 22 centímetros\nLargura: 1,37 metros\nComprimento: 1,91 metros\nPeso: 3,160 Kg",
-          "attributes": {
-            "marca": "Mor",
-            "linha": "acampamento",
-            "modelo": "IGLU",
-            "modelo-alfanumerico": "9034",
-            "capacidade-maxima-de-pessoas": "3",
-            "material-de-piso": "Polietileno",
-            "tipo": "Acampar",
-            "material-de-parede": "Poliéster",
-            "compartimentos-divisorios": "1",
-            "peso": "1.47 kg",
-            "altura": "1.3 m",
-            "profundidade": "2.1 m",
-            "largura": "2.1 m",
-            "inclui-mosquiteiro": "Sim",
-            "instantanea": "Não"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "azul"
-              },
-              "priceAmount": 160.25
-            }
-          ],
-          "images": [
-            {
-              "color": "azul",
-              "files": [
-                "barraca-camping-iglu-3-pessoas-mor-1.webp",
-                "barraca-camping-iglu-3-pessoas-mor-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Nautika barraca camping blackout Onix 4 pessoas",
-          "description": "• Tecnologia Blackout que bloqueia até 90% da luz solar\n• Avancê frontal incorporado\n• Coluna d´água de 2000mm\n• Capacidade para até 4 lugares\n• Com costuras seladas\n\nBarraca Onix 4 NTK: Conheça o novo modelo de barraca para camping com tecnologia Blackout, que bloqueia até 90% da luz solar!\n\nA Onix 4 da Nautika é um modelo de barraca do tipo iglú com sobreteto completo e avancê frontal incorporado.\n\nCom uma coluna d'água de 2000mm, é uma barraca bastante resistente que comporta até 4 pessoas com tranquilidade e conforto.\n\nSeu sistema Blackout, permite que você tenha noites muito agradáveis, além de bloquear durante o dia até 90% de claridade externa.\n\nEm relação a sua estrutura, a barraca Onix 4 da NTK possui varetas de fibra de vidro com maior diâmetro, interligadas por elástico interno e fabricadas com material 100% virgem com sistema NANO-FIBER. Seu piso é de polietileno de alta resistência e anti-fungos, e seu dormitório é fabricado em poliéster 100% respirável para máximo conforto e durabilidade.\n\nO sobreteto da barraca também é 100% poliéster impermeabilizado e sua tela mosquiteiro, é de poliéster No-see-um, um tecido super fino que evita até os menores insetos e mosquitos.\n\nA Onix da Nautika é uma barraca fácil de armar, compacta, resistente e leve.\n\nAlgumas informações adicionais sobre a barraca: ela conta com 1 (uma) porta, possui costuras seladas, vem com bolso interno para guardar pequenos objetos, conta com estabilizadores extra resistentes e argola para pendurar lanternas na parte interna.\n\nDentro da embalagem acompanha: 1 barraca com capacidade para 4 lugares, kit de varetas, kit de estacas, cordinhas para estabilização, sacola para transporte e manual de instruções.\n\nInformações gerais:\n• Material do piso: Polietileno de alta resistência\n• Material da tela: Mosquiteiro de poliéster No-see-um super fino\n• Material do dormitório: Poliéster respirável\n• Material da estrutura: Varetas de fibra de vidro fabricadas com material 100% virgem\n• Material do sobreteto: Poliéster impermeabilizado\n• Peso: 3,1kg\n• Dimensões: 2,20m (c) x 2,10m (l) x 1,30m (a)\n• Coluna d'água: 2000mm\n• Adicional: Possui 1 (uma) porta e tem costura selada\n• Marca: NTK",
-          "attributes": {
-            "marca": "Nautika",
-            "modelo": "Onix 4P",
-            "capacidade-maxima-de-pessoas": "4",
-            "material-de-piso": "Polietileno de alta resistência",
-            "tipo": "Túnel",
-            "material-de-parede": "Poliéster respirável",
-            "compartimentos-divisorios": "1",
-            "peso": "3.1 kg",
-            "altura": "1.3 m",
-            "profundidade": "2.2 m",
-            "largura": "2.1 m",
-            "inclui-mosquiteiro": "Sim",
-            "quantidade-de-janelas": "0",
-            "com-piso": "Sim",
-            "com-cobertura-de-teto": "Sim",
-            "impermeabilidade": "2000 mm",
-            "resistencia-ao-vento": "35 km/h",
-            "instantanea": "Não",
-            "e-impermeavel": "Sim"
-          },
-          "skus": [
-            {
-              "attributes": {},
-              "priceAmount": 379
-            }
-          ],
-          "images": [
-            {
-              "files": [
-                "nautika-barraca-camping-blackout-onix-4-pessoas-1.webp",
-                "nautika-barraca-camping-blackout-onix-4-pessoas-2.webp"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Ciclismo",
-      "products": [
-        {
-          "name": "Capacete Ciclismo Abus Gamechanger 2.0 Preto M",
-          "description": "Kit Almofadas de Espuma Para Capacete Abus Gamechanger 2.0\n\nTransforme seu capacete Abus Gamechanger 2.0 com este kit de almofadas de espuma, projetado especialmente para proporcionar conforto e proteção. Ideal para adultos, este item é a escolha perfeita para ciclistas que buscam desempenho durante suas pedaladas. As almofadas são compatíveis tanto para o público masculino quanto feminino, garantindo um ajuste perfeito independentemente do gênero. Produzidas pela renomada marca Abus, reconhecida por sua qualidade e inovação, estas almofadas são uma peça de reposição essencial que não compromete a segurança. Experimente a linha Performance e sinta a diferença na sua próxima pedalada!",
-          "attributes": {
-            "marca": "Abus",
-            "linha": "Gamechanger",
-            "modelo": "Gamechanger 2.0",
-            "desenho": "Liso",
-            "cor-principal": "Preto",
-            "peso": "50 g",
-            "com-tiras-ajustaveis": "Não",
-            "com-viseira-removivel": "Não",
-            "com-luz": "Não",
-            "com-oculos-de-protecao": "Não",
-            "com-ventilacao": "Não",
-            "usos-recomendados": "Ciclismo",
-            "genero": "Sem gênero",
-            "material": "Espuma",
-            "idade-minima-recomendada": "14 anos",
-            "com-faixas-refletivas": "Não"
+            "marca": "Olympikus",
+            "modelo": "ORBITA",
+            "genero": "Unissex",
+            "modelo-alfanumerico": "43520363",
+            "tipo-de-largura": "Padrão",
+            "usos-recomendados": "Caminhada",
+            "id-da-guia-de-tamanhos": "4088692",
+            "materiais-do-exterior": "Tecido",
+            "materiais-do-interior": "Tecido",
+            "materiais-da-sola": "Borracha",
+            "tipos-de-ajuste": "Cadarços",
+            "com-materiais-reciclados": "Não",
+            "e-impermeavel": "Não",
+            "com-sola-antiderrapante": "Sim",
+            "com-plataforma": "Não",
+            "com-luzes": "Não",
+            "com-palmilhas-removiveis": "Sim"
           },
           "skus": [
             {
               "attributes": {
                 "cor": "preto",
-                "tamanho": "M"
+                "tamanho": "37 BR"
               },
-              "priceAmount": 147.34
+              "priceAmount": 194.89
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "37 BR"
+              },
+              "priceAmount": 194.89
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "43 BR"
+              },
+              "priceAmount": 194.89
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "38 BR"
+              },
+              "priceAmount": 194.89
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "43 BR"
+              },
+              "priceAmount": 221.99
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "39 BR"
+              },
+              "priceAmount": 221.99
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "40 BR"
+              },
+              "priceAmount": 221.99
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "42 BR"
+              },
+              "priceAmount": 221.99
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "41 BR"
+              },
+              "priceAmount": 221.99
             }
           ],
           "images": [
             {
               "color": "preto",
               "files": [
-                "capacete-ciclismo-abus-gamechanger-2-0-preto-m-1.webp"
+                "tenis-olympikus-orbita-1-1.webp",
+                "tenis-olympikus-orbita-1-2.webp",
+                "tenis-olympikus-orbita-1-3.webp"
+              ]
+            },
+            {
+              "color": "azul",
+              "files": [
+                "tenis-olympikus-orbita-2-1.webp",
+                "tenis-olympikus-orbita-2-2.webp",
+                "tenis-olympikus-orbita-2-3.webp"
               ]
             }
           ]
         },
         {
-          "name": "Capacete Ciclismo Adulto M Catlike Vulcano Branco",
-          "description": "O acessório necessário para suas atividades\nEsse capacete lhe dará comodidade e segurança para que você possa aproveitar as atividades que você mais gosta sem preocupações.\n\nProteção e estilo\nA viseira removível pode lhe proteger do sol quando você precisar ou, simplesmente, dar um toque diferente ao seu capacete.\n\nSegurança e conforto\nO capacete possui um sistema de alças que se adapta ao seu rosto, fornecendo assim um mecanismo de ajuste que lhe trará segurança.",
+          "name": "Tênis Olympikus Passo",
+          "description": "Ideal para quem busca estilo e conforto nas corridas. \n\nCabedal com tecnologia HYPERSOX, que facilita o calce e oferece melhor caimento, conforto e maciez. \n\nVistas em laminado e TPU com pintura e detalhes em tecnologia HIGH FREQUENCY. \n\nLingueta em tecido dupla frontura com alta capacidade de transpiração, além de etiqueta em fita gráfica. \n\nAtacador em poliéster chato texturizado. \n\nForro em poliéster canelado com espuma, garantindo maior conforto ao caminhar. \n\nPuxador traseiro em fita texturizada para facilitar o calce. \n\nPalmilha em poliéster e EVA com aplicação gráfica. \n\nSolado com design exclusivo e tecnologia ELEVA+, que aprimora a resiliência, leveza e conforto do modelo.",
           "attributes": {
-            "marca": "Catlike",
-            "modelo": "Vulcano",
-            "cor-principal": "Branco",
-            "peso": "320 g",
-            "com-tiras-ajustaveis": "Sim",
-            "com-viseira-removivel": "Sim",
-            "com-luz": "Não",
-            "com-oculos-de-protecao": "Não",
-            "com-ventilacao": "Sim",
-            "genero": "Sem gênero",
-            "material": "EPS",
-            "com-faixas-refletivas": "Sim"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "branco",
-                "tamanho": "M"
-              },
-              "priceAmount": 116
-            }
-          ],
-          "images": [
-            {
-              "color": "branco",
-              "files": [
-                "capacete-ciclismo-adulto-m-catlike-vulcano-branco-1.webp",
-                "capacete-ciclismo-adulto-m-catlike-vulcano-branco-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Capacete Ciclismo ASW Accel Verde P/M",
-          "description": "Capacete ASW Ciclismo Bike Accel Frontier Unissex\n\nO Accel Frontier, o seu casco foi injetado diretamente e garante que não ficará descolando, é um modelo voltado ao uso MTB, porém a sua versatilidade permite o uso em outras modalidades.\n\nO seu forro interno é anti-estático e possui secagem rápida, é lavável e substituível.\n\nO ajuste deste modelo possui o sistema Dial que é personalizado ponto a ponto em circunferência, para que o ciclista utilize ele de uma forma confortável e segura.\n\nPossui um acolchoado na parte que fixa no queijo, além de tiras que oferecem conforto extra no rosto e orelha.\n\nAlém de aberturas de ventilação para garantir a temperatura correta e sensação de bem-estar.\n\nDetalhes:\n- Casco externo de policarbonato;\n- EPS in mold de alta absorção;\n- Forro interno de secagem rápida, lavável e substituível;\n- Sistema de ajuste 2 way fit com dial de ajuste milimétrico de circunferência e posicionamento vertical que juntos proporcionam ajuste preciso em segundos;\n- Pala de proteção;\n- Peso: 275g\n\nTamanho:\nP/M 54/58cm\nG/GG 58/62cm",
-          "attributes": {
-            "marca": "ASW",
-            "linha": "Bike Fun",
-            "modelo": "Fun",
-            "tamanho-da-circunferencia-da-cabeca": "54 cm",
-            "cor-principal": "Verde",
-            "peso": "275 g",
-            "com-tiras-ajustaveis": "Sim",
-            "com-viseira-removivel": "Sim",
-            "com-luz": "Sim",
-            "com-oculos-de-protecao": "Não",
-            "com-ventilacao": "Sim",
-            "usos-recomendados": "Ciclismo",
-            "genero": "Masculino",
-            "material": "Plástico",
-            "idade-minima-recomendada": "8 anos",
-            "com-faixas-refletivas": "Não"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "verde",
-                "tamanho": "P/M"
-              },
-              "priceAmount": 296.44
-            }
-          ],
-          "images": [
-            {
-              "color": "verde",
-              "files": [
-                "capacete-ciclismo-asw-accel-verde-p-m-1.webp",
-                "capacete-ciclismo-asw-accel-verde-p-m-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "capacete ciclismo Abus Wing Back",
-          "description": "Experimente a liberdade sobre duas rodas com o Capacete Abus Wingback, o acessório essencial para os ciclistas que buscam segurança e conforto. Projetado para adultos e adequado para todos os gêneros, este capacete combina um design aerodinâmico com materiais de alta qualidade, como EPS, garantindo proteção eficaz em trajetos urbanos e trilhas.\n\nO modelo Wingback conta com alças ajustáveis que oferecem um ajuste perfeito e personalizado, aumentando a sensação de segurança durante a pedalada. Além disso, sua estrutura possui ventilação estratégica, proporcionando frescor e conforto mesmo em dias mais quentes.\n\nIdeal para ciclistas iniciantes e experientes, o Capacete Abus Wingback se destaca pela sua versatilidade. Seja para passeios tranquilos ou treinos intensivos, este capacete é a escolha perfeita para quem valoriza a proteção sem abrir mão do estilo. Invista na sua segurança e maximize sua experiência sobre a bicicleta.",
-          "attributes": {
-            "marca": "Abus",
-            "modelo": "Wing Back",
-            "desenho": "Liso",
-            "cor-principal": "Vermelho",
-            "peso": "260 g",
-            "com-tiras-ajustaveis": "Sim",
-            "com-viseira-removivel": "Não",
-            "com-luz": "Não",
-            "com-oculos-de-protecao": "Não",
-            "com-ventilacao": "Sim",
-            "usos-recomendados": "Ciclismo, Patinação",
-            "genero": "Sem gênero",
-            "material": "EPS",
-            "idade-minima-recomendada": "12 anos",
-            "com-faixas-refletivas": "Sim"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "vermelho",
-                "tamanho": "M"
-              },
-              "priceAmount": 604.17
-            }
-          ],
-          "images": [
-            {
-              "color": "vermelho",
-              "files": [
-                "capacete-ciclismo-abus-wing-back-1.webp",
-                "capacete-ciclismo-abus-wing-back-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Capacete Ciclismo Absolute Nero Branco/vermelho",
-          "description": "Capacete de Ciclismo Absolute Nero Branco/Vermelho\n\nCaracterísticas: \n\nDesign Aerodinâmico: O formato aerodinâmico do capacete reduz a resistência do vento e melhora o desempenho em alta velocidade. \n\nSistema de Ajuste Precisão: Equipado com um sistema de ajuste fácil e preciso, o capacete se adapta perfeitamente a diferentes tamanhos de cabeça, proporcionando um ajuste seguro e confortável. \n\nVentilação Otimizada: Com várias aberturas estrategicamente posicionadas, o capacete garante uma excelente ventilação, mantendo a cabeça fresca e seca durante os passeios mais intensos. \n\nForro Removível e Lavável: O forro interno é acolchoado e pode ser removido para lavagem, garantindo maior higiene e conforto. \n\nRevestimento Resistente: Feito com materiais de alta qualidade, o capacete oferece proteção contra impactos e durabilidade a longo prazo. \n\nVisibilidade Aumentada: Detalhes em cores vivas e refletores garantem maior visibilidade e segurança em condições de baixa luminosidade. \n\nCom o Capacete de Ciclismo Absolute Nero Branco/Vermelho, você estará pronto para enfrentar qualquer desafio com confiança e estilo. Ideal para ciclistas de todos os níveis que valorizam desempenho e segurança em cada pedalada.",
-          "attributes": {
-            "marca": "Absolute",
-            "linha": "Nero",
-            "modelo": "Nero",
-            "desenho": "Liso",
-            "com-tiras-ajustaveis": "Sim",
-            "com-viseira-removivel": "Sim",
-            "com-luz": "Sim",
-            "com-oculos-de-protecao": "Não",
-            "com-ventilacao": "Sim",
-            "usos-recomendados": "Ciclismo",
-            "genero": "Sem gênero",
-            "material": "Policarbonato EPS",
-            "idade-minima-recomendada": "18 anos",
-            "com-faixas-refletivas": "Não"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "branco/vermelho",
-                "tamanho": "G"
-              },
-              "priceAmount": 282.9
-            }
-          ],
-          "images": [
-            {
-              "color": "branco/vermelho",
-              "files": [
-                "capacete-ciclismo-absolute-nero-branco-vermelho-1.webp"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Trilha",
-      "products": [
-        {
-          "name": "Mochila Trilha Viagem 20l Resistente À Água Mochila Trilha Preto",
-          "description": "Nome do Produto: Mochila de Viagem para Caminhada e Escalada ao Ar Livre\n\nPúblico-alvo: Masculino / Feminino – Uso Unissex\n\nCenas de Uso: Escalada, Trilha, Academia, Deslocamento Diário, Viagem\n\n---\n\nCaracterísticas do Produto:\n\n1. Leve e Espaçosa: Design leve que reduz o peso sem comprometer a capacidade. Ideal para caminhadas curtas, atividades fitness ou viagens de fim de semana. O compartimento principal espaçoso comporta roupas, garrafa de água, dispositivos eletrônicos, guarda-chuva dobrável e outros itens.\n\n2. Design Ergonômico: Costas acolchoadas com malha respirável em formato de colmeia e alças em S que seguem a ergonomia do corpo. Reduz a pressão nos ombros e oferece conforto durante longos períodos de uso.\n\n3. Tecido Resistente à Água: Feita com tecido Oxford de alta densidade e resistente a respingos. Protege os pertences contra chuvas leves e umidade, sendo adequada para diversas situações ao ar livre.\n\n4. Múltiplos Compartimentos: Compartimento principal, bolso frontal, bolsos laterais e divisórias internas para organização inteligente dos objetos. Bolsos laterais com elástico para garrafa de água ou guarda-chuva, com acesso prático.\n\n5. Visual Minimalista: Design simples e moderno com linhas retas. Combina facilmente com diversos estilos de roupa, sendo funcional tanto para o uso urbano quanto para aventuras ao ar livre.\n\n---\n\nEspecificações do Produto:\n\nCapacidade: Aproximadamente 20–35L\nDimensões: Cerca de 53×31×19 cm\nMaterial: Tecido Oxford de alta densidade\nPeso: Cerca de 700g\n\n---\n\nIndicado Para:\n\nAventureiros que praticam trilha, escalada, ciclismo ou atividades físicas.\nUsuários que buscam uma mochila leve para viagens curtas ou uso diário.\nEstudantes e profissionais que valorizam organização e funcionalidade.",
-          "attributes": {
-            "marca": "Wicopet",
-            "modelo": "MW-20L",
-            "tipo-de-mochila": "Esportiva",
-            "capacidade-da-mochila": "20 L",
+            "marca": "Olympikus",
+            "modelo": "Passo",
+            "genero": "Unissex",
+            "modelo-alfanumerico": "43242437",
             "desenho-do-tecido": "Liso",
-            "cor-principal": "Preto",
-            "altura": "53 cm",
-            "largura": "31 cm",
-            "profundidade": "19 cm",
-            "peso": "700 g",
-            "genero": "Sem gênero",
-            "materiais": "Tecido Oxford",
-            "tipos-de-fecho": "Zíper",
-            "com-compartimento-para-notebook": "Não",
-            "e-a-prova-d-agua": "Sim",
-            "e-reforcada": "Sim",
+            "tipo-de-largura": "Padrão",
+            "usos-recomendados": "Caminhada",
+            "id-da-guia-de-tamanhos": "4088692",
+            "materiais-do-exterior": "Tecido",
+            "materiais-do-interior": "Tecido",
+            "materiais-da-sola": "Borracha",
+            "tipos-de-ajuste": "Cadarços",
             "com-materiais-reciclados": "Não",
-            "com-rodas": "Não",
-            "com-mecanismo-antirroubo": "Não",
-            "com-entrada-usb": "Não"
+            "e-impermeavel": "Não",
+            "com-sola-antiderrapante": "Sim",
+            "com-plataforma": "Não",
+            "com-luzes": "Não",
+            "com-palmilhas-removiveis": "Sim"
           },
           "skus": [
             {
               "attributes": {
-                "cor": "preto"
+                "cor": "cinza",
+                "tamanho": "40 BR"
               },
-              "priceAmount": 151.05
-            }
-          ],
-          "images": [
-            {
-              "color": "preto",
-              "files": [
-                "mochila-trilha-viagem-20l-resistente-a-agua-mochila-trilha-preto-1.webp",
-                "mochila-trilha-viagem-20l-resistente-a-agua-mochila-trilha-preto-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Mochila Trilha Arpenaz 20 Litros Quechua Cinza",
-          "description": "A mochila Quechua Arpenaz de 20 litros na cor cinza combina versatilidade e resistência para o seu dia a dia. Este modelo foi desenvolvido para adultos que buscam praticidade em passeios urbanos ou trilhas leves. Sua estrutura reforçada garante durabilidade mesmo em condições de uso intenso.\n\nO compartimento interno oferece espaço dedicado para organizar seu notebook com segurança. O bolso lateral facilita o transporte de garrafas de água, mantendo sua hidratação sempre acessível durante o trajeto. O fechamento por zíper proporciona um manuseio rápido e seguro dos seus pertences.\n\nConfeccionada em polietileno tereftalato, a mochila alia leveza a um design funcional. Com capacidade de 20 litros, ela possui o volume ideal para acomodar itens essenciais com conforto. Este acessório é a escolha ideal para quem prioriza organização e um visual sóbrio.",
-          "attributes": {
-            "marca": "Quechua",
-            "modelo": "Arpenaz",
-            "tipo-de-mochila": "Passeio",
-            "capacidade-da-mochila": "20 L",
-            "desenho-do-tecido": "Liso",
-            "genero": "Sem gênero",
-            "materiais": "Polietileno tereftalato",
-            "tipos-de-fecho": "Zíper",
-            "com-compartimento-para-notebook": "Sim",
-            "e-reforcada": "Sim",
-            "com-rodas": "Não",
-            "com-entrada-usb": "Não",
-            "com-bolso-para-garrafa": "Sim",
-            "cor-principal": "Cinza",
-            "e-impermeavel": "Não"
-          },
-          "skus": [
+              "priceAmount": 219.99
+            },
             {
               "attributes": {
-                "cor": "cinza"
+                "cor": "preto",
+                "tamanho": "40 BR"
               },
-              "priceAmount": 299.99
+              "priceAmount": 229.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza",
+                "tamanho": "38 BR"
+              },
+              "priceAmount": 232.72
+            },
+            {
+              "attributes": {
+                "cor": "cinza",
+                "tamanho": "39 BR"
+              },
+              "priceAmount": 232.72
+            },
+            {
+              "attributes": {
+                "cor": "cinza",
+                "tamanho": "41 BR"
+              },
+              "priceAmount": 232.72
+            },
+            {
+              "attributes": {
+                "cor": "cinza",
+                "tamanho": "42 BR"
+              },
+              "priceAmount": 232.72
+            },
+            {
+              "attributes": {
+                "cor": "cinza",
+                "tamanho": "43 BR"
+              },
+              "priceAmount": 232.72
+            },
+            {
+              "attributes": {
+                "cor": "cinza",
+                "tamanho": "44 BR"
+              },
+              "priceAmount": 249.99
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "43 BR"
+              },
+              "priceAmount": 229.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "35 BR"
+              },
+              "priceAmount": 315.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "39 BR"
+              },
+              "priceAmount": 315.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "42 BR"
+              },
+              "priceAmount": 229.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "41 BR"
+              },
+              "priceAmount": 229.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "34 BR"
+              },
+              "priceAmount": 279.99
             }
           ],
           "images": [
             {
               "color": "cinza",
               "files": [
-                "mochila-trilha-arpenaz-20-litros-quechua-cinza-1.webp",
-                "mochila-trilha-arpenaz-20-litros-quechua-cinza-2.webp"
+                "tenis-olympikus-passo-1-1.webp",
+                "tenis-olympikus-passo-1-2.webp",
+                "tenis-olympikus-passo-1-3.webp"
               ]
-            }
-          ]
-        },
-        {
-          "name": "Mochila Trilha Camping Caminhada Viagem Confort 70l Cor Azul",
-          "description": "Mochila masculina e feminina para trilha, camping, acampamento, caminhada e viagem, com capacidade aproximada de 70L. \n\nComposta por:\n- 1 compartimento principal com fechamento em cordão ajustável\n- 1 divisória interna para notebook\n- 1 compartimento interno com zíper\n- 5 compartimentos externos com zíper\n- 1 compartimento externo sem zíper\n- Trava peitoral e abdominal\n- Dois bolsos laterais\n- Saída para mangueira da squeeze\n\nPRINCIPAIS CARACTERÍSTICAS:\n- Não acompanha mangueira nem bolsa de hidratação\n- Feita de nylon, resistente à água, leve e durável\n- Compartimento principal espaçoso e numerosos bolsos\n- Ultraleve, pesando apenas 1,150kg\n- Compartimento para sapatos separados\n- Alças de ombro acolchoadas ergonômicas\n- Suporte para as costas para melhor ventilação e conforto\n- Ajustes anatômicos\n- Alça para as costas regulável\n\nMedidas Aproximadas:\n- Altura: 70cm\n- Largura: 33cm\n- Profundidade: 24cm\n- Capacidade: 70 litros\n\nDicas de Limpeza:\n- Não use abrasivos, solventes ou agentes químicos na limpeza.\n\nCuidados:\n- Guarde em local seco e arejado.\n- Evite excesso de peso para não forçar zíperes e costuras.\n- Proteja objetos cortantes e/ou pontiagudos.",
-          "attributes": {
-            "marca": "CB",
-            "modelo": "A2020",
-            "tipo-de-mochila": "Academia",
-            "capacidade-da-mochila": "70 L",
-            "cor-principal": "Azul",
-            "altura": "70 cm",
-            "largura": "33 cm",
-            "profundidade": "24 cm",
-            "peso": "1 kg",
-            "genero": "Sem gênero",
-            "materiais": "Poliéster",
-            "tipos-de-fecho": "Zíper",
-            "com-compartimento-para-notebook": "Não",
-            "tamanho-maximo-do-notebook": "17 \"",
-            "e-a-prova-d-agua": "Sim",
-            "e-reforcada": "Sim",
-            "com-materiais-reciclados": "Sim",
-            "com-rodas": "Não",
-            "com-mecanismo-antirroubo": "Não",
-            "com-entrada-usb": "Não"
-          },
-          "skus": [
+            },
             {
-              "attributes": {
-                "cor": "azul"
-              },
-              "priceAmount": 289
-            }
-          ],
-          "images": [
-            {
-              "color": "azul",
+              "color": "preto",
               "files": [
-                "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-azul-1.webp",
-                "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-azul-2.webp"
+                "tenis-olympikus-passo-2-1.webp",
+                "tenis-olympikus-passo-2-2.webp",
+                "tenis-olympikus-passo-2-3.webp"
               ]
             }
           ]
         },
         {
-          "name": "Mochila Trilha Camping Caminhada Viagem Confort 70l Cor Preto",
-          "description": "Mochila masculina e feminina para trilha, camping, acampamento e viagem com capacidade aproximada de 70L. \n\nComposta por:\n- 1 compartimento principal com fechamento em cordão ajustável\n- 1 divisória interna para notebook\n- 1 compartimento interno com zíper\n- 5 compartimentos externos com zíper\n- 1 compartimento externo sem zíper\n- Trava peitoral e abdominal\n- Dois bolsos laterais\n- Saída para mangueira da squeeze\n\nPRINCIPAIS CARACTERÍSTICAS DA MOCHILA:\n- Não acompanha mangueira nem bolsa de hidratação\n- Feita de nylon, resistente à água, leve e durável\n- Compartimento principal espaçoso e numerosos bolsos\n- Ultraleve, pesando apenas 1,150kg\n- Compartimento para sapatos separados\n- Alças de ombro acolchoadas e suporte para as costas\n- Ajustes anatômicos\n- Alça para as costas regulável\n\nMedidas Aproximadas:\n- Altura 70cm\n- Largura 33cm\n- Profundidade 24cm\n- Capacidade aproximada 70 litros\n\nDicas de Limpeza:\n- Não use abrasivos, solventes ou agentes químicos na limpeza do produto.\n\nCuidados:\n- Guarde em local seco e arejado\n- Evite excesso de peso para não forçar zíperes e costuras\n- Proteja objetos cortantes e/ou pontiagudos evitando contato direto com o produto.",
+          "name": "Tênis Olympikus Dynamic",
+          "description": "O Olympikus Dynamic é o tênis ideal para quem busca conforto e durabilidade no dia a dia. \n\nO seu solado possui camada dupla com a tecnologia de amortecimento Evasense, que proporciona leveza, maciez e flexibilidade nas passadas. \n\nJá o cabedal é confeccionado em material sintético, tecido dupla frontura e injetado de silicone com a tecnologia Covergrid, que proporciona maior proteção, resistência e durabilidade. \n\nPossui atacador bicolor composto por tecido poliéster, logo em high frequency com detalhe de aplicação gráfica e forro de poliéster com espuma. \n\nSua palmilha é anatômica, composta por tecido poliéster e EVA.",
           "attributes": {
-            "marca": "CB",
-            "modelo": "A2020",
-            "tipo-de-mochila": "Academia",
-            "capacidade-da-mochila": "70 L",
-            "cor-principal": "Preto",
-            "altura": "70 cm",
-            "largura": "33 cm",
-            "profundidade": "24 cm",
-            "peso": "1 kg",
-            "genero": "Sem gênero",
-            "materiais": "Poliéster",
-            "tipos-de-fecho": "Zíper",
-            "com-compartimento-para-notebook": "Não",
-            "tamanho-maximo-do-notebook": "17 \"",
-            "e-a-prova-d-agua": "Sim",
-            "e-reforcada": "Sim",
-            "com-materiais-reciclados": "Sim",
-            "com-rodas": "Não",
-            "com-mecanismo-antirroubo": "Não",
-            "com-entrada-usb": "Não"
+            "marca": "Olympikus",
+            "modelo": "Dynamic",
+            "genero": "Unissex",
+            "modelo-alfanumerico": "43298343",
+            "desenho-do-tecido": "Liso",
+            "tipo-de-largura": "Padrão",
+            "usos-recomendados": "Treino e Academia",
+            "id-da-guia-de-tamanhos": "4088692",
+            "materiais-do-exterior": "Tecido",
+            "materiais-do-interior": "Tecido",
+            "materiais-da-sola": "Borracha",
+            "tipos-de-ajuste": "Cadarços",
+            "com-materiais-reciclados": "Não",
+            "e-impermeavel": "Não",
+            "com-sola-antiderrapante": "Sim",
+            "com-palmilhas-removiveis": "Sim",
+            "com-palmilhas-respiraveis": "Sim"
           },
           "skus": [
             {
               "attributes": {
-                "cor": "preto"
+                "cor": "preto",
+                "tamanho": "44 BR"
               },
-              "priceAmount": 289
+              "priceAmount": 249
+            },
+            {
+              "attributes": {
+                "cor": "cinza",
+                "tamanho": "39 BR"
+              },
+              "priceAmount": 359.9
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "41 BR"
+              },
+              "priceAmount": 249
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "40 BR"
+              },
+              "priceAmount": 259.77
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "38 BR"
+              },
+              "priceAmount": 339.99
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "39 BR"
+              },
+              "priceAmount": 249
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "37 BR"
+              },
+              "priceAmount": 270.27
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "43 BR"
+              },
+              "priceAmount": 249
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "42 BR"
+              },
+              "priceAmount": 249
             }
           ],
           "images": [
             {
               "color": "preto",
               "files": [
-                "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-preto-1.webp",
-                "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-preto-2.webp"
+                "tenis-olympikus-dynamic-1-1.webp",
+                "tenis-olympikus-dynamic-1-2.webp",
+                "tenis-olympikus-dynamic-1-3.webp"
+              ]
+            },
+            {
+              "color": "cinza",
+              "files": [
+                "tenis-olympikus-dynamic-2-1.webp",
+                "tenis-olympikus-dynamic-2-2.webp",
+                "tenis-olympikus-dynamic-2-3.webp"
               ]
             }
           ]
         },
         {
-          "name": "Mochila Trilha Camping Caminhada Viagem Confort 70l Cor Vermelho",
-          "description": "Mochila masculina feminina trilha camping acampamento caminhada viagem confort com capacidade aproximada de 70L litros. \n\nComposta por 1 compartimento principal com fechamento em cordão ajustável, 1 divisória interna para notebook, 1 compartimento interno com zíper, 5 compartimentos externos com zíper e 1 sem zíper, além de trava peitoral, trava abdominal, dois bolsos laterais e saída para mangueira da squeeze.\n\nPRINCIPAIS CARACTERÍSTICAS DA MOCHILA:\n- Não acompanha mangueira e nem bolsa de hidratação.\n- Feito de nylon, resistente à água, resistente ao rasgo, leve e durável.\n- Mochila de escalada 70l, compartimento principal espaçoso e numerosos bolsos com grande capacidade.\n- Ultraleve, pesando apenas 1,150kg.\n- Compartimento para sapatos separados, evitando que os outros itens da mochila sejam sujos, super conveniente e prático.\n- Alças de ombro acolchoadas ergonômicas e suporte para as costas para melhor ventilação e carga confortável.\n- Saída para mangueira da squeeze.\n- Divisória interna para notebook.\n- Ajustes anatômicos.\n- Alça para as costas regulável.\n\nMedidas Aproximadas:\n- Altura 70cm\n- Largura 33cm\n- Profundidade 24cm\n- Capacidade aproximada 70 litros\n\nDicas de Limpeza:\n- Não use abrasivos, solventes ou agentes químicos na limpeza de seu produto.\n\nCuidados:\n- Guarde em um local seco e arejado.\n- Evite colocar excesso de peso no produto para não forçar os zíperes e costuras.\n- Proteja os objetos cortantes e/ou pontiagudos evitando o contato direto com o produto.",
+          "name": "Tênis Olympikus Zex 2 Masculino",
+          "description": "O tênis ideal para quem busca conforto e estilo no dia a dia ganha a sua segunda edição. \n\nEntressola desenvolvida com a tecnologia de amortecimento Evasense, em um único bloco de EVA que proporciona leveza, maciez e flexibilidade nas passadas. \n\nPalmilha em EVA que oferece maior respirabilidade e um encaixe perfeito para os pés. \n\nGáspea produzida em double jacquard, uma tecnologia inovadora e flexível. \n\nDetalhes em laminado produzidos com a tecnologia high frequency, um material diferenciado de espessura mínima. \n\nInterior produzido em poliéster, oferecendo conforto ao caminhar. \n\nFita bicolor na lateral passante para o atacador. \n\nAtacador com pesponto apresenta destaque e estilo. \n\nPuxador traseiro em fita bicolor que auxilia o calce.",
           "attributes": {
-            "marca": "CB",
-            "modelo": "A2020",
-            "tipo-de-mochila": "Academia",
-            "capacidade-da-mochila": "70 L",
-            "cor-principal": "Vermelho",
-            "altura": "70 cm",
-            "largura": "33 cm",
-            "profundidade": "24 cm",
-            "peso": "1 kg",
-            "genero": "Sem gênero",
-            "materiais": "Poliéster",
-            "tipos-de-fecho": "Zíper",
-            "com-compartimento-para-notebook": "Não",
-            "tamanho-maximo-do-notebook": "17 \"",
-            "e-a-prova-d-agua": "Sim",
-            "e-reforcada": "Sim",
-            "com-materiais-reciclados": "Sim",
-            "com-rodas": "Não",
-            "com-mecanismo-antirroubo": "Não",
-            "com-entrada-usb": "Não"
+            "marca": "Olympikus",
+            "modelo": "Zex 2",
+            "versao": "2",
+            "genero": "Masculino",
+            "modelo-alfanumerico": "43584380",
+            "desenho-do-tecido": "Liso",
+            "tipo-de-largura": "Padrão",
+            "usos-recomendados": "Caminhada",
+            "id-da-guia-de-tamanhos": "4088378",
+            "materiais-do-exterior": "Tecido",
+            "materiais-do-interior": "Tecido",
+            "materiais-da-sola": "Borracha",
+            "tipos-de-ajuste": "Cadarços",
+            "com-materiais-reciclados": "Não",
+            "e-impermeavel": "Não",
+            "com-sola-antiderrapante": "Sim",
+            "com-plataforma": "Não",
+            "com-luzes": "Não"
           },
           "skus": [
+            {
+              "attributes": {
+                "cor": "cinza",
+                "tamanho": "43 BR"
+              },
+              "priceAmount": 249.99
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "39 BR"
+              },
+              "priceAmount": 249.99
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "43 BR"
+              },
+              "priceAmount": 249.99
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "42 BR"
+              },
+              "priceAmount": 249.99
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "37 BR"
+              },
+              "priceAmount": 249.99
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "41 BR"
+              },
+              "priceAmount": 249.99
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "38 BR"
+              },
+              "priceAmount": 249.99
+            }
+          ],
+          "images": [
+            {
+              "color": "cinza",
+              "files": [
+                "tenis-olympikus-zex-2-masculino-1-1.webp",
+                "tenis-olympikus-zex-2-masculino-1-2.webp",
+                "tenis-olympikus-zex-2-masculino-1-3.webp"
+              ]
+            },
+            {
+              "color": "azul",
+              "files": [
+                "tenis-olympikus-zex-2-masculino-2-1.webp",
+                "tenis-olympikus-zex-2-masculino-2-2.webp",
+                "tenis-olympikus-zex-2-masculino-2-3.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Tênis Masculino Kr6 Fila",
+          "description": "ESTILO E CONFORTO PARA O SEU DIA A DIA!\n\nO novo KR6 conta com a inovadora tecnologia SPEED TECH FOAM que entrega maior resiliência e responsividade. O solado na região frontal em EVER-GRIP T garante maior tração com o solo, já a borracha traseira em EVER-GRIP assegura maior durabilidade, sendo um tênis perfeito para treinos de velocidade. \n\nCom a tecnologia SKIN TECH no cabedal, em dupla camada de tecidos, o corredor calça praticamente uma segunda pele, desfrutando de maior ventilação e estrutura, além de evitar rasgos. \n------------------------------------------------------------------------------\nSOBRE A MARCA:\nFundada pelos irmãos Fila em 1911 na cidade de Biela, nos alpes italianos, a intenção original da marca era criar roupas de qualidade para pequenas cidades da região. Ao longo do tempo, a marca tornou-se mais próxima do esporte, com foco no desenvolvimento de calçados, além de acompanhar, incentivar e ajudar a escrever a história de esportes como tênis, automobilismo, running e basquete. No século XXI, a marca tornou-se especialista na produção de moda que mescla o casual com o esportivo, resgatando sua história em cada nova peça desenvolvida. Navegue por nossa coleção de polos, tênis para corrida, moda fitness, calçados casuais, bermudas, camisas, roupas para academia e outros itens de moda masculina e feminina.",
+          "attributes": {
+            "marca": "Fila",
+            "modelo": "KR6",
+            "genero": "Masculino",
+            "idade": "Adultos",
+            "tipo-de-largura": "Padrão",
+            "usos-recomendados": "Corrida",
+            "id-da-guia-de-tamanhos": "210030",
+            "materiais-do-exterior": "Tecido, PVC",
+            "materiais-do-interior": "Tecido",
+            "materiais-da-sola": "Borracha EVA, PVC, Borracha, Tecido",
+            "tecnologias-do-calcado": "Speed Tech Foam, Ever-Grip, Skin Tech",
+            "tipos-de-ajuste": "Cadarços",
+            "com-materiais-reciclados": "Não",
+            "composicao-do-exterior": "85% tecido, 15% PVC",
+            "composicao-da-sola": "63% borracha EVA, 20% PVC, 15% borracha, 2% tecido",
+            "com-sola-antiderrapante": "Sim",
+            "com-plataforma": "Não",
+            "com-luzes": "Não"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "branco"
+              },
+              "priceAmount": 250
+            },
+            {
+              "attributes": {
+                "cor": "preto"
+              },
+              "priceAmount": 500
+            },
             {
               "attributes": {
                 "cor": "vermelho"
               },
-              "priceAmount": 189.9
+              "priceAmount": 250
             }
           ],
           "images": [
+            {
+              "color": "branco",
+              "files": [
+                "tenis-masculino-kr6-fila-1-1.webp"
+              ]
+            },
+            {
+              "color": "preto",
+              "files": [
+                "tenis-masculino-kr6-fila-2-1.webp"
+              ]
+            },
             {
               "color": "vermelho",
               "files": [
-                "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-vermelho-1.webp",
-                "mochila-trilha-camping-caminhada-viagem-confort-70l-cor-vermelho-2.webp"
+                "tenis-masculino-kr6-fila-3-1.webp"
               ]
             }
           ]
         },
         {
-          "name": "Mochila Trilha Viagem Reforcada 90l Mochila Camping Cargueira Wicopet Mochila Masculina Impermeável",
-          "description": "Descrição do Produto:\nEsta mochila de esporte e aventura de 90L é projetada para exploração ao ar livre e viagens prolongadas, combinando um enorme espaço de armazenamento com excelentes propriedades de impermeabilidade. Seja para trilhas, acampamentos ou viagens longas, esta mochila atende todas as suas necessidades, oferecendo uma solução de armazenamento excepcional e conforto durante o uso.\n\nDesign e Aparência:\n- Grande Capacidade: Com um design de 90L, a mochila oferece muito espaço para armazenar equipamentos e itens, ideal para viagens longas, escaladas ou acampamentos de vários dias.\n- Função Impermeável: Fabricada com materiais impermeáveis de alta qualidade, protege seus itens internos contra chuva e umidade, garantindo que seu equipamento permaneça seco.\n- Design Resistente: Utiliza tecido Oxford, conhecido por sua durabilidade e resistência, capaz de suportar condições adversas.\n\nConforto e Funcionalidade:\n- Sistema de Transporte Confortável: A mochila é equipada com painel traseiro em malha respirável e alças acolchoadas, reduzindo a pressão nas costas e ombros, melhorando o conforto durante o uso prolongado. As alças e o cinto são ajustáveis, adaptando-se a diferentes tipos de corpo e proporcionando uma experiência de transporte estável.\n- Bolsos Multifuncionais: Vários compartimentos e bolsos internos permitem a organização eficiente dos itens. Bolsos externos frontais, laterais e inferiores facilitam o armazenamento e acesso rápido a garrafas de água, ferramentas e alimentos.\n\nEspaço de Armazenamento:\n- Compartimento Principal: O compartimento principal de grande capacidade pode acomodar itens volumosos como tendas, sacos de dormir e roupas, facilitando a organização e armazenamento.\n- Bolsos Adicionais: Múltiplos bolsos externos e divisórias internas permitem o armazenamento de itens menores, garantindo fácil acesso. Bolsos laterais elásticos são ideais para armazenar garrafas de água ou outros itens essenciais.\n\nCenários de Uso:\n- Versatilidade: Esta mochila de 90L é ideal para viagens longas, escaladas, acampamentos e outras atividades ao ar livre. Sua grande capacidade e propriedades impermeáveis fazem dela a escolha perfeita para enfrentar diversos desafios ao ar livre.\n\nEspecificações:\n- Material: Nylon de alta resistência\n- Capacidade: 90L\n- Dimensões: aproximadamente 75 x 35 x 25 cm\n- Peso: 1.4 kg\n\nResumo:\nEsta mochila de esporte e aventura de 90L combina grande capacidade, durabilidade e conforto, tornando-se um equipamento essencial para entusiastas do outdoor. Seja para exploração prolongada ou viagens curtas, ela proporciona amplo espaço de armazenamento e proteção confiável contra a água, tornando suas atividades ao ar livre mais fáceis e agradáveis.",
+          "name": "Tênis Corrida Olympikus Masculino 43506336 Sonoro 3",
+          "description": "CONFORTO E ESTILO PARA AS SUAS CORRIDAS!\n\nO tênis de corrida masculino Sonoro 3 da Olympikus oferece leveza sem abdicar do desempenho. O cabedal em tecido knit bicolor com tecnologia Hypersox proporciona flexibilidade e alta resistência, mantendo seus pés frescos e confortáveis. \n\nSeu solado inovador antiderrapante, de borracha, com as tecnologias Eleva + e Gripper, proporciona amortecimento e aderência em cada movimento. O calce por via de cadarços garante um ajuste firme e personalizado, além de contar com forro têxtil e palmilha plana de EVA e poliéster, trazendo suporte durante todo o uso. Leve, flexível e confortável, o Sonoro 3 da Olympikus é ideal para elevar o nível de performance nas corridas!",
           "attributes": {
-            "marca": "Unistar",
-            "linha": "Esportiva",
-            "modelo": "Camping",
-            "capacidade-da-mochila": "90 L",
-            "desenho-do-tecido": "NTK",
-            "cor-principal": "Preto",
-            "altura": "75 cm",
-            "largura": "35 cm",
-            "profundidade": "25 cm",
-            "peso": "751 kg",
+            "marca": "Olympikus",
+            "modelo": "Sonoro 3",
+            "versao": "3",
             "genero": "Masculino",
-            "materiais": "Oxford",
-            "tipos-de-fecho": "Zíper",
-            "com-compartimento-para-notebook": "Não",
-            "e-a-prova-d-agua": "Sim",
-            "e-reforcada": "Sim",
-            "com-materiais-reciclados": "Não",
-            "com-rodas": "Não",
-            "com-mecanismo-antirroubo": "Não",
-            "com-entrada-usb": "Não"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "preto"
-              },
-              "priceAmount": 152
-            }
-          ],
-          "images": [
-            {
-              "color": "preto",
-              "files": [
-                "mochila-trilha-viagem-reforcada-90l-mochila-camping-cargueira-wicopet-mochila-masculina-impermeavel-1.webp",
-                "mochila-trilha-viagem-reforcada-90l-mochila-camping-cargueira-wicopet-mochila-masculina-impermeavel-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Mochila Trilha Acampamento Camping Flamengo Time Rubro Negro",
-          "description": "Mochila Camping Flamengo 55L é a escolha perfeita para quem busca praticidade, conforto e resistência. \n\nCom capacidade ampla de 55 litros, seu material impermeável protege seus itens da chuva e da umidade, tornando-a ideal para trilhas, acampamentos e viagens.\n\nSeu design ergonômico com alças acolchoadas proporciona conforto extra, mesmo em longas caminhadas. Além disso, conta com vários compartimentos espaçosos para organizar seus itens essenciais com segurança. O escudo do Flamengo em destaque dá aquele toque especial.\n\nCaracterísticas:\n- Alça de mão\n- Alça de costas\n- Bolso para notebook\n- Capa de chuva\n- Compartimento para sapatos\n- Forro exclusivo\n- Puxador personalizado\n- Zíper tratorado\n\nEspecificações:\n- Material: Poliéster\n- Medidas Aproximadas (A x L x P): 66cm x 36cm x 20cm",
-          "attributes": {
-            "marca": "Clio",
-            "modelo": "Camping",
-            "tipo-de-mochila": "Esportiva",
-            "capacidade-da-mochila": "55 L",
+            "modelo-alfanumerico": "43506336",
             "desenho-do-tecido": "Liso",
-            "cor-principal": "Preto",
-            "altura": "66 cm",
-            "largura": "36 cm",
-            "profundidade": "20 cm",
-            "genero": "Sem gênero",
-            "materiais": "Poliéster",
-            "tipos-de-fecho": "Zíper",
-            "com-compartimento-para-notebook": "Sim",
-            "e-a-prova-d-agua": "Sim",
-            "e-reforcada": "Sim",
+            "tipo-de-largura": "Padrão",
+            "usos-recomendados": "Corrida",
+            "id-da-guia-de-tamanhos": "4088692",
+            "materiais-do-exterior": "Tecido Knit bicolor",
+            "materiais-do-interior": "Tecido",
+            "materiais-da-sola": "Borracha",
+            "tipos-de-ajuste": "Cadarços",
             "com-materiais-reciclados": "Não",
-            "com-rodas": "Não",
-            "com-mecanismo-antirroubo": "Não",
-            "com-entrada-usb": "Não",
-            "com-saida-para-fone-de-ouvido": "Não"
+            "composicao-da-sola": "EVA",
+            "e-impermeavel": "Não"
           },
           "skus": [
             {
               "attributes": {
-                "cor": "preto"
+                "cor": "preto",
+                "tamanho": "33 BR"
               },
-              "priceAmount": 302.9
+              "priceAmount": 160
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "41 BR"
+              },
+              "priceAmount": 299
+            },
+            {
+              "attributes": {
+                "cor": "mc/pto",
+                "tamanho": "40 BR"
+              },
+              "priceAmount": 450
+            },
+            {
+              "attributes": {
+                "cor": "mc/pto",
+                "tamanho": "38 BR"
+              },
+              "priceAmount": 459.99
             }
           ],
           "images": [
             {
               "color": "preto",
               "files": [
-                "mochila-trilha-acampamento-camping-flamengo-time-rubro-negro-1.webp"
+                "tenis-corrida-olympikus-masculino-43506336-sonoro-3-1-1.webp",
+                "tenis-corrida-olympikus-masculino-43506336-sonoro-3-1-2.webp",
+                "tenis-corrida-olympikus-masculino-43506336-sonoro-3-1-3.webp"
               ]
-            }
-          ]
-        },
-        {
-          "name": "Mochila Trilha 70 Litros Camping Pesca Caminhada - Reforçada",
-          "description": "A mochila Camping Clio Poliéster MC5386 possui capacidade de 70 litros, confeccionada em poliéster de alta qualidade, disponível em várias cores, como vermelho, verde, azul, cinza e preto. \n\nSeu amplo compartimento principal tem grande abertura por cordão regulável, facilitando o acesso e a organização da carga. O acesso ao compartimento principal pode ser feito pela parte superior ou inferior, através de um zíper que divide os compartimentos.\n\nA mochila conta com dois bolsos laterais grandes com fechamento em zíper, mais dois bolsos telados para garrafas de água, compartimento frontal com zíper de acesso rápido e um bolso frontal. A tampa superior possui um amplo bolso para itens de acesso rápido.\n\nPossui acolchoamento nas costas, alças reforçadas e cinturão abdominal também reforçado, além de peitoral, que proporcionam mais estabilidade e segurança no uso. As alças possuem ajuste de altura por fitas e vêm com fitas de compressão nas laterais, no fundo e na parte frontal, que ajudam na compactação da carga e podem servir para prender itens mais volumosos, como isolantes, casacos ou saco de dormir.\n\nDuas alças no fundo servem de ponto de amarra para mosquetões e itens pequenos.\n\nCapacidade: 70 litros\n\nMedidas aproximadas: altura 75 cm x largura 38 cm x profundidade 30 cm\n\nPeso: 1250 gramas.",
-          "attributes": {
-            "marca": "Clio",
-            "linha": "Camping",
-            "modelo": "MC3327",
-            "capacidade-da-mochila": "70 L",
-            "profundidade": "23 cm",
-            "peso": "950 g",
-            "genero": "Sem gênero",
-            "materiais": "Poliéster",
-            "tipos-de-fecho": "Zíper",
-            "com-compartimento-para-notebook": "Não",
-            "e-a-prova-d-agua": "Não",
-            "e-reforcada": "Sim",
-            "com-materiais-reciclados": "Sim",
-            "com-rodas": "Não",
-            "com-mecanismo-antirroubo": "Não",
-            "com-entrada-usb": "Não",
-            "com-saida-para-fone-de-ouvido": "Não",
-            "com-correia-abdominal": "Sim",
-            "com-correia-de-peito": "Sim",
-            "com-correia-para-bagagem": "Não"
-          },
-          "skus": [
+            },
             {
-              "attributes": {
-                "cor": "azul-escuro"
-              },
-              "priceAmount": 189
-            }
-          ],
-          "images": [
-            {
-              "color": "azul-escuro",
+              "color": "mc/pto",
               "files": [
-                "mochila-trilha-70-litros-camping-pesca-caminhada-reforcada-1.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Mochila Trilha Camping 55l Litros Impermeável Clio Exploring",
-          "description": "Mochila Trilha Camping 55l Litros Impermeável Clio Exploring\n\nAltura: 68 cm;\nLargura: 38 cm\nProfundidade: 30 cm\nPeso: 1150 gramas\n\n- Compartimento principal com grande abertura por cordão regulável, facilita o acesso e a organização da carga. Acesso por cima ou por baixo, em abertura inferior com zíper;\n\n- Possibilidade de isolar a parte de cima e de baixo através do zíper interno;\n\n- Dois bolsos laterais grandes com fechamento em zíper para guardar pertences de acesso rápido;\n\n- Dois bolsos telados para garrafas de água;\n\n- Compartimento frontal com zíper de acesso rápido;\n\n- Um bolso frontal adicional;\n\n- Isolamento superior com amplo bolso para guardar objetos e roupas;\n\n- Acolchoamento nas costas;\n\n- Alças reforçadas;\n\n- Cinturão abdominal reforçado;\n\n- Cinta peitoral para maior estabilidade e segurança;\n\n- Alças com ajuste de altura por fitas;\n\n- Fitas de compressão laterais, no fundo e na parte frontal, úteis para prender itens volumosos como isolantes e saco de dormir;\n\n- Duas alças no fundo para amarrar ou afixar mosquetões e objetos pequenos.\n\nCapacidade: 55 litros",
-          "attributes": {
-            "marca": "Clio",
-            "modelo": "Trilha Camping Clio",
-            "tipo-de-mochila": "Trekking",
-            "capacidade-da-mochila": "55 L",
-            "cor-principal": "Cinza",
-            "altura": "68 cm",
-            "largura": "38 cm",
-            "profundidade": "30 cm",
-            "peso": "1.15 kg",
-            "e-impermeavel": "Sim"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "cinza-escuro"
-              },
-              "priceAmount": 131.92
-            }
-          ],
-          "images": [
-            {
-              "color": "cinza-escuro",
-              "files": [
-                "mochila-trilha-camping-55l-litros-impermeavel-clio-exploring-1.webp",
-                "mochila-trilha-camping-55l-litros-impermeavel-clio-exploring-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Mochila Trilha Thule Stir Com Aba Protetora Contra Chuva 35l",
-          "description": "MOCHILA THULE – PRONTA PARA ESCALADAS E TRILHAS INTENSAS\n\n• Ideal para aventuras ao ar livre: leve, resistente e funcional\n• Painel traseiro ajustável e barrigueira removível para máximo conforto\n• Tecido em nylon resistente a intempéries e abrasão\n• Acesso lateral rápido ao conteúdo e capa de chuva inclusa\n• Suporte para bastões, machado de neve e cordas\n\nDETALHES TÉCNICOS\n• Dimensões: 62 x 31 x 27 cm | Peso: 1 kg\n• Diversos bolsos e compartimentos acessíveis\n• Logotipo reflexivo para visibilidade em baixa luz\n\nAdquira já a mochila perfeita para suas aventuras com segurança, organização e estilo!",
-          "attributes": {
-            "marca": "Thule",
-            "modelo": "Thule Stir",
-            "tipo-de-mochila": "Passeio",
-            "capacidade-da-mochila": "35 L",
-            "cor-principal": "Marrom",
-            "altura": "62 cm",
-            "largura": "31 cm",
-            "profundidade": "27 cm",
-            "peso": "1 kg",
-            "genero": "Sem gênero",
-            "materiais": "Náilon",
-            "tipos-de-fecho": "Zíper",
-            "com-compartimento-para-notebook": "Não",
-            "e-a-prova-d-agua": "Sim",
-            "e-reforcada": "Sim",
-            "com-rodas": "Não",
-            "com-mecanismo-antirroubo": "Não",
-            "com-entrada-usb": "Não",
-            "com-correia-abdominal": "Não",
-            "com-correia-de-peito": "Sim"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "marrom"
-              },
-              "priceAmount": 2199
-            }
-          ],
-          "images": [
-            {
-              "color": "marrom",
-              "files": [
-                "mochila-trilha-thule-stir-com-aba-protetora-contra-chuva-35l-1.webp",
-                "mochila-trilha-thule-stir-com-aba-protetora-contra-chuva-35l-2.webp"
+                "tenis-corrida-olympikus-masculino-43506336-sonoro-3-2-1.webp",
+                "tenis-corrida-olympikus-masculino-43506336-sonoro-3-2-2.webp",
+                "tenis-corrida-olympikus-masculino-43506336-sonoro-3-2-3.webp"
               ]
             }
           ]
@@ -1074,339 +1078,978 @@
       ]
     },
     {
-      "name": "Natação",
+      "name": "Acessórios",
       "products": [
         {
-          "name": "Óculos Natação Leader Swell Mirror Preto",
-          "description": "Descrição:\n\nÓculos de Natação Espelhado Leader Swell é uma escolha perfeita para treinamentos e aventuras em águas abertas. Com um design exclusivo que oferece visão panorâmica, você terá um campo visual ótimo enquanto nada.  \nFabricado em silicone de alta durabilidade, este modelo de óculos de natação foi concebido para resistir ao uso intenso e frequente. Além disso, conta com uma tira dupla, garantindo um ajuste perfeito e confortável para todas as formas e tamanhos de rostos.  \nCom uma película antiembaçante,   \nAs lentes possuem proteção contra raios UV e são espelhadas, aprimorando sua visão durante a natação em ambientes com incidência de sol. Com o Leader Swell, sua experiência aquática será incrível, independentemente das condições climáticas.  \n\nO Estojo Porta Óculos Natação Medinas é ideal para qualquer atividade que os equipamentos molham e precisam secar sem umidade. Dessa forma, eles vão durar muito mais. Nosso estojo possui um bolso interno e dois furos estrategicamente posicionados para retirar a umidade dos itens. Equipado com um gancho para você pendurá-lo e transportá-lo facilmente. Mantenha seus equipamentos seguros, secos e organizados na sua mochila.  \n\nTecnologias:  \nAntiembaçante;  \nProteção UV;  \nLentes espelhadas;  \nNarigueiras Reguláveis.  \n\nÁrea de Vedação:  \nÁrea de Vedação M: a vedação ocorre abaixo das sobrancelhas, com foco em conforto e médio atrito com a água.  \n\nCampo de Visão:  \n180º Graus: desenho com foco na máxima amplitude do campo de visão.  \n\nComposição:  \nLentes: 100% Policarbonato;  \nVentosa: 100% Silicone líquido;  \nTira: 100% Silicone líquido.  \n\nEstojo:  \nMoldado em EVA;  \nMatéria prima emborrachada revestida com poliéster.  \nZíper em Nylon.  \nGancho em metal.  \n\nContém:  \n1 – Óculos de Natação Espelhado Leader Swell;  \n3 – Opções de narigueira com tamanhos P, M e G;  \n1 – Embalagem de acrílico;  \n1 – Estojo Porta Óculos Natação Medinas.  \nAcessórios da foto não inclusos.  \n\nTamanho Estojo:  \n9cm x 7cm x 20cm.  \n\nCuidados:  \nApós o uso, enxague seu óculos em água corrente fria e limpa;  \nDeixar secar em local com temperatura ambiente;  \nNão guardar ou deixar diretamente na luz do sol;  \nNão esfregar a parte interna das lentes;  \nUtilize um estojo para guardar os seus óculos.  \n\nIndicação:  \nNatação;  \nTreinamento;  \nÁguas Abertas;  \nTriathlon.",
+          "name": "Okdok Aba Curva",
+          "description": "O Boné Okdok Aba Curva Team - Branco - Unic é a escolha perfeita para quem busca estilo e conforto. Com um design moderno, este boné apresenta um modelo de aba curva que se adapta perfeitamente ao seu rosto, proporcionando proteção contra o sol. Confeccionado em tecido Ottoman, ele garante durabilidade e um toque suave ao toque. O boné possui um fechamento posterior, garantindo um ajuste seguro e confortável. O bordado do logo Okdok, tanto na parte frontal quanto na posterior, adiciona um toque de sofisticação. Com tamanho único, é ideal para adultos. A embalagem do produto tem dimensões de 40 cm de altura, 32 cm de largura e 1 cm de comprimento, pesando 800 g, e vem com embalagem adicional, garantindo que seu boné chegue em perfeitas condições.",
           "attributes": {
-            "marca": "Leader",
-            "modelo": "Swell",
-            "cor-principal": "Preto",
-            "tipo-de-lente": "Espelhado",
-            "genero": "Sem gênero",
-            "materiais": "Policarbonato, Silicone",
-            "usos-recomendados": "Natação, Treinamento, Triatlo, Águas abertas",
-            "com-protecao-uv": "Sim",
-            "com-narizeiras-intercambiaveis": "Não",
-            "e-antiembacante": "Sim",
-            "e-um-produto-hipoalergenico": "Não",
-            "inclui-estojo": "Sim"
+            "marca": "Okdok",
+            "modelo": "Aba Curva",
+            "tipo-de-chapeu": "Boné",
+            "desenho-do-tecido": "Liso",
+            "genero": "Masculino",
+            "temporada-de-lancamento": "Primavera/Verão",
+            "e-reversivel": "Não"
           },
           "skus": [
             {
               "attributes": {
-                "cor": "preto"
+                "cor": "branco",
+                "tamanho": "Unic"
               },
-              "priceAmount": 89
+              "priceAmount": 126.58
+            },
+            {
+              "attributes": {
+                "cor": "vermelho",
+                "tamanho": "Unic"
+              },
+              "priceAmount": 145.88
             }
           ],
           "images": [
+            {
+              "color": "branco",
+              "files": [
+                "okdok-aba-curva-1-1.webp",
+                "okdok-aba-curva-1-2.webp",
+                "okdok-aba-curva-1-3.webp"
+              ]
+            },
+            {
+              "color": "vermelho",
+              "files": [
+                "okdok-aba-curva-2-1.webp",
+                "okdok-aba-curva-2-2.webp",
+                "okdok-aba-curva-2-3.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Okdok Boné Aba Curva",
+          "description": "O boné OKDOK com aba curva é a escolha perfeita para quem valoriza estilo e conforto em seu dia a dia. Sua composição de tecidos de alta qualidade garante durabilidade, enquanto seu design moderno se adapta facilmente a diversas ocasiões, seja para um passeio casual ou um evento social.\n\nCom um ajuste confortável, este boné oferece proteção contra os raios solares, permitindo que você aproveite ao máximo o tempo ao ar livre. A aba curva não apenas adiciona um toque de elegância, mas também é prática, adaptando-se ao formato do rosto e proporcionando sombra onde mais você precisa.\n\nDisponível em uma variedade de cores, o boné OKDOK permite que você encontre a opção que melhor combina com o seu estilo pessoal. Invista em um acessório versátil que realça sua aparência enquanto oferece funcionalidade no dia a dia.\n\nSeja para um dia na praia, uma caminhada no parque ou um evento casual, este boné é um item essencial que não pode faltar no seu guarda-roupa. Com o boné OKDOK, você não só obterá qualidade, mas também um toque de sofisticação em cada uso.",
+          "attributes": {
+            "marca": "Okdok",
+            "modelo": "Boné Aba Curva",
+            "tipo-de-chapeu": "Boné",
+            "desenho-do-tecido": "Liso",
+            "com-fechamento-ajustavel": "Sim"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "vermelho",
+                "tamanho": "Unic"
+              },
+              "priceAmount": 125.18
+            },
+            {
+              "attributes": {
+                "cor": "bege",
+                "tamanho": "Unic"
+              },
+              "priceAmount": 117.86
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "Unic"
+              },
+              "priceAmount": 125.18
+            }
+          ],
+          "images": [
+            {
+              "color": "vermelho",
+              "files": [
+                "okdok-bone-aba-curva-1-1.webp",
+                "okdok-bone-aba-curva-1-2.webp",
+                "okdok-bone-aba-curva-1-3.webp"
+              ]
+            },
+            {
+              "color": "bege",
+              "files": [
+                "okdok-bone-aba-curva-2-1.webp",
+                "okdok-bone-aba-curva-2-2.webp",
+                "okdok-bone-aba-curva-2-3.webp"
+              ]
+            },
             {
               "color": "preto",
               "files": [
-                "oculos-natacao-leader-swell-mirror-preto-1.webp",
-                "oculos-natacao-leader-swell-mirror-preto-2.webp"
+                "okdok-bone-aba-curva-3-1.webp"
               ]
             }
           ]
         },
         {
-          "name": "Óculos Natação Speedo One Fit Verde",
-          "description": "O Óculos Natação Speedo OneFit foi desenvolvido para quem busca praticidade, conforto e segurança. Com design moderno e sistema de ajuste inteligente, oferece uma experiência confortável para nadadores que precisam de um óculos fácil de regular, eficiente na vedação e versátil para diferentes formatos de rosto.\n\nA tecnologia exclusiva Smart Clip permite um ajuste rápido, seguro e preciso na parte traseira da cabeça. Essa solução facilita a regulagem das tiras e auxilia o nadador a encontrar o encaixe ideal.\n\nO modelo acompanha 3 tamanhos de narizeira removível — P, M e G — permitindo uma adaptação personalizada ao rosto, sendo uma escolha para quem tem dificuldade em encontrar óculos de natação que encaixem bem, especialmente rostos menores.\n\nAs lentes em policarbonato contam com tratamento Anti-Fog e proteção UV 400, oferecendo visão clara e segurança em treinos em piscinas abertas ou ambientes com maior luminosidade.\n\nPrincipais Benefícios\n\nTecnologia Smart Clip para ajuste rápido e seguro.\nConforto imediato desde o primeiro uso.\nIndicado também para rostos menores.\nNarizeira removível com 3 tamanhos inclusos: P, M e G.\nLentes com proteção UV 400.\nTratamento Anti-Fog contra embaçamento.\nVedação confortável em elastômero termoplástico.\nTira em silicone com excelente durabilidade.\nAcompanha estojo rígido Ellipse Box.\nDesign moderno e versátil para treinos e lazer.\n\nÁrea de Vedação\n\nÁrea de Vedação P: a vedação ocorre em pequena área ao redor dos olhos. Foco em baixo arrasto de água e maior deslize.\n\nCampo de Visão\n\nFrontal/Lateral: ampla visão subaquática à frente e aos lados.\n\nTecnologias\n\nSmart Clip: tecnologia de ajuste rápido e seguro para um encaixe prático.\nAdjustable: narizeira removível em 3 tamanhos para melhor adaptação facial.\nAnti-Fog: tratamento antiembaçante para clareza visual.\nUV 400: proteção contra raios UVA e UVB.\nSmall Faces: design indicado também para rostos menores.\n\nIndicação\n\nNatação.\nTreinamentos.\nLazer.\nPiscinas cobertas.\nPiscinas abertas.\nNadadores com rosto menor ou que buscam ajuste personalizado.\n\nComposição\n\nLentes: Policarbonato.\nVentosa: Elastômero termoplástico.\nTira: Silicone.\nNarizeira: Removível em 3 tamanhos.\n\nContém\n\n1 – Óculos Natação Speedo OneFit.\n3 – Narizeiras removíveis nos tamanhos P, M e G.\n1 – Estojo rígido Ellipse Box 6 x 20 x 6 cm.\n\nCuidados\n\nEnxaguar o óculos com água fria e limpa após cada uso.\nNão esfregar a parte interna das lentes para preservar o tratamento Anti-Fog.\nDeixar secar naturalmente à sombra.\nNão guardar molhado dentro do estojo.\nEvitar exposição prolongada ao sol quando não estiver em uso. Guardar no estojo rígido para proteger as lentes contra riscos e impactos.",
+          "name": "Resina Dardo",
+          "description": "O boné de aba curva é um item de vestuário estruturado para proteção craniana, confeccionado em tecido de brim peletizado composto por 100% algodão. Este material confere resistência à tração e permeabilidade adequada para utilização em condições climáticas de primavera e verão. O design incorpora um sistema de ajuste tipo strapback, equipado com um regulador de fivela de 17 mm, permitindo a adaptação da circunferência do acessório a um padrão nominal de 57,50 cm. A aba apresenta uma geometria curva reforçada por quatro costuras paralelas, que asseguram a estabilidade da forma. Trata-se de um produto de categoria unissex, adequado para o público adulto, que não utiliza materiais reciclados em sua composição. A arquitetura do boné mantém uma estrutura fixa, não sendo reversível, e é classificada como um modelo convencional de uso contínuo.",
           "attributes": {
-            "marca": "Speedo",
-            "modelo": "One Fit",
-            "cor-principal": "Verde",
-            "tipo-de-lente": "Fumê",
-            "genero": "Sem gênero",
-            "materiais": "Policarbonato, Silicone",
-            "usos-recomendados": "Ambientes  abertos, Competições, Lazer, Natação, Recreação, Treinos",
-            "com-protecao-uv": "Sim",
-            "com-narizeiras-intercambiaveis": "Sim",
-            "e-antiembacante": "Sim",
-            "e-um-produto-hipoalergenico": "Não",
-            "inclui-estojo": "Sim"
+            "marca": "Resina",
+            "modelo": "Dardo",
+            "tipo-de-chapeu": "Aba Curva",
+            "desenho-do-tecido": "Liso",
+            "genero": "Unissex",
+            "temporada-de-lancamento": "Primavera/Verão",
+            "ano-de-lancamento": "2023",
+            "com-fechamento-ajustavel": "Sim",
+            "com-materiais-reciclados": "Não"
           },
           "skus": [
             {
               "attributes": {
-                "cor": "verde"
+                "cor": "branco",
+                "tamanho": "Único"
               },
-              "priceAmount": 161.91
+              "priceAmount": 33.22
+            },
+            {
+              "attributes": {
+                "cor": "azul royal",
+                "tamanho": "Único"
+              },
+              "priceAmount": 33.22
+            },
+            {
+              "attributes": {
+                "cor": "azul-claro",
+                "tamanho": "Único"
+              },
+              "priceAmount": 33.22
+            },
+            {
+              "attributes": {
+                "cor": "azul-marinho",
+                "tamanho": "Único"
+              },
+              "priceAmount": 33.22
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "Único"
+              },
+              "priceAmount": 33.22
+            },
+            {
+              "attributes": {
+                "cor": "rosa",
+                "tamanho": "Único"
+              },
+              "priceAmount": 33.22
+            },
+            {
+              "attributes": {
+                "cor": "vermelho",
+                "tamanho": "Único"
+              },
+              "priceAmount": 33.22
             }
           ],
           "images": [
             {
-              "color": "verde",
+              "color": "branco",
               "files": [
-                "oculos-natacao-speedo-one-fit-verde-1.webp"
+                "resina-dardo-1-1.webp",
+                "resina-dardo-1-2.webp"
               ]
-            }
-          ]
-        },
-        {
-          "name": "Oculos Natacao Athlon Mormaii Branco Espelhado",
-          "description": "Óculos de Natação Mormaii Athlon, ideais para práticas em treinos ou atividades em águas abertas. O design proporciona ajuste anatômico ao rosto e amplo campo de visão.\n\nFabricado com corpo em silicone, garante conforto e vedação eficiente. As lentes escurecidas e espelhadas reduzem a incidência de luz, sendo indicadas para ambientes externos ou locais com alta luminosidade.\n\nConta com sistema de ajuste lateral rápido, permitindo a regulagem precisa das tiras.\n\nCaracterísticas:\nMarca: Mormaii\nModelo: Athlon\nCorpo em silicone\nLentes escurecidas e espelhadas\nSistema de ajuste lateral rápido\nDesign com campo de visão estendido\nIndicado para natação recreativa, treinos e águas abertas",
-          "attributes": {
-            "marca": "Mormaii",
-            "modelo": "OCULOS NATACAO ATHLON MORMAII",
-            "genero": "Sem gênero",
-            "usos-recomendados": "Natação",
-            "com-narizeiras-intercambiaveis": "Não",
-            "inclui-estojo": "Sim"
-          },
-          "skus": [
+            },
             {
-              "attributes": {
-                "cor": "branco/espelhado"
-              },
-              "priceAmount": 124.9
-            }
-          ],
-          "images": [
-            {
-              "color": "branco/espelhado",
+              "color": "azul royal",
               "files": [
-                "oculos-natacao-athlon-mormaii-branco-espelhado-1.webp",
-                "oculos-natacao-athlon-mormaii-branco-espelhado-2.webp"
+                "resina-dardo-2-1.webp",
+                "resina-dardo-2-2.webp"
               ]
-            }
-          ]
-        },
-        {
-          "name": "Oculos Natacao Athlon Mormaii Cinza Espelhado",
-          "description": "Os óculos de natação Mormaii Athlon foram desenvolvidos para desempenho, conforto absoluto e vedação em qualquer ambiente aquático. Fabricado em 100% silicone líquido ultra macio, adapta-se ao rosto, garantindo encaixe preciso e seguro.\n\nCaracterísticas:\n\n100% silicone líquido: material premium, flexível e confortável.\n\nVedação: ventosas ultra macias que impedem a entrada de água.\n\nBaixo volume: reduz arrasto e melhora a performance.\n\nAjuste rápido: tiras de silicone com regulagem prática e eficiente.\n\nLentes em policarbonato: alta resistência e durabilidade.\n\nProteção UV: segurança para treinos ao ar livre.\n\nTratamento antiembaçante: visão clara dentro da água.\n\nAcompanha estojo para proteção e transporte.\n\nIndicado para:\n\nTreinamentos.\n\nCompetições.\n\nPiscinas e águas abertas.\n\nMaratonas aquáticas.",
-          "attributes": {
-            "marca": "Mormaii",
-            "modelo": "OCULOS NATACAO ATHLON MORMAII",
-            "genero": "Sem gênero",
-            "usos-recomendados": "Natação",
-            "com-narizeiras-intercambiaveis": "Não",
-            "inclui-estojo": "Sim"
-          },
-          "skus": [
+            },
             {
-              "attributes": {
-                "cor": "cinza espelhado"
-              },
-              "priceAmount": 139.5
-            }
-          ],
-          "images": [
-            {
-              "color": "cinza espelhado",
+              "color": "azul-claro",
               "files": [
-                "oculos-natacao-athlon-mormaii-cinza-espelhado-1.webp"
+                "resina-dardo-3-1.webp",
+                "resina-dardo-3-2.webp"
               ]
-            }
-          ]
-        },
-        {
-          "name": "Oculos Natação Speedo Beats Cor Fumê",
-          "description": "Descrição:\n\nOs Óculos de Natação Speedo Beats são a escolha perfeita para nadadores que buscam praticidade, conforto e ótimo preço. Projetado para se ajustar a rostos menores, esse modelo garante vedação segura e uma experiência de natação sem incômodos. \n\nPrincipais Benefícios:  \nDesign One-Piece: Modelo de peça única que oferece praticidade e ajuste preciso, ideal para uso regular em treinos e lazer.  \nExcelente Campo de Visão: Lentes em policarbonato de alta qualidade garantem visão clara, proporcionando maior segurança e confiança na água.  \nConforto e Vedação: Equipado com vedação macia em policloreto de vinila, os óculos oferecem conforto durante toda a sessão, sem causar desconforto ou vazamentos.  \nAjuste Ideal para Rostos Menores: Com uma área de vedação tamanho M, é perfeito para nadadores com rostos menores, proporcionando um encaixe seguro e confortável.  \nTira em Silicone Resistente: A tira em silicone garante durabilidade e ajuste seguro, adaptando-se perfeitamente ao rosto.  \n\nMaterial de Alta Qualidade:  \nLentes de Policarbonato: Resistentes e duráveis, garantindo uma visão nítida.  \nVedação em Policloreto de Vinila: Vedação macia para evitar desconforto.  \nTira em Silicone: Flexível e durável para um ajuste seguro.  \n\nOs Óculos Speedo Beats são ideais para nadadores que buscam conforto e performance com um design prático e funcional.\n\nTecnologias:  \nAnti-Fog;  \nProteção UV;  \n\nÁrea de Vedação:  \nÁrea de Vedação M: a vedação ocorre abaixo das sobrancelhas, com foco em conforto e médio atrito com a água.\n\nCampo de Visão:  \nFrontal: desenho com foco em oferecer visão à frente.\n\nComposição:  \nLentes: 100% Policarbonato;  \nVentosa: 100% Silicone;  \nTira: 100% Silicone.\n\nContém:  \n1 – Óculos Natação Speedo Beats.  \n1 – Embalagem de acrílico.\n\nCuidados:  \nApós o uso enxague seu óculos em água corrente fria e limpa;  \nDeixar secar em local com temperatura ambiente;  \nNão guardar ou deixar diretamente na luz do sol;  \nNão esfregar a parte interna das lentes;  \nUtilize um estojo para guardar os seus óculos.\n\nIndicação:  \nTreinamento;  \nNatação.",
-          "attributes": {
-            "marca": "Speedo",
-            "modelo": "Beats",
-            "cor-principal": "Cinza",
-            "tipo-de-lente": "Transparente",
-            "genero": "Sem gênero",
-            "materiais": "Silicone",
-            "usos-recomendados": "Natação",
-            "com-protecao-uv": "Sim",
-            "com-narizeiras-intercambiaveis": "Não",
-            "e-antiembacante": "Sim",
-            "e-um-produto-hipoalergenico": "Não"
-          },
-          "skus": [
+            },
             {
-              "attributes": {
-                "cor": "fumê"
-              },
-              "priceAmount": 66.93
-            }
-          ],
-          "images": [
-            {
-              "color": "fumê",
+              "color": "azul-marinho",
               "files": [
-                "oculos-natacao-speedo-beats-cor-fume-1.webp",
-                "oculos-natacao-speedo-beats-cor-fume-2.webp"
+                "resina-dardo-4-1.webp",
+                "resina-dardo-4-2.webp"
               ]
-            }
-          ]
-        },
-        {
-          "name": "Oculos Natação Leader Swell Cor Verde",
-          "description": "Descrição:\n\nOs Óculos de Natação Leader Swell são perfeitos para treinamento e águas abertas. Possuem lentes com visão panorâmica, corpo inteiriço de silicone de alta durabilidade e proteção contra raios UV. A tira dupla proporciona um ajuste excelente e a película antiembaçante garante uma visão clara.\n\nTecnologias:\n\nAntiembaçante;\nProteção UV;\n\nÁrea de Vedação:\n\nÁrea de Vedação M: a vedação ocorre abaixo das sobrancelhas, focando no conforto e médio atrito com a água.\n\nCampo de Visão:\n\n180º Graus: desenho focado na máxima amplitude do campo de visão.\n\nComposição:\n\nLentes: 100% Policarbonato;\nVentosa: 100% Silicone líquido;\nTira: 100% Silicone líquido.\n\nContém:\n\n1 – Óculos de Natação Leader Swell;\n1 – Embalagem de acrílico;\n\nCuidados:\n\nApós o uso, lave seus óculos em água corrente fria e limpa;\nDeixe secar em um local com temperatura ambiente;\nNão guarde ou deixe diretamente na luz do sol;\nNão esfregue a parte interna das lentes;\nUse um estojo para guardar seus óculos.\n\nIndicação:\n\nNatação;\nTreinamento;\nÁguas Abertas;\nTriathlon.",
-          "attributes": {
-            "marca": "Leader",
-            "modelo": "Swell espelhado",
-            "cor-principal": "Verde",
-            "tipo-de-lente": "Transparente",
-            "genero": "Sem gênero",
-            "materiais": "Policarbonato, Silicone",
-            "usos-recomendados": "Natacao e recreação",
-            "com-protecao-uv": "Sim",
-            "com-narizeiras-intercambiaveis": "Sim",
-            "e-antiembacante": "Sim",
-            "e-um-produto-hipoalergenico": "Não",
-            "inclui-estojo": "Não"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "verde"
-              },
-              "priceAmount": 66.92
-            }
-          ],
-          "images": [
-            {
-              "color": "verde",
-              "files": [
-                "oculos-natacao-leader-swell-cor-verde-1.webp",
-                "oculos-natacao-leader-swell-cor-verde-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Óculos Natação Mormaii Endurance Cor Transparente",
-          "description": "Descrição:\n\nO Óculos de Natação Mormaii Endurance é perfeito para treinamento e competição. Possui tiras duplas para maior segurança e uma ventosa para conforto e vedação. \n\nTecnologias:\n\nLentes com Proteção UV;\nNarigueiras ajustáveis;\nVisão de 180º;\nRevestimento Antiembaçante.\n\nÁrea de Vedação:\n\nÁrea de Vedação M: a vedação ocorre abaixo das sobrancelhas, com foco em conforto e médio atrito com a água.\n\nCampo de Visão:\n\n180º Graus: desenho focado na máxima amplitude do campo de visão.\n\nComposição:\n\nLentes: 100% Policarbonato;\nVentosa: 100% Silicone líquido;\nTira: 100% Silicone líquido.\n\nContém:\n\n1 – Óculos de Natação Mormaii Endurance;\n4 - Opções de narigueiras.\n\nCuidados:\n\nApós o uso, lave seus óculos em água corrente fria e limpa;\nDeixe secar em local com temperatura ambiente;\nNão deixe diretamente na luz do sol;\nNão esfregue a parte interna das lentes;\nUse um estojo para guardar seus óculos.\n\nIndicação:\n\nTreinamento;\nCompetição;\nNatação.",
-          "attributes": {
-            "marca": "Mormaii",
-            "modelo": "Endurance",
-            "cor-principal": "Preto",
-            "tipo-de-lente": "Transparente",
-            "genero": "Sem gênero",
-            "materiais": "Policarbonato, Silicone",
-            "usos-recomendados": "Competição, Treinamento, Natação",
-            "com-protecao-uv": "Sim",
-            "com-narizeiras-intercambiaveis": "Sim",
-            "e-antiembacante": "Sim",
-            "e-um-produto-hipoalergenico": "Não",
-            "inclui-estojo": "Não"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "transparente"
-              },
-              "priceAmount": 97.9
-            }
-          ],
-          "images": [
-            {
-              "color": "transparente",
-              "files": [
-                "oculos-natacao-mormaii-endurance-cor-transparente-1.webp",
-                "oculos-natacao-mormaii-endurance-cor-transparente-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Oculos Natação Leader Soft Cor Azul",
-          "description": "Oculos Natação Leader Soft Cor Azul",
-          "attributes": {
-            "marca": "Leader",
-            "modelo": "Leader Soft",
-            "cor-principal": "Azul",
-            "tipo-de-lente": "Transparente",
-            "genero": "Sem gênero",
-            "materiais": "Policarbonato, Silicone",
-            "usos-recomendados": "Natação, Treinamento",
-            "com-protecao-uv": "Sim",
-            "com-narizeiras-intercambiaveis": "Não",
-            "e-antiembacante": "Sim",
-            "e-um-produto-hipoalergenico": "Não",
-            "inclui-estojo": "Não"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "azul"
-              },
-              "priceAmount": 54.81
-            }
-          ],
-          "images": [
-            {
-              "color": "azul",
-              "files": [
-                "oculos-natacao-leader-soft-cor-azul-1.webp",
-                "oculos-natacao-leader-soft-cor-azul-2.webp"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Oculos Natação Leader Soft Cor Preto",
-          "description": "Descrição: \n  \nÓculos de Natação Leader Soft é ideal para treinamento. Serve crianças a partir de 7 anos e adultos. Modelo inteiriço de silicone com uma ótima vedação e muito resistente. Possui película antiembaçante e lentes com proteção UV. \n  \nTecnologias: \n  \nPelícula Antiembaçante;  \nProteção UV;  \nLentes anti-risco;  \nTira dupla silicone;  \n  \nÁrea de Vedação:  \n  \nÁrea de Vedação M: a vedação ocorre abaixo das sobrancelhas, com foco em conforto e médio atrito com a água.  \n  \nCampo de Visão:  \n  \nFrontal: desenho com foco em oferecer visão à frente.  \n  \nComposição:  \n  \nLentes: 100% Policarbonato;  \nVentosa: 100% Silicone líquido;  \nTira: 100% Silicone líquido.  \n  \nContém:  \n  \n1 – Óculos de Natação Leader Soft;  \n1 – Embalagem de acrílico;  \n  \nCuidados:  \n  \nApós o uso enxague seu óculos em água corrente fria e limpa;  \nDeixar secar em local com temperatura ambiente;  \nNão guardar ou deixar diretamente na luz do sol;  \nNão esfregar a parte interna das lentes;  \nUtilize um estojo para guardar os seus óculos.  \n  \nIndicação:  \n  \nNatação;  \nTreinamento;",
-          "attributes": {
-            "marca": "Leader",
-            "modelo": "Leader Soft",
-            "cor-principal": "Preto",
-            "tipo-de-lente": "Transparente",
-            "genero": "Sem gênero",
-            "materiais": "Policarbonato, Silicone",
-            "usos-recomendados": "Natação, Treinamento",
-            "com-protecao-uv": "Sim",
-            "com-narizeiras-intercambiaveis": "Não",
-            "e-antiembacante": "Sim",
-            "e-um-produto-hipoalergenico": "Não",
-            "inclui-estojo": "Não"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "preto"
-              },
-              "priceAmount": 50.45
-            }
-          ],
-          "images": [
+            },
             {
               "color": "preto",
               "files": [
-                "oculos-natacao-leader-soft-cor-preto-1.webp",
-                "oculos-natacao-leader-soft-cor-preto-2.webp"
+                "resina-dardo-5-1.webp",
+                "resina-dardo-5-2.webp"
               ]
-            }
-          ]
-        },
-        {
-          "name": "Óculos Natação Speedo Tornado Cor Rosa",
-          "description": "Desenvolvido para oferecer máximo conforto, vedação eficiente e excelente desempenho na água, o Óculos de Natação Speedo Tornado é a escolha ideal para nadadores frequentes, atletas iniciantes e praticantes de lazer. Sua tecnologia exclusiva Soft Frame integra narizeira, moldura e ventosas em uma única estrutura, proporcionando ajuste confortável e maior resistência durante os treinos e atividades aquáticas.\nCom design moderno e ampla área de vedação, o modelo garante excelente campo de visão, proteção contra os raios solares e lentes com tratamento antiembaçante para uma experiência de natação muito mais confortável e segura.\n\nPrincipais Benefícios:\n- Tecnologia Soft Frame para ajuste confortável e vedação eficiente.\n- Ampla área de vedação tamanho G, proporcionando maior cobertura facial.\n- Lentes com tratamento Anti-Fog, reduzindo o embaçamento durante o uso.\n- Proteção contra raios UVA e UVB.\n- Tira de silicone repartida para ajuste prático e seguro.\n- Excelente visibilidade dentro e fora da água.\n- Estrutura resistente e durável.\n- Área de vedação: G (acima das sobrancelhas).\n- Indicação: Nadadores iniciantes, amadores e frequentes.\n- Embalagem: Elipse Box.\n\nDiferenciais do Speedo Tornado:\nA área de vedação tamanho G oferece maior conforto para quem busca ampla cobertura facial, reduzindo a pressão ao redor dos olhos. Além disso, as lentes em policarbonato garantem resistência e maior durabilidade, enquanto a proteção UV auxilia na proteção dos olhos durante atividades em ambientes externos.\n\nCuidados e Conservação:\n- Lave os óculos com água limpa e fria após o uso.\n- Deixe secar naturalmente à sombra.\n- Evite esfregar ou secar as lentes com pano ou papel.\n- Não deixe o produto exposto ao sol ou calor excessivo quando não estiver em uso.\n- Para prolongar o efeito antiembaçante, evite tocar ou molhar a parte interna das lentes.\n- Recomenda-se a utilização periódica de solução anti-fog para manutenção da propriedade antiembaçante.",
-          "attributes": {
-            "marca": "Speedo",
-            "modelo": "Tornado",
-            "cor-principal": "Rosa",
-            "tipo-de-lente": "Fumê",
-            "genero": "Feminino",
-            "materiais": "Policarbonato, Silicone",
-            "usos-recomendados": "Piscina, Triatlo, Águas abertas, Natação",
-            "com-protecao-uv": "Sim",
-            "com-narizeiras-intercambiaveis": "Não",
-            "e-antiembacante": "Sim",
-            "e-um-produto-hipoalergenico": "Sim",
-            "inclui-estojo": "Sim"
-          },
-          "skus": [
-            {
-              "attributes": {
-                "cor": "rosa"
-              },
-              "priceAmount": 75
-            }
-          ],
-          "images": [
+            },
             {
               "color": "rosa",
               "files": [
-                "oculos-natacao-speedo-tornado-cor-rosa-1.webp",
-                "oculos-natacao-speedo-tornado-cor-rosa-2.webp"
+                "resina-dardo-6-1.webp",
+                "resina-dardo-6-2.webp"
+              ]
+            },
+            {
+              "color": "vermelho",
+              "files": [
+                "resina-dardo-7-1.webp",
+                "resina-dardo-7-2.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "New Era Aba Curva",
+          "description": "BONÉ 920 GOLDEN STATE WARRIORS\n\nDESCRIÇÃO DO PRODUTO\nConfeccionado em tecido macio, exibe a clássica bandeira New Era na lateral esquerda e o escudo do Golden State Warriors. O design moderno conta com aba curva, que auxilia na proteção contra raios solares, e costuras reforçadas. A tecnologia adjustable proporciona encaixe preciso e conforto durante o uso.\n\nDETALHES TÉCNICOS\n• Modelo: 9TWENTY (920)\n• Aba: Curva\n• Ajuste: Strapback\n• Cor: Preto",
+          "attributes": {
+            "marca": "New Era",
+            "modelo": "Aba Curva",
+            "desenho-do-tecido": "Liso",
+            "temporada-de-lancamento": "Primavera/Verão",
+            "com-fechamento-ajustavel": "Sim",
+            "com-materiais-reciclados": "Não",
+            "composicao": "Algodão",
+            "e-reversivel": "Não"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "Único"
+              },
+              "priceAmount": 242.43
+            },
+            {
+              "attributes": {
+                "cor": "azul",
+                "tamanho": "Ajustável"
+              },
+              "priceAmount": 49.9
+            }
+          ],
+          "images": [
+            {
+              "color": "preto",
+              "files": [
+                "new-era-aba-curva-1-1.webp",
+                "new-era-aba-curva-1-2.webp",
+                "new-era-aba-curva-1-3.webp"
+              ]
+            },
+            {
+              "color": "azul",
+              "files": [
+                "new-era-aba-curva-2-1.webp",
+                "new-era-aba-curva-2-2.webp",
+                "new-era-aba-curva-2-3.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Líso ABA CURVA FITÃO Bonés",
+          "description": "KIT 5 BONÉS LISOS ABA CURVA FITÃO\n\nDETALHES DO PRODUTO:\n- Modelo: Aba curva, inteiro em tecido.\n- Fechamento: Fivela fitão (ajustável).\n- Indicação: Ideal para bordar e personalizar (festas, eventos, uniformes e empresas).\n- Material: Matéria-prima de alta qualidade e durabilidade.\n- Tamanho: Único padrão.\n- Circunferência: 58 cm (com regulador que permite ajuste de +/- 4 cm).\n- Profundidade: 14 cm.\n- Aba: 17,5 x 7 cm.\n- Fotos reais do produto.\n\nOBSERVAÇÃO: O produto não acompanha personalização.",
+          "attributes": {
+            "marca": "Líso",
+            "modelo": "ABA CURVA FITÃO",
+            "tipo-de-chapeu": "Bonés",
+            "genero": "Masculino",
+            "temporada-de-lancamento": "Primavera/Verão",
+            "ano-de-lancamento": "2023",
+            "com-fechamento-ajustavel": "Sim",
+            "com-materiais-reciclados": "Não",
+            "e-reversivel": "Não"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "cinza claro fitão",
+                "tamanho": "58"
+              },
+              "priceAmount": 73.62
+            },
+            {
+              "attributes": {
+                "cor": "preto fitão m2",
+                "tamanho": "58"
+              },
+              "priceAmount": 661.41
+            }
+          ],
+          "images": [
+            {
+              "color": "cinza claro fitão",
+              "files": [
+                "liso-aba-curva-fitao-bones-1-1.webp",
+                "liso-aba-curva-fitao-bones-1-2.webp",
+                "liso-aba-curva-fitao-bones-1-3.webp"
+              ]
+            },
+            {
+              "color": "preto fitão m2",
+              "files": [
+                "liso-aba-curva-fitao-bones-2-1.webp",
+                "liso-aba-curva-fitao-bones-2-2.webp",
+                "liso-aba-curva-fitao-bones-2-3.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Anthco Derby Flex Pro",
+          "description": "Boné Aba Curva Derby Flex Pro Fechado Anth Co\n\nO Boné Derby Anth Co possui design moderno inspirado nos modelos trucker e americano, aliando estética, resistência e excelente caimento.\n\nO visual apresenta patch frontal estampado em relevo com aplicação bordada, bordado lateral e etiqueta personalizada.\n\nO modelo utiliza tecnologia Flex Pro, que proporciona ajuste firme sem necessidade de regulagem. A aba curva é moldável e conta com 6 costuras reforçadas para maior durabilidade.\n\nA estrutura é confeccionada com materiais de alta qualidade e inclui orifícios laterais para ventilação estratégica.\n\nEspecificações:\n• Modelo fechado com tecnologia Flex Pro\n• Design frente alta estilo Trucker/Americano\n• Patch frontal estampado em relevo com aplicação bordada\n• Bordado lateral e etiqueta personalizada\n• Aba curva moldável com 6 costuras reforçadas\n• Ventilação lateral para conforto térmico\n\nComposição:\n• 98% Poliéster\n• 2% Elastano\n\nMedidas:\n• Circunferência: 58 cm\n• Profundidade: 16,5 cm\n• Comprimento da aba: 7 cm\n• Largura da aba: 18 cm\n\nIndicado para compor looks casuais, urbanos e streetwear.",
+          "attributes": {
+            "marca": "Anth Co.",
+            "modelo": "Derby Flex Pro",
+            "tipo-de-chapeu": "Bonés",
+            "desenho-do-tecido": "Liso",
+            "genero": "Unissex",
+            "temporada-de-lancamento": "Primavera/Verão",
+            "ano-de-lancamento": "2022",
+            "com-fechamento-ajustavel": "Não",
+            "com-materiais-reciclados": "Não"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "branco/aba preto",
+                "tamanho": "Único"
+              },
+              "priceAmount": 54.5
+            },
+            {
+              "attributes": {
+                "cor": "azul/aba areia",
+                "tamanho": "Único"
+              },
+              "priceAmount": 54.5
+            },
+            {
+              "attributes": {
+                "cor": "bege/aba preto",
+                "tamanho": "Único"
+              },
+              "priceAmount": 54.5
+            },
+            {
+              "attributes": {
+                "cor": "cinza/aba marinho",
+                "tamanho": "Único"
+              },
+              "priceAmount": 54.5
+            },
+            {
+              "attributes": {
+                "cor": "marinho",
+                "tamanho": "Único"
+              },
+              "priceAmount": 54.5
+            },
+            {
+              "attributes": {
+                "cor": "marrom/aba areia",
+                "tamanho": "Único"
+              },
+              "priceAmount": 54.5
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "Único"
+              },
+              "priceAmount": 54.5
+            },
+            {
+              "attributes": {
+                "cor": "preto/aba bordô",
+                "tamanho": "Único"
+              },
+              "priceAmount": 54.5
+            },
+            {
+              "attributes": {
+                "cor": "preto/cinza",
+                "tamanho": "Único"
+              },
+              "priceAmount": 54.5
+            },
+            {
+              "attributes": {
+                "cor": "rosa/aba azul bebê",
+                "tamanho": "Único"
+              },
+              "priceAmount": 44.9
+            },
+            {
+              "attributes": {
+                "cor": "verde militar/aba preto",
+                "tamanho": "Único"
+              },
+              "priceAmount": 54.5
+            },
+            {
+              "attributes": {
+                "cor": "vermelho/aba preto",
+                "tamanho": "Único"
+              },
+              "priceAmount": 54.89
+            }
+          ],
+          "images": [
+            {
+              "color": "branco/aba preto",
+              "files": [
+                "anthco-derby-flex-pro-1-1.webp",
+                "anthco-derby-flex-pro-1-2.webp",
+                "anthco-derby-flex-pro-1-3.webp"
+              ]
+            },
+            {
+              "color": "azul/aba areia",
+              "files": [
+                "anthco-derby-flex-pro-2-1.webp",
+                "anthco-derby-flex-pro-2-2.webp",
+                "anthco-derby-flex-pro-2-3.webp"
+              ]
+            },
+            {
+              "color": "bege/aba preto",
+              "files": [
+                "anthco-derby-flex-pro-3-1.webp",
+                "anthco-derby-flex-pro-3-2.webp",
+                "anthco-derby-flex-pro-3-3.webp"
+              ]
+            },
+            {
+              "color": "cinza/aba marinho",
+              "files": [
+                "anthco-derby-flex-pro-4-1.webp"
+              ]
+            },
+            {
+              "color": "marinho",
+              "files": [
+                "anthco-derby-flex-pro-5-1.webp",
+                "anthco-derby-flex-pro-5-2.webp",
+                "anthco-derby-flex-pro-5-3.webp"
+              ]
+            },
+            {
+              "color": "marrom/aba areia",
+              "files": [
+                "anthco-derby-flex-pro-6-1.webp",
+                "anthco-derby-flex-pro-6-2.webp"
+              ]
+            },
+            {
+              "color": "preto",
+              "files": [
+                "anthco-derby-flex-pro-7-1.webp",
+                "anthco-derby-flex-pro-7-2.webp",
+                "anthco-derby-flex-pro-7-3.webp"
+              ]
+            },
+            {
+              "color": "preto/aba bordô",
+              "files": [
+                "anthco-derby-flex-pro-8-1.webp",
+                "anthco-derby-flex-pro-8-2.webp",
+                "anthco-derby-flex-pro-8-3.webp"
+              ]
+            },
+            {
+              "color": "preto/cinza",
+              "files": [
+                "anthco-derby-flex-pro-9-1.webp",
+                "anthco-derby-flex-pro-9-2.webp",
+                "anthco-derby-flex-pro-9-3.webp"
+              ]
+            },
+            {
+              "color": "rosa/aba azul bebê",
+              "files": [
+                "anthco-derby-flex-pro-10-1.webp",
+                "anthco-derby-flex-pro-10-2.webp",
+                "anthco-derby-flex-pro-10-3.webp"
+              ]
+            },
+            {
+              "color": "verde militar/aba preto",
+              "files": [
+                "anthco-derby-flex-pro-11-1.webp",
+                "anthco-derby-flex-pro-11-2.webp"
+              ]
+            },
+            {
+              "color": "vermelho/aba preto",
+              "files": [
+                "anthco-derby-flex-pro-12-1.webp",
+                "anthco-derby-flex-pro-12-2.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Resina Aba Curva Strapback Emoji",
+          "description": "O boné com aba curva é um acessório de proteção craniana confeccionado em algodão brim peletizado, material selecionado por sua resistência mecânica e capacidade de transpirabilidade. O design apresenta uma estrutura de copa com ajuste por fivela metálica de 17mm, permitindo a adequação ergonômica à circunferência cefálica de aproximadamente 57,50 cm. A aba possui geometria curva, reforçada por um padrão de quatro costuras perimetrais que garantem a estabilidade estrutural do componente. \n\nCARACTERÍSTICAS TÉCNICAS:\nMarca: Resina;\nMaterial: 100% algodão brim peletizado;\nCircunferência: 57,50 cm;\nSistema de ajuste: Fivela de 17mm;\nConfiguração da aba: Curva com 4 costuras;\nGênero: Unissex;\nFaixa etária: Adultos;\nTipo de estruturação: Strapback;\nTemporada de concepção: Primavera/Verão;\nCompatibilidade de uso: Adultos;\nPeriodicidade de lançamento: 2023.",
+          "attributes": {
+            "marca": "Resina",
+            "modelo": "Aba Curva Strapback Emoji",
+            "tipo-de-chapeu": "Aba Curva",
+            "desenho-do-tecido": "Liso",
+            "genero": "Unissex",
+            "temporada-de-lancamento": "Primavera/Verão",
+            "ano-de-lancamento": "2023",
+            "com-fechamento-ajustavel": "Sim",
+            "com-materiais-reciclados": "Não",
+            "e-reversivel": "Não"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "branco",
+                "tamanho": "Único"
+              },
+              "priceAmount": 33.22
+            },
+            {
+              "attributes": {
+                "cor": "azul royal",
+                "tamanho": "Único"
+              },
+              "priceAmount": 33.22
+            },
+            {
+              "attributes": {
+                "cor": "azul-claro",
+                "tamanho": "Único"
+              },
+              "priceAmount": 33.22
+            },
+            {
+              "attributes": {
+                "cor": "azul-marinho",
+                "tamanho": "Único"
+              },
+              "priceAmount": 33.22
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "Único"
+              },
+              "priceAmount": 33.22
+            },
+            {
+              "attributes": {
+                "cor": "rosa",
+                "tamanho": "Único"
+              },
+              "priceAmount": 33.22
+            },
+            {
+              "attributes": {
+                "cor": "vermelho",
+                "tamanho": "Único"
+              },
+              "priceAmount": 33.22
+            }
+          ],
+          "images": [
+            {
+              "color": "branco",
+              "files": [
+                "resina-aba-curva-strapback-emoji-1-1.webp",
+                "resina-aba-curva-strapback-emoji-1-2.webp"
+              ]
+            },
+            {
+              "color": "azul royal",
+              "files": [
+                "resina-aba-curva-strapback-emoji-2-1.webp",
+                "resina-aba-curva-strapback-emoji-2-2.webp"
+              ]
+            },
+            {
+              "color": "azul-claro",
+              "files": [
+                "resina-aba-curva-strapback-emoji-3-1.webp",
+                "resina-aba-curva-strapback-emoji-3-2.webp"
+              ]
+            },
+            {
+              "color": "azul-marinho",
+              "files": [
+                "resina-aba-curva-strapback-emoji-4-1.webp",
+                "resina-aba-curva-strapback-emoji-4-2.webp"
+              ]
+            },
+            {
+              "color": "preto",
+              "files": [
+                "resina-aba-curva-strapback-emoji-5-1.webp",
+                "resina-aba-curva-strapback-emoji-5-2.webp"
+              ]
+            },
+            {
+              "color": "rosa",
+              "files": [
+                "resina-aba-curva-strapback-emoji-6-1.webp",
+                "resina-aba-curva-strapback-emoji-6-2.webp"
+              ]
+            },
+            {
+              "color": "vermelho",
+              "files": [
+                "resina-aba-curva-strapback-emoji-7-1.webp",
+                "resina-aba-curva-strapback-emoji-7-2.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Anth Co. NYC Bonés",
+          "description": "Boné Aba Curva Nyc New York City Ajustável Anth Co\n\n- Modelo frente alta estilo Americano;\n- Patch frontal emborrachado;\n- Bordado lateral;\n- Etiqueta costurada na parte traseira;\n- Aba curva moldável com 8 costuras;\n- Fecho Plástico de alta resistência ajustável na parte traseira;\n- Ilhoses para ventilação;\n- Viés interno personalizado;\n- Costuras reforçadas;\n- Tecido 100% Poliéster;\n\nMEDIDAS:\n\n- Circunferência: 58cm com ajuste de 4cm para mais ou para menos;\n- Profundidade: 16,5cm (do pino até a base);\n- Altura: 12cm;\n- Comprimento da Aba: 7cm;\n- Largura da Aba: 18cm.",
+          "attributes": {
+            "marca": "Anth Co.",
+            "modelo": "NYC",
+            "desenho-do-tecido": "Liso",
+            "temporada-de-lancamento": "Primavera/Verão",
+            "com-fechamento-ajustavel": "Sim"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "bordô/aba cinza",
+                "tamanho": "Único"
+              },
+              "priceAmount": 44.9
+            },
+            {
+              "attributes": {
+                "cor": "caramelo",
+                "tamanho": "Único"
+              },
+              "priceAmount": 48.9
+            },
+            {
+              "attributes": {
+                "cor": "cinza/marinho",
+                "tamanho": "Único"
+              },
+              "priceAmount": 44.9
+            },
+            {
+              "attributes": {
+                "cor": "laranja/preto",
+                "tamanho": "Único"
+              },
+              "priceAmount": 48.9
+            },
+            {
+              "attributes": {
+                "cor": "preto/aba cáqui",
+                "tamanho": "Único"
+              },
+              "priceAmount": 44.9
+            },
+            {
+              "attributes": {
+                "cor": "preto/branco",
+                "tamanho": "Único"
+              },
+              "priceAmount": 44.9
+            },
+            {
+              "attributes": {
+                "cor": "rosa",
+                "tamanho": "Único"
+              },
+              "priceAmount": 44.9
+            },
+            {
+              "attributes": {
+                "cor": "roxo",
+                "tamanho": "Único"
+              },
+              "priceAmount": 48.9
+            },
+            {
+              "attributes": {
+                "cor": "vermelho/aba preto",
+                "tamanho": "Único"
+              },
+              "priceAmount": 44.9
+            },
+            {
+              "attributes": {
+                "cor": "branco",
+                "tamanho": "Adulto"
+              },
+              "priceAmount": 55
+            },
+            {
+              "attributes": {
+                "cor": "preto/caramelo",
+                "tamanho": "Adulto"
+              },
+              "priceAmount": 49.4
+            },
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "58 cm de circunferência + Ajuste"
+              },
+              "priceAmount": 38.6
+            },
+            {
+              "attributes": {
+                "cor": "branco",
+                "tamanho": "Único"
+              },
+              "priceAmount": 41.5
+            }
+          ],
+          "images": [
+            {
+              "color": "bordô/aba cinza",
+              "files": [
+                "anth-co-nyc-bones-1-1.webp",
+                "anth-co-nyc-bones-1-2.webp",
+                "anth-co-nyc-bones-1-3.webp"
+              ]
+            },
+            {
+              "color": "caramelo",
+              "files": [
+                "anth-co-nyc-bones-2-1.webp",
+                "anth-co-nyc-bones-2-2.webp",
+                "anth-co-nyc-bones-2-3.webp"
+              ]
+            },
+            {
+              "color": "cinza/marinho",
+              "files": [
+                "anth-co-nyc-bones-3-1.webp",
+                "anth-co-nyc-bones-3-2.webp",
+                "anth-co-nyc-bones-3-3.webp"
+              ]
+            },
+            {
+              "color": "laranja/preto",
+              "files": [
+                "anth-co-nyc-bones-4-1.webp",
+                "anth-co-nyc-bones-4-2.webp",
+                "anth-co-nyc-bones-4-3.webp"
+              ]
+            },
+            {
+              "color": "preto/aba cáqui",
+              "files": [
+                "anth-co-nyc-bones-5-1.webp",
+                "anth-co-nyc-bones-5-2.webp",
+                "anth-co-nyc-bones-5-3.webp"
+              ]
+            },
+            {
+              "color": "preto/branco",
+              "files": [
+                "anth-co-nyc-bones-6-1.webp",
+                "anth-co-nyc-bones-6-2.webp",
+                "anth-co-nyc-bones-6-3.webp"
+              ]
+            },
+            {
+              "color": "rosa",
+              "files": [
+                "anth-co-nyc-bones-7-1.webp",
+                "anth-co-nyc-bones-7-2.webp",
+                "anth-co-nyc-bones-7-3.webp"
+              ]
+            },
+            {
+              "color": "roxo",
+              "files": [
+                "anth-co-nyc-bones-8-1.webp",
+                "anth-co-nyc-bones-8-2.webp",
+                "anth-co-nyc-bones-8-3.webp"
+              ]
+            },
+            {
+              "color": "vermelho/aba preto",
+              "files": [
+                "anth-co-nyc-bones-9-1.webp",
+                "anth-co-nyc-bones-9-2.webp",
+                "anth-co-nyc-bones-9-3.webp"
+              ]
+            },
+            {
+              "color": "branco",
+              "files": [
+                "anth-co-nyc-bones-10-1.webp",
+                "anth-co-nyc-bones-10-2.webp",
+                "anth-co-nyc-bones-10-3.webp"
+              ]
+            },
+            {
+              "color": "preto/caramelo",
+              "files": [
+                "anth-co-nyc-bones-11-1.webp",
+                "anth-co-nyc-bones-11-2.webp",
+                "anth-co-nyc-bones-11-3.webp"
+              ]
+            },
+            {
+              "color": "preto",
+              "files": [
+                "anth-co-nyc-bones-12-1.webp",
+                "anth-co-nyc-bones-12-2.webp",
+                "anth-co-nyc-bones-12-3.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Líso Aba Curva Telinha",
+          "description": "BONÉ LISO, IDEAL PARA ESTAMPAR E SILKAR.  \nTECIDO 100 % POLIÉSTER  \nUM PRODUTO IDEAL PARA A PRODUÇÃO DE BONÉS PERSONALIZADOS PARA FESTAS, EVENTOS, UNIFORMES E EMPRESAS.  \n\nMODELO = ABA CURVA TELINHA  \n\nNA HORA DE FINALIZAR A COMPRA NA VARIAÇÃO COR ESCOLHA UMA DAS OPÇÕES ( PRETO TELA, BRANCO TELA, VERMELHO TELA, AZUL MARINHO TELA, PRETO COM A FRENTE BRANCO TELA, BORDÔ TELA, CINZA TELA, ROSA TELA, AZUL ROYAL TELA, VERDE TELA )  \n\nEMBALAGEM = CAIXA PADRÃO  \nTAMANHO = ÚNICO PADRÃO, Circunferência 58 cm (com regulador +/- 4, aumenta 4 e diminui 4 cm)  \nProfundidade = 14 cm  \nAba = 17,5 x 7 cm  \nREGULAGEM DE TAMANHO = SIM  \nFECHO = BROCHE DE PLÁSTICO  \nFOTOS REAIS DO PRODUTO  \n\nPERGUNTAS FREQUENTES  \n\nQUAL É O TAMANHO DO BONÉ?  \nR = Tamanho único padrão, Circunferência 58 cm (com regulador +/- 4, aumenta 4 e diminui 4 cm)  \nProfundidade = 14 cm  \nAba = 17,5 x 7 cm  \n\nQUAIS OS TIPOS DE BONÉS QUE VOCÊS TRABALHAM?  \nR = Trabalhamos com bonés aba curva liso tela, lisos fitão sem tela, bonés evangélicos, bonés multimarcas, bonés country, bonés de time, bonés refletivos e bonés aba reta multimarcas e evangélicos.  \n\nMUITO OBRIGADO PELA SUA PREFERÊNCIA E CONFIANÇA.",
+          "attributes": {
+            "marca": "Líso",
+            "modelo": "Aba Curva Telinha",
+            "tipo-de-chapeu": "Boné",
+            "temporada-de-lancamento": "Primavera/Verão",
+            "ano-de-lancamento": "2023",
+            "com-fechamento-ajustavel": "Sim",
+            "com-materiais-reciclados": "Não",
+            "composicao": "100% poliéster",
+            "e-reversivel": "Não"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "amarelo tela",
+                "tamanho": "58"
+              },
+              "priceAmount": 151.81
+            },
+            {
+              "attributes": {
+                "cor": "cores sortidas tela",
+                "tamanho": "58"
+              },
+              "priceAmount": 151.81
+            },
+            {
+              "attributes": {
+                "cor": "preto com frente branco tela",
+                "tamanho": "58"
+              },
+              "priceAmount": 151.81
+            },
+            {
+              "attributes": {
+                "cor": "preto tela",
+                "tamanho": "58"
+              },
+              "priceAmount": 151.9
+            },
+            {
+              "attributes": {
+                "cor": "rosa bebê tela",
+                "tamanho": "58"
+              },
+              "priceAmount": 151.81
+            }
+          ],
+          "images": [
+            {
+              "color": "amarelo tela",
+              "files": [
+                "liso-aba-curva-telinha-1-1.webp",
+                "liso-aba-curva-telinha-1-2.webp",
+                "liso-aba-curva-telinha-1-3.webp"
+              ]
+            },
+            {
+              "color": "cores sortidas tela",
+              "files": [
+                "liso-aba-curva-telinha-2-1.webp",
+                "liso-aba-curva-telinha-2-2.webp",
+                "liso-aba-curva-telinha-2-3.webp"
+              ]
+            },
+            {
+              "color": "preto com frente branco tela",
+              "files": [
+                "liso-aba-curva-telinha-3-1.webp",
+                "liso-aba-curva-telinha-3-2.webp",
+                "liso-aba-curva-telinha-3-3.webp"
+              ]
+            },
+            {
+              "color": "preto tela",
+              "files": [
+                "liso-aba-curva-telinha-4-1.webp",
+                "liso-aba-curva-telinha-4-2.webp",
+                "liso-aba-curva-telinha-4-3.webp"
+              ]
+            },
+            {
+              "color": "rosa bebê tela",
+              "files": [
+                "liso-aba-curva-telinha-5-1.webp",
+                "liso-aba-curva-telinha-5-2.webp",
+                "liso-aba-curva-telinha-5-3.webp"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Puma Boné Aba Curva Running III",
+          "description": "SOBRE O PRODUTO\n\nMantenha-se fresco e focado com este boné com tecnologia dryCELL. A viseira curvada e a faixa antissuor que absorve a umidade mantêm você fresco, enquanto o logo refletivo PUMA adiciona um toque dinâmico. Perfeito para seu estilo de vida ativo. Abrace a correria com a PUMA.\n\nCARACTERÍSTICAS & BENEFÍCIOS\n\n- Feito com pelo menos 50% de materiais reciclados\n- dryCELL: Tecnologia de desempenho projetada para absorver a umidade do corpo e mantê-lo livre de suor durante o exercício\n\nDETALHES\n\n- Boné estilo beisebol\n- Faixa antissuor que absorve a umidade\n- Viseira curvada\n- Logo PUMA Cat na frente\n- Detalhes da marca PUMA",
+          "attributes": {
+            "marca": "Puma",
+            "modelo": "Boné Aba Curva Running III",
+            "tipo-de-chapeu": "Boné",
+            "genero": "Unissex",
+            "temporada-de-lancamento": "Primavera/Verão",
+            "com-fechamento-ajustavel": "Sim",
+            "com-materiais-reciclados": "Sim",
+            "composicao": "Visor inferior: 100% poliéster, Exterior: 100% poliéster",
+            "e-reversivel": "Não"
+          },
+          "skus": [
+            {
+              "attributes": {
+                "cor": "preto",
+                "tamanho": "UN"
+              },
+              "priceAmount": 155
+            },
+            {
+              "attributes": {
+                "cor": "branco",
+                "tamanho": "UN"
+              },
+              "priceAmount": 149.99
+            }
+          ],
+          "images": [
+            {
+              "color": "preto",
+              "files": [
+                "puma-bone-aba-curva-running-iii-1-1.webp",
+                "puma-bone-aba-curva-running-iii-1-2.webp",
+                "puma-bone-aba-curva-running-iii-1-3.webp"
+              ]
+            },
+            {
+              "color": "branco",
+              "files": [
+                "puma-bone-aba-curva-running-iii-2-1.webp"
               ]
             }
           ]
