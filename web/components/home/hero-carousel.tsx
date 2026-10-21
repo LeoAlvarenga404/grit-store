@@ -32,7 +32,7 @@ export function HeroCarousel({ slides, labels }: { slides: ReactNode[]; labels: 
         className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {slides.map((slide, index) => (
-          <div key={labels[index]} aria-roledescription="slide" aria-label={`${index + 1} de ${slides.length}: ${labels[index]}`} className="w-full shrink-0 snap-start">
+          <div key={labels[index]} data-active={index === current} aria-roledescription="slide" aria-label={`${index + 1} de ${slides.length}: ${labels[index]}`} className="w-full shrink-0 snap-start">
             {slide}
           </div>
         ))}
