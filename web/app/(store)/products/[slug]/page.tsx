@@ -51,13 +51,13 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
           </li>
         </ol>
       </nav>
-      <div className="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
+      <div className="mt-6 grid grid-cols-[minmax(0,1fr)] items-start gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
         <div className="lg:sticky lg:top-24">
           <ProductGallery key={colorKey} images={galleryOf(product.imageUrls, color)} productName={product.name} />
         </div>
         <div>
           <p className="text-eyebrow text-muted-foreground">{product.attributes["marca"] ?? product.categoryName}</p>
-          <h1 className="text-display mt-2 text-3xl md:text-4xl">{product.name}</h1>
+          <h1 className="text-display mt-2 text-2xl break-words sm:text-3xl md:text-4xl">{product.name}</h1>
           <PurchasePanel
             key={colorKey}
             skus={skusOfColor(product.skus, color)}
