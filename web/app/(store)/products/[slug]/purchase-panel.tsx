@@ -23,7 +23,7 @@ const errorMessages: Record<string, string> = {
 };
 
 // The page renders this with key = the selected colour, so a colour change starts with no size chosen.
-export function PurchasePanel({ skus, colorPicker, children }: { skus: Sku[]; colorPicker: ReactNode; children: ReactNode }) {
+export function PurchasePanel({ skus, colorPicker }: { skus: Sku[]; colorPicker: ReactNode }) {
   const options = sizeOptions(skus);
   const [skuId, setSkuId] = useState(options.length === 1 ? options[0].sku.id : null);
   const [quantity, setQuantity] = useState(1);
@@ -76,7 +76,6 @@ export function PurchasePanel({ skus, colorPicker, children }: { skus: Sku[]; co
           {isPending ? "Adicionando…" : "Adicionar à sacola"}
         </Button>
       </div>
-      {children}
     </div>
   );
 }

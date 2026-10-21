@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { storeValues } from "@/components/home/value-strip";
 import { api } from "@/lib/api/client";
 import { galleryOf, selectColor, skusOfColor } from "@/lib/product-variants";
 import { ColorPicker } from "./color-picker";
@@ -62,19 +61,7 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
             key={colorKey}
             skus={skusOfColor(product.skus, color)}
             colorPicker={<ColorPicker slug={product.slug} colors={product.colors} selected={color?.name ?? null} />}
-          >
-            <ul className="grid gap-3 border-t pt-6 text-xs sm:grid-cols-3">
-              {storeValues.map(({ icon: Icon, title, text }) => (
-                <li key={title} className="flex items-start gap-2">
-                  <Icon aria-hidden="true" className="size-5 shrink-0" strokeWidth={1.5} />
-                  <span>
-                    <span className="block font-semibold">{title}</span>
-                    <span className="text-muted-foreground">{text}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </PurchasePanel>
+          />
           <ProductAccordion description={product.description} attributes={product.attributes} />
         </div>
       </div>

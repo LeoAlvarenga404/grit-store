@@ -3,7 +3,6 @@ import { BrandMarquee } from "@/components/home/brand-marquee";
 import { Hero } from "@/components/home/hero";
 import { ProductGridSection, ProductRowSection } from "@/components/home/product-sections";
 import { PromoBanners } from "@/components/home/promo-banners";
-import { ValueStrip } from "@/components/home/value-strip";
 import { api } from "@/lib/api/client";
 
 // Rendered per request: the build must not need a running API.
@@ -18,7 +17,6 @@ export default async function HomePage() {
   return (
     <main>
       <Hero />
-      <ValueStrip />
       <CategoryGrid />
       <ProductGridSection id="latest-title" eyebrow="Novidades" title="Lançamentos" href="/catalog" products={latest.data?.items ?? []} />
       <BrandMarquee />

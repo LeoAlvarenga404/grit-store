@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Lock, PackageX, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { CheckoutSteps } from "@/components/checkout-steps";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
@@ -79,14 +79,6 @@ export default async function BasketPage({ searchParams }: { searchParams: Promi
           <Link href="/catalog" className="mt-4 block text-center text-sm underline-offset-4 hover:underline">
             Continuar comprando
           </Link>
-          <ul className="mt-6 space-y-3 border-t pt-6 text-xs text-muted-foreground">
-            <li className="flex items-center gap-2">
-              <Lock aria-hidden="true" className="size-4 shrink-0" strokeWidth={1.5} /> Pagamento processado pelo Stripe
-            </li>
-            <li className="flex items-center gap-2">
-              <PackageX aria-hidden="true" className="size-4 shrink-0" strokeWidth={1.5} /> Cancele até o pedido ser enviado
-            </li>
-          </ul>
         </aside>
       </div>
     </main>

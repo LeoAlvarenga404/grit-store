@@ -1,7 +1,7 @@
-import { ArrowUp, Truck, ShieldCheck, PackageX } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { flatShippingLabel, storeCategories } from "@/lib/store-navigation";
+import { storeCategories } from "@/lib/store-navigation";
 
 const footerLink = "inline-flex min-h-9 items-center text-sm text-background/70 underline-offset-4 transition-colors hover:text-background hover:underline";
 
@@ -14,12 +14,6 @@ function FooterColumn({ title, children }: { title: string; children: ReactNode 
   );
 }
 
-const promises = [
-  { icon: Truck, text: `Frete fixo de ${flatShippingLabel}` },
-  { icon: ShieldCheck, text: "Pagamento processado pelo Stripe" },
-  { icon: PackageX, text: "Cancele até o envio" },
-];
-
 export function SiteFooter() {
   return (
     <footer className="relative overflow-hidden bg-foreground text-background">
@@ -28,14 +22,6 @@ export function SiteFooter() {
           <div>
             <p className="text-display text-4xl">Grit</p>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-background/70">Roupas e tênis esportivos para quem treina de verdade.</p>
-            <ul className="mt-8 space-y-3">
-              {promises.map(({ icon: Icon, text }) => (
-                <li key={text} className="flex items-center gap-3 text-sm text-background/70">
-                  <Icon aria-hidden="true" className="size-4 shrink-0" strokeWidth={1.5} />
-                  {text}
-                </li>
-              ))}
-            </ul>
           </div>
           <FooterColumn title="Loja">
             {storeCategories.map((category) => (

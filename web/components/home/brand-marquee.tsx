@@ -1,4 +1,4 @@
-const phrases = ["Feito pra quem não para", "Treino", "Corrida", "Frete fixo para todo o Brasil", "Cancele até o envio"];
+const phrases = ["Feito pra quem não para", "Treino", "Corrida", "Força", "Ritmo"];
 
 function Line({ isHidden = false }: { isHidden?: boolean }) {
   return (
