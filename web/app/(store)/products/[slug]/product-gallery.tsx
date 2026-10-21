@@ -8,6 +8,13 @@ import { cn } from "@/lib/cn";
 
 const photo = "object-contain mix-blend-multiply";
 
+// The photo grows under the pointer: the transform origin follows the cursor.
+function followCursor(event: React.MouseEvent<HTMLElement>) {
+  const box = event.currentTarget.getBoundingClientRect();
+  event.currentTarget.style.setProperty("--x", `${((event.clientX - box.left) / box.width) * 100}%`);
+  event.currentTarget.style.setProperty("--y", `${((event.clientY - box.top) / box.height) * 100}%`);
+}
+
 // The page renders this with key = the selected colour, so another colour opens on its first photo.
 export function ProductGallery({ images, productName }: { images: string[]; productName: string }) {
   const [current, setCurrent] = useState(0);
@@ -48,9 +55,18 @@ export function ProductGallery({ images, productName }: { images: string[]; prod
         type="button"
         aria-label="Ampliar foto"
         onClick={() => openZoom(current)}
-        className="relative hidden aspect-[4/5] flex-1 cursor-zoom-in overflow-hidden bg-muted lg:block"
+        onMouseMove={followCursor}
+        className="group relative hidden aspect-[4/5] flex-1 cursor-zoom-in overflow-hidden bg-muted lg:block"
       >
-        <Image src={images[current]} alt={altOf(current)} fill sizes="(min-width: 1024px) 45vw, 100vw" preload className={cn(photo, "p-8")} unoptimized />
+        <Image
+          src={images[current]}
+          alt={altOf(current)}
+          fill
+          sizes="(min-width: 1024px) 45vw, 100vw"
+          preload
+          className={cn(photo, "p-8 transition-transform duration-300 ease-out [transform-origin:var(--x,50%)_var(--y,50%)] group-hover:scale-[1.6]")}
+          unoptimized
+        />
         <span className="absolute right-4 bottom-4 flex size-10 items-center justify-center rounded-full bg-background">
           <ZoomIn aria-hidden="true" className="size-5" />
         </span>

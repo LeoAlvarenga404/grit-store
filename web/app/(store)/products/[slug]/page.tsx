@@ -7,7 +7,7 @@ import { api } from "@/lib/api/client";
 import { galleryOf, selectColor, skusOfColor } from "@/lib/product-variants";
 import { ColorPicker } from "./color-picker";
 import { ProductGallery } from "./product-gallery";
-import { ProductTabs } from "./product-tabs";
+import { ProductAccordion } from "./product-accordion";
 import { PurchasePanel } from "./purchase-panel";
 import { RelatedProducts } from "./related-products";
 
@@ -51,8 +51,10 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
           </li>
         </ol>
       </nav>
-      <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
-        <ProductGallery key={colorKey} images={galleryOf(product.imageUrls, color)} productName={product.name} />
+      <div className="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
+        <div className="lg:sticky lg:top-24">
+          <ProductGallery key={colorKey} images={galleryOf(product.imageUrls, color)} productName={product.name} />
+        </div>
         <div>
           <p className="text-eyebrow text-muted-foreground">{product.attributes["marca"] ?? product.categoryName}</p>
           <h1 className="text-display mt-2 text-3xl md:text-4xl">{product.name}</h1>
@@ -73,9 +75,9 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
               ))}
             </ul>
           </PurchasePanel>
+          <ProductAccordion description={product.description} attributes={product.attributes} />
         </div>
       </div>
-      <ProductTabs description={product.description} attributes={product.attributes} />
       <RelatedProducts categorySlug={product.categorySlug} productId={product.id} />
     </main>
   );
