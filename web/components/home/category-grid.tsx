@@ -7,8 +7,8 @@ import { storeCategories } from "@/lib/store-navigation";
 
 export function CategoryGrid() {
   return (
-    <section aria-labelledby="categories-title" className="mx-auto max-w-screen-2xl px-4 py-14 lg:px-8">
-      <SectionHeading id="categories-title" title="Compre por categoria" />
+    <section aria-labelledby="categories-title" className="mx-auto max-w-screen-2xl px-4 py-16 lg:px-8 lg:py-24">
+      <SectionHeading id="categories-title" eyebrow="Categorias" title="Compre por categoria" />
       <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
         {storeCategories.map((category) => (
           <li key={category.slug} className="reveal">

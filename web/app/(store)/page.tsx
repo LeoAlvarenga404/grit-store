@@ -1,4 +1,5 @@
 import { CategoryGrid } from "@/components/home/category-grid";
+import { BrandMarquee } from "@/components/home/brand-marquee";
 import { Hero } from "@/components/home/hero";
 import { ProductGridSection, ProductRowSection } from "@/components/home/product-sections";
 import { PromoBanners } from "@/components/home/promo-banners";
@@ -19,9 +20,10 @@ export default async function HomePage() {
       <Hero />
       <ValueStrip />
       <CategoryGrid />
-      <ProductGridSection id="latest-title" title="Lançamentos" href="/catalog" products={latest.data?.items ?? []} />
+      <ProductGridSection id="latest-title" eyebrow="Novidades" title="Lançamentos" href="/catalog" products={latest.data?.items ?? []} />
+      <BrandMarquee />
       <PromoBanners />
-      <ProductRowSection id="sneakers-title" title="Tênis" href="/catalog?category=tenis" products={sneakers.data?.items ?? []} />
+      <ProductRowSection id="sneakers-title" eyebrow="Corrida e treino" title="Tênis" href="/catalog?category=tenis" products={sneakers.data?.items ?? []} />
     </main>
   );
 }

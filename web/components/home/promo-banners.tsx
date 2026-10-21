@@ -5,7 +5,7 @@ import { promoBanners } from "@/lib/banners";
 
 export function PromoBanners() {
   return (
-    <section aria-label="Coleções" className="mx-auto grid max-w-screen-2xl gap-3 px-4 py-6 md:grid-cols-2 lg:px-8">
+    <section aria-label="Coleções" className="mx-auto grid max-w-screen-2xl gap-3 px-4 py-16 md:grid-cols-2 lg:px-8 lg:py-24">
       {promoBanners.map((banner) => (
         <div key={banner.desktopImage} className="group reveal relative overflow-hidden">
           <BannerImage
