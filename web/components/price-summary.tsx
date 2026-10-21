@@ -12,7 +12,7 @@ export function PriceSummary({ subtotalAmount, shippingAmount, className }: { su
         <dt className="text-muted-foreground">Frete fixo</dt>
         <dd className="tabular-nums">{formatPrice(shippingAmount)}</dd>
       </div>
-      <div className="flex justify-between border-t pt-3 text-base font-semibold">
+      <div className="flex items-baseline justify-between border-t pt-4 text-lg font-semibold">
         <dt>Total</dt>
         <dd className="tabular-nums">{formatPrice(subtotalAmount + shippingAmount)}</dd>
       </div>

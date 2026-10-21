@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ShoppingBag } from "lucide-react";
+import { Lock, PackageX, ShoppingBag } from "lucide-react";
+import { CheckoutSteps } from "@/components/checkout-steps";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
 import { ErrorMessage } from "@/components/error-message";
@@ -46,7 +47,8 @@ export default async function BasketPage({ searchParams }: { searchParams: Promi
 
   return (
     <main className="mx-auto max-w-screen-2xl px-4 py-10 lg:px-8">
-      <h1 className="text-display text-3xl md:text-4xl">Sacola</h1>
+      <CheckoutSteps current={0} />
+      <h1 className="text-display text-3xl md:text-5xl">Sacola</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         {itemCount} {itemCount === 1 ? "item" : "itens"}
       </p>
@@ -57,7 +59,7 @@ export default async function BasketPage({ searchParams }: { searchParams: Promi
             <BasketLine key={line.skuId} line={line} />
           ))}
         </ul>
-        <aside aria-labelledby="summary-title" className="h-fit bg-muted/60 p-6 lg:sticky lg:top-24">
+        <aside aria-labelledby="summary-title" className="h-fit border bg-muted/40 p-6 lg:sticky lg:top-24">
           <h2 id="summary-title" className="text-display text-xl">
             Resumo
           </h2>
@@ -77,6 +79,14 @@ export default async function BasketPage({ searchParams }: { searchParams: Promi
           <Link href="/catalog" className="mt-4 block text-center text-sm underline-offset-4 hover:underline">
             Continuar comprando
           </Link>
+          <ul className="mt-6 space-y-3 border-t pt-6 text-xs text-muted-foreground">
+            <li className="flex items-center gap-2">
+              <Lock aria-hidden="true" className="size-4 shrink-0" strokeWidth={1.5} /> Pagamento processado pelo Stripe
+            </li>
+            <li className="flex items-center gap-2">
+              <PackageX aria-hidden="true" className="size-4 shrink-0" strokeWidth={1.5} /> Cancele até o pedido ser enviado
+            </li>
+          </ul>
         </aside>
       </div>
     </main>
