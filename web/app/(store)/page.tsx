@@ -3,15 +3,15 @@ import { BrandMarquee } from "@/components/home/brand-marquee";
 import { Hero } from "@/components/home/hero";
 import { ProductGridSection, ProductRowSection } from "@/components/home/product-sections";
 import { PromoBanners } from "@/components/home/promo-banners";
-import { api } from "@/lib/api/client";
+import { getProducts } from "@/lib/api/catalog-reads";
 
 // Rendered per request: the build must not need a running API.
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const [latest, sneakers] = await Promise.all([
-    api.GET("/api/v1/catalog/products", { params: { query: { limit: 12 } } }),
-    api.GET("/api/v1/catalog/products", { params: { query: { category: "tenis", limit: 10 } } }),
+    getProducts({ limit: 12 }),
+    getProducts({ category: "tenis", limit: 10 }),
   ]);
 
   return (

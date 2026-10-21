@@ -1,15 +1,19 @@
 "use server";
 
+import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { api } from "@/lib/api/client";
 import { callApi } from "@/lib/api/call-api";
+import { catalogTag } from "@/lib/api/catalog-reads";
 import { errorCode } from "@/lib/api/problem";
 
 function productPath(productId: string): string {
   return `/admin/products/${encodeURIComponent(productId)}`;
 }
 
+// A change the shop shows (price, photos) expires the cached catalogue reads, so the storefront does not wait out the window.
 function backToProduct(productId: string, result: { error?: unknown; response: Response }): never {
+  if (result.response.ok) updateTag(catalogTag);
   const query = result.response.ok ? "" : `?error=${encodeURIComponent(errorCode(result))}`;
   redirect(`${productPath(productId)}${query}`);
 }
