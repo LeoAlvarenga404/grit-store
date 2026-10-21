@@ -29,6 +29,8 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
   const facets = facetsResponse.data;
   const listKey = catalogHref(filters, {});
   const storeCategory = storeCategories.find((category) => category.slug === filters.category);
+  // Every facet count equals the size of its refinement, so the categories add up to the number of matches.
+  const totalProducts = facets?.categories.reduce((sum, category) => sum + category.count, 0) ?? null;
   const activeCount = filters.attributes.length + (filters.category ? 1 : 0) + (filters.minPrice || filters.maxPrice ? 1 : 0);
 
   const list = !products.data ? (
@@ -47,6 +49,7 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
       query={toSearchQuery(filters)}
       initialProducts={products.data.items}
       initialCursor={products.data.nextCursor}
+      totalProducts={totalProducts}
     />
   );
 
@@ -64,7 +67,14 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
               <FiltersSheet key={listKey} activeCount={activeCount}>
                 <FilterPanel filters={filters} facets={facets} />
               </FiltersSheet>
-              <SortSelect filters={filters} />
+              {totalProducts !== null && (
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-semibold text-foreground tabular-nums">{totalProducts}</span> {totalProducts === 1 ? "produto" : "produtos"}
+                </p>
+              )}
+              <div className="ml-auto">
+                <SortSelect filters={filters} />
+              </div>
             </div>
             <ActiveFilters filters={filters} facets={facets} />
             {list}
