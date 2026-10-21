@@ -1,6 +1,7 @@
 import type { components } from "@/lib/api/schema";
 import { SectionHeading } from "@/components/home/section-heading";
 import { ProductCard } from "@/components/product-card";
+import { ScrollRow } from "@/components/scroll-row";
 
 type Product = components["schemas"]["ProductSummaryResponse"];
 
@@ -12,7 +13,7 @@ export function ProductGridSection({ id, title, href, products }: { id: string; 
       <SectionHeading id={id} title={title} href={href} />
       <ul className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 xl:grid-cols-6">
         {products.map((product) => (
-          <li key={product.id}>
+          <li key={product.id} className="reveal">
             <ProductCard product={product} />
           </li>
         ))}
@@ -29,13 +30,13 @@ export function ProductRowSection({ id, title, href, products }: { id: string; t
       <div className="px-4 lg:px-0">
         <SectionHeading id={id} title={title} href={href} />
       </div>
-      <ul className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 lg:px-0 [scrollbar-width:thin]">
+      <ScrollRow label={title}>
         {products.map((product) => (
           <li key={product.id} className="w-[44vw] shrink-0 snap-start sm:w-[30vw] lg:w-[calc((100%-4*0.75rem)/5)]">
             <ProductCard product={product} />
           </li>
         ))}
-      </ul>
+      </ScrollRow>
     </section>
   );
 }
