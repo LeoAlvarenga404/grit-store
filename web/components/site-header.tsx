@@ -2,6 +2,7 @@ import { User } from "lucide-react";
 import Link from "next/link";
 import { BasketLink } from "@/components/basket-count";
 import { CategoryMenu, navLinkClass } from "@/components/category-menu";
+import { FavoritesLink } from "@/components/favorites-link";
 import { HeaderShell } from "@/components/header-shell";
 import { MobileMenu } from "@/components/mobile-menu";
 import { SearchField } from "@/components/search-field";
@@ -43,6 +44,7 @@ export function SiteHeader({ isSignedIn }: { isSignedIn: boolean }) {
               <User className="size-5" />
             </Link>
           )}
+          <FavoritesLink className={iconLink} />
           <BasketLink className={iconLink} />
         </div>
       </div>

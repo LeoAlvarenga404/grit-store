@@ -3,6 +3,7 @@ import { BrandMarquee } from "@/components/home/brand-marquee";
 import { Hero } from "@/components/home/hero";
 import { ProductGridSection, ProductRowSection } from "@/components/home/product-sections";
 import { PromoBanners } from "@/components/home/promo-banners";
+import { RecentlyViewed } from "@/components/recently-viewed";
 import { getProducts } from "@/lib/api/catalog-reads";
 
 // Rendered per request: the build must not need a running API.
@@ -22,6 +23,7 @@ export default async function HomePage() {
       <BrandMarquee />
       <PromoBanners />
       <ProductRowSection id="sneakers-title" eyebrow="Corrida e treino" title="Tênis" href="/catalog?category=tenis" products={sneakers.data?.items ?? []} />
+      <RecentlyViewed count={6} className="py-16 lg:py-24" />
     </main>
   );
 }

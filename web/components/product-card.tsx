@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { ColorSwatch } from "@/components/color-swatch";
+import { FavoriteButton } from "@/components/favorite-button";
 import type { components } from "@/lib/api/schema";
 import { cn } from "@/lib/cn";
 import { formatPrice } from "@/lib/format";
@@ -20,7 +21,8 @@ export function ProductCard({ product, className }: { product: Product; classNam
   const href = `/products/${product.slug}`;
 
   return (
-    <div className={cn("group", className)}>
+    <div className={cn("group relative", className)}>
+      <FavoriteButton slug={product.slug} name={product.name} className="absolute top-2 right-2 z-10" />
       <Link href={href} className="relative block aspect-[4/5] overflow-hidden bg-muted" tabIndex={-1} aria-hidden="true">
         {activeImage ? (
           <Image

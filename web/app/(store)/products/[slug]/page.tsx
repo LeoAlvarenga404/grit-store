@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
+import { FavoriteButton } from "@/components/favorite-button";
+import { RecentlyViewed } from "@/components/recently-viewed";
 import { getProductBySlug } from "@/lib/api/catalog-reads";
 import { galleryOf, selectColor, skusOfColor } from "@/lib/product-variants";
 import { ColorPicker } from "./color-picker";
@@ -63,8 +65,13 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
           <ProductGallery key={colorKey} images={galleryOf(product.imageUrls, color)} productName={product.name} />
         </div>
         <div>
-          <p className="text-eyebrow text-muted-foreground">{product.attributes["marca"] ?? product.categoryName}</p>
-          <h1 className="text-display mt-2 text-2xl break-words sm:text-3xl md:text-4xl">{product.name}</h1>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-eyebrow text-muted-foreground">{product.attributes["marca"] ?? product.categoryName}</p>
+              <h1 className="text-display mt-2 text-2xl break-words sm:text-3xl md:text-4xl">{product.name}</h1>
+            </div>
+            <FavoriteButton slug={product.slug} name={product.name} className="size-11 shrink-0 border" />
+          </div>
           <PurchasePanel
             key={colorKey}
             skus={skusOfColor(product.skus, color)}
@@ -74,6 +81,7 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
         </div>
       </div>
       <RelatedProducts categorySlug={product.categorySlug} productId={product.id} />
+      <RecentlyViewed currentSlug={product.slug} count={4} className="mt-24 border-t px-0 pt-16 lg:px-0" />
     </main>
   );
 }
