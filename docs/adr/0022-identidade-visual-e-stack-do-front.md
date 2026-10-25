@@ -58,3 +58,17 @@ A UI da v1 era mínima: classes simples e uma folha de estilos própria (`legacy
   - a página do pedido se recarrega inteira a cada 2 s enquanto o pedido está `Placed` (`<meta http-equiv="refresh">`). Como `placeOrder` redireciona sem revalidar o layout, e o carrinho é esvaziado de forma assíncrona (no `OrderPlaced`), o cabeçalho mostra a contagem antiga até o primeiro recarregamento; quem sai por um link antes dele leva a contagem antiga até o próximo carregamento completo ou a próxima ação na sacola. Para um leitor de tela, cada recarregamento é uma página nova, e o `aria-live` do painel de situação não anuncia a mudança;
   - as bolinhas de cor do card têm 24 px, abaixo dos 40 px: são um atalho visual (trocam a foto), não a escolha da cor, que fica na página do produto;
   - as telas não têm teste automatizado de UI: o aceite é uma verificação no navegador, tela a tela.
+
+## Emenda de 2026-10-20: polimento visual da loja
+
+Rodada de acabamento depois do uso real das telas (branch `m15-store-polish`), sem mudar a identidade nem o stack:
+
+- **Ordenação do catálogo:** o `select` nativo do `SortSelect` virou o `Select` do `radix-ui` (`components/ui/select.tsx`), um menu em forma de pílula. A ordenação já dependia de JavaScript (`router.push`), então não perde funcionamento sem JS. O `native-select` continua nos formulários do admin.
+- **Total de resultados:** a API de busca não devolve total; a página soma as contagens de categoria das facetas, que valem o número de produtos da busca atual (decisão 1B-D9-B).
+- **Paginação:** "Carregar mais" ganhou contador ("Você viu X de Y"), barra de progresso e cartões de espera, mas continua um botão, sem rolagem infinita.
+- **Header:** o menu "Categorias" é um painel com a foto de cada categoria; a barra encolhe e ganha sombra depois da rolagem (`HeaderShell`).
+- **Fileira da home:** a rolagem nativa da fileira de Tênis foi trocada por setas e uma trilha de progresso (`ScrollRow`).
+- **Movimento:** animações de entrada só com CSS (`animation-timeline: view()`, sem JavaScript, ignoradas por navegadores sem suporte e com `prefers-reduced-motion`), texto do hero e zoom lento no slide ativo, faixa com o lema em loop.
+- **Produto e compra:** as abas viraram acordeão (`<details>` nativo), a galeria e a coluna de compra ficam fixas na rolagem, o zoom segue o cursor, e sacola e checkout mostram as etapas (`CheckoutSteps`).
+- **Banners que faltavam:** `auth.webp` (login e cadastro) e os seis `catalog-*-mobile.webp`, cortados das fotos que já existiam. Um banner ausente continua virando espaço reservado, mas nenhum está ausente agora.
+- **Limites conhecidos:** o campo de busca ainda usa o `datalist` nativo; as animações de entrada não aparecem em navegadores sem `animation-timeline`; a página do pedido não mostra as etapas.

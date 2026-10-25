@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ImageOff, Lock, ShoppingBag } from "lucide-react";
+import { CheckoutSteps } from "@/components/checkout-steps";
 import { EmptyState } from "@/components/empty-state";
 import { ErrorMessage } from "@/components/error-message";
 import { PriceSummary } from "@/components/price-summary";
@@ -53,10 +54,11 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
 
   return (
     <main className="mx-auto max-w-screen-2xl px-4 py-10 lg:px-8">
-      <Link href="/basket" className="inline-flex items-center gap-1 text-sm hover:underline">
+      <CheckoutSteps current={1} />
+      <Link href="/basket" className="inline-flex items-center gap-1 text-sm underline-offset-4 hover:underline">
         <ArrowLeft aria-hidden="true" className="size-4" /> Voltar para a sacola
       </Link>
-      <h1 className="text-display mt-4 text-3xl md:text-4xl">Finalizar compra</h1>
+      <h1 className="text-display mt-4 text-3xl md:text-5xl">Finalizar compra</h1>
       {errorText && <ErrorMessage className="mt-6">{errorText}</ErrorMessage>}
       <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_26rem]">
         <form action={placeOrder} className="space-y-8">
@@ -75,7 +77,7 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
           )}
           <p className="text-xs text-muted-foreground">Ao pagar, o pedido é criado e o pagamento é processado. Você pode cancelar até o pedido ser enviado.</p>
         </form>
-        <aside aria-labelledby="summary-title" className="h-fit bg-muted/60 p-6 lg:sticky lg:top-24">
+        <aside aria-labelledby="summary-title" className="h-fit border bg-muted/40 p-6 lg:sticky lg:top-24">
           <h2 id="summary-title" className="text-display text-xl">Resumo do pedido</h2>
           <ul className="mt-6 divide-y">
             {basket.lines.map((line) => (

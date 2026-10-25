@@ -1,44 +1,29 @@
-import { ChevronDown, User } from "lucide-react";
+import { User } from "lucide-react";
 import Link from "next/link";
 import { BasketLink } from "@/components/basket-count";
+import { CategoryMenu, navLinkClass } from "@/components/category-menu";
+import { HeaderShell } from "@/components/header-shell";
 import { MobileMenu } from "@/components/mobile-menu";
 import { SearchField } from "@/components/search-field";
 import { Wordmark } from "@/components/wordmark";
 import { logOut } from "@/lib/session/actions";
-import { menuShortcuts, storeCategories } from "@/lib/store-navigation";
+import { menuShortcuts } from "@/lib/store-navigation";
 
-const navLink = "inline-flex h-16 items-center border-b-2 border-transparent text-[13px] font-semibold tracking-[0.08em] uppercase hover:border-foreground";
-const iconLink = "relative inline-flex size-10 items-center justify-center rounded-full hover:bg-muted";
+const iconLink = "relative inline-flex size-10 items-center justify-center rounded-full transition-colors hover:bg-muted";
 
 export function SiteHeader({ isSignedIn }: { isSignedIn: boolean }) {
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-screen-2xl items-center gap-4 px-4 lg:gap-8 lg:px-8">
+    <HeaderShell>
+      <div className="mx-auto flex h-16 max-w-screen-2xl items-center gap-4 px-4 transition-[height] duration-300 group-data-[scrolled=true]/header:h-14 lg:gap-10 lg:px-8">
         <MobileMenu />
         <Wordmark />
-        <nav aria-label="Principal" className="hidden h-full items-center gap-7 lg:flex">
+        <nav aria-label="Principal" className="hidden h-full items-center gap-8 lg:flex">
           {menuShortcuts.map((item) => (
-            <Link key={item.href} href={item.href} className={navLink}>
+            <Link key={item.href} href={item.href} className={navLinkClass}>
               {item.label}
             </Link>
           ))}
-          {/* Hover or keyboard focus opens the panel; every link inside stays reachable with Tab. */}
-          <div className="group h-full">
-            <button type="button" className={`${navLink} gap-1`} aria-haspopup="true">
-              Categorias <ChevronDown aria-hidden="true" className="size-4" />
-            </button>
-            <div className="invisible absolute inset-x-0 top-full border-b bg-background opacity-0 transition-opacity group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
-              <ul className="mx-auto grid max-w-screen-2xl grid-cols-3 gap-x-8 gap-y-1 px-8 py-8">
-                {storeCategories.map((category) => (
-                  <li key={category.slug}>
-                    <Link href={`/catalog?category=${category.slug}`} className="block py-2 text-sm hover:underline">
-                      {category.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          <CategoryMenu />
         </nav>
         <SearchField className="ml-auto hidden w-full max-w-xs md:block" />
         <div className="ml-auto flex items-center gap-1 md:ml-0">
@@ -48,7 +33,7 @@ export function SiteHeader({ isSignedIn }: { isSignedIn: boolean }) {
                 <User className="size-5" />
               </Link>
               <form action={logOut}>
-                <button type="submit" className="px-2 text-sm font-medium hover:underline">
+                <button type="submit" className="px-2 text-sm font-medium underline-offset-4 hover:underline">
                   Sair
                 </button>
               </form>
@@ -61,6 +46,6 @@ export function SiteHeader({ isSignedIn }: { isSignedIn: boolean }) {
           <BasketLink className={iconLink} />
         </div>
       </div>
-    </header>
+    </HeaderShell>
   );
 }

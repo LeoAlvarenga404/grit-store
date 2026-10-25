@@ -15,10 +15,10 @@ export function BasketLine({ line }: { line: Line }) {
   const variant = variantLabel(line.color, line.size);
 
   return (
-    <li className={cn("flex gap-4 py-6", !line.isAvailable && "opacity-70")}>
-      <Link href={href} className="relative aspect-[4/5] w-24 shrink-0 overflow-hidden bg-muted sm:w-28" tabIndex={-1} aria-hidden="true">
+    <li className={cn("flex gap-5 py-7", !line.isAvailable && "opacity-70")}>
+      <Link href={href} className="relative aspect-[4/5] w-24 shrink-0 overflow-hidden bg-muted sm:w-36" tabIndex={-1} aria-hidden="true">
         {line.imageUrl ? (
-          <Image src={line.imageUrl} alt="" fill sizes="112px" className="object-contain p-2 mix-blend-multiply" unoptimized />
+          <Image src={line.imageUrl} alt="" fill sizes="144px" className="object-contain p-2 mix-blend-multiply" unoptimized />
         ) : (
           <span className="absolute inset-0 flex items-center justify-center">
             <ImageOff aria-hidden="true" className="size-5 text-muted-foreground" />
@@ -28,13 +28,13 @@ export function BasketLine({ line }: { line: Line }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <Link href={href} className="font-medium hover:underline">
+            <Link href={href} className="text-base font-semibold underline-offset-4 hover:underline">
               {line.productName}
             </Link>
             {variant && <p className="mt-1 text-sm text-muted-foreground">{variant}</p>}
             <p className="mt-1 text-sm text-muted-foreground tabular-nums">{formatPrice(unitPrice)} cada</p>
           </div>
-          <p className="font-semibold tabular-nums">{formatPrice(unitPrice * line.quantity)}</p>
+          <p className="text-base font-semibold tabular-nums">{formatPrice(unitPrice * line.quantity)}</p>
         </div>
         {line.hasPriceChanged && line.isAvailable && (
           <p className="mt-2 text-sm">O preço mudou desde que você adicionou: era {formatPrice(line.unitPriceAmount)}.</p>
@@ -47,7 +47,7 @@ export function BasketLine({ line }: { line: Line }) {
             <button
               type="submit"
               aria-label={`Remover ${line.productName}`}
-              className="inline-flex min-h-10 items-center gap-1.5 text-sm underline-offset-4 hover:underline"
+              className="inline-flex min-h-10 items-center gap-1.5 text-sm text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
             >
               <Trash2 aria-hidden="true" className="size-4" /> Remover
             </button>
@@ -60,7 +60,7 @@ export function BasketLine({ line }: { line: Line }) {
 
 function QuantityStepper({ line }: { line: Line }) {
   return (
-    <div className="flex h-10 items-center rounded-sm border">
+    <div className="flex h-10 items-center rounded-full border">
       <form action={changeQuantity}>
         <input type="hidden" name="skuId" value={line.skuId} />
         <input type="hidden" name="quantity" value={line.quantity - 1} />

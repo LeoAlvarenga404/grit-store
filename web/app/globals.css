@@ -85,6 +85,79 @@
   }
 }
 
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+/* Scroll-driven entrance: browsers without animation-timeline simply show the content. */
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee {
+  animation: marquee 45s linear infinite;
+}
+
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+/* The slide being shown brings its text in and slowly pushes into the photo. */
+[data-active="true"] .hero-text > * {
+  animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+[data-active="true"] .hero-text > :nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+[data-active="true"] .hero-text > :nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+[data-active="true"] .hero-text > :nth-child(4) {
+  animation-delay: 0.36s;
+}
+
+[data-active="true"] .hero-media img {
+  animation: drift 10s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .marquee,
+  [data-active="true"] .hero-text > *,
+  [data-active="true"] .hero-media img {
+    animation: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

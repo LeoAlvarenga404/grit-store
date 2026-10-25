@@ -23,7 +23,7 @@ const errorMessages: Record<string, string> = {
 };
 
 // The page renders this with key = the selected colour, so a colour change starts with no size chosen.
-export function PurchasePanel({ skus, colorPicker, children }: { skus: Sku[]; colorPicker: ReactNode; children: ReactNode }) {
+export function PurchasePanel({ skus, colorPicker }: { skus: Sku[]; colorPicker: ReactNode }) {
   const options = sizeOptions(skus);
   const [skuId, setSkuId] = useState(options.length === 1 ? options[0].sku.id : null);
   const [quantity, setQuantity] = useState(1);
@@ -69,14 +69,13 @@ export function PurchasePanel({ skus, colorPicker, children }: { skus: Sku[]; co
       </p>
       {colorPicker}
       {!isSingleOption(options) && <SizePicker options={options} selected={selected} isMissing={isSizeMissing} onChoose={choose} />}
-      <div className="flex gap-3">
+      <div className="flex flex-col gap-3 min-[430px]:flex-row">
         <QuantityStepper quantity={quantity} onChange={setQuantity} />
         <Button size="lg" className="flex-1" onClick={addToBag} disabled={isPending || !price}>
           <ShoppingBag aria-hidden="true" />
           {isPending ? "Adicionando…" : "Adicionar à sacola"}
         </Button>
       </div>
-      {children}
     </div>
   );
 }
@@ -119,7 +118,7 @@ function QuantityStepper({ quantity, onChange }: { quantity: number; onChange: (
   const step = "flex size-11 items-center justify-center disabled:opacity-30";
 
   return (
-    <div className="flex h-14 items-center rounded-sm border">
+    <div className="flex h-14 w-fit items-center rounded-sm border">
       <button type="button" className={step} aria-label="Diminuir quantidade" disabled={quantity <= 1} onClick={() => onChange(quantity - 1)}>
         <Minus aria-hidden="true" className="size-4" />
       </button>
