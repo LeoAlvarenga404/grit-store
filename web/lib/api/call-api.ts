@@ -1,6 +1,7 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { refreshTokens } from "@/lib/session/refresh";
+import { currentPathHeader, loginHref } from "@/lib/session/return-path";
 import { accessTokenCookie, clearSession, refreshTokenCookie, writeSession } from "@/lib/session/session";
 
 type CookieStore = Awaited<ReturnType<typeof cookies>>;
@@ -12,14 +13,18 @@ export async function callApi<Result extends { response: Response }>(
 ): Promise<Result> {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get(accessTokenCookie)?.value || (await renewSession(cookieStore));
-  if (!accessToken) redirect("/login");
+  if (!accessToken) redirect(await signInPath());
 
   const result = await call({ Authorization: `Bearer ${accessToken}` });
   if (result.response.status !== 401) return result;
 
   const renewedAccessToken = await renewSession(cookieStore);
-  if (!renewedAccessToken) redirect("/login");
+  if (!renewedAccessToken) redirect(await signInPath());
   return call({ Authorization: `Bearer ${renewedAccessToken}` });
+}
+
+async function signInPath(): Promise<string> {
+  return loginHref((await headers()).get(currentPathHeader));
 }
 
 async function renewSession(cookieStore: CookieStore): Promise<string | null> {

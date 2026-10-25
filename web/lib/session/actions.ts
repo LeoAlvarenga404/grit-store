@@ -4,6 +4,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { api } from "@/lib/api/client";
 import { errorCode } from "@/lib/api/problem";
+import { safeReturnPath } from "./return-path";
 import { clearSession, refreshTokenCookie, writeSession } from "./session";
 
 function readCredentials(formData: FormData) {
@@ -17,19 +18,27 @@ async function clientAddress(): Promise<Record<string, string>> {
   return forwardedFor ? { "X-Forwarded-For": forwardedFor } : {};
 }
 
+// A failed attempt keeps the page the visitor was heading to, so the next one still lands there.
+function authErrorPath(page: "/login" | "/register", error: string, next: string): string {
+  const query = new URLSearchParams({ error });
+  if (next !== "/") query.set("next", next);
+  return `${page}?${query}`;
+}
+
 export async function logIn(formData: FormData) {
+  const next = safeReturnPath(formData.get("next"));
   const result = await api.POST("/api/v1/identity/login", {
     body: readCredentials(formData),
     headers: await clientAddress(),
   });
-  if (!result.data) redirect(`/login?error=${encodeURIComponent(errorCode(result))}`);
+  if (!result.data) redirect(authErrorPath("/login", errorCode(result), next));
   writeSession(await cookies(), result.data);
-  redirect("/");
+  redirect(next);
 }
 
 export async function register(formData: FormData) {
   const result = await api.POST("/api/v1/identity/register", { body: readCredentials(formData) });
-  if (!result.data) redirect(`/register?error=${encodeURIComponent(errorCode(result))}`);
+  if (!result.data) redirect(authErrorPath("/register", errorCode(result), safeReturnPath(formData.get("next"))));
   await logIn(formData);
 }
 

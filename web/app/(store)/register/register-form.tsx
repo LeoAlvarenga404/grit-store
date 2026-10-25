@@ -27,7 +27,7 @@ function RuleItem({ label, isMet }: { label: string; isMet: boolean }) {
   );
 }
 
-export function RegisterForm() {
+export function RegisterForm({ returnPath }: { returnPath: string }) {
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
   const [isShown, setIsShown] = useState(false);
@@ -39,6 +39,7 @@ export function RegisterForm() {
 
   return (
     <form action={register} className="space-y-6">
+      <input type="hidden" name="next" value={returnPath} />
       <div className="space-y-2">
         <Label htmlFor="email">E-mail</Label>
         <Input id="email" name="email" type="email" autoComplete="email" placeholder="voce@email.com" required className="h-12" />
