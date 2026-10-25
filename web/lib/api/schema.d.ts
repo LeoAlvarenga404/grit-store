@@ -1061,7 +1061,7 @@ export interface paths {
         put?: never;
         /**
          * Registers a customer.
-         * @description Creates an account with the customer role. The password needs 8 to 128 characters. Log in afterwards to get tokens.
+         * @description Creates an account with the customer role. The password needs 8 to 128 characters with a lowercase letter, an uppercase letter, a digit and a symbol. Log in afterwards to get tokens.
          */
         post: {
             parameters: {
