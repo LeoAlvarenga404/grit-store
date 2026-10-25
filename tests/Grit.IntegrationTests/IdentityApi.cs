@@ -21,7 +21,7 @@ internal static class IdentityApi
 
     public const string MePath = "/api/v1/identity/me";
 
-    public const string Password = "senha-de-teste-123";
+    public const string Password = "Senha-de-teste-123!";
 
     public static string UniqueEmail() => $"cliente-{Guid.NewGuid():N}@grit.dev";
 

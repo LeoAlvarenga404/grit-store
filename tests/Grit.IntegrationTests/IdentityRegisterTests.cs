@@ -60,19 +60,38 @@ public class IdentityRegisterTests(ApiFactory factory)
         }
     }
 
-    // Length is the only password rule (D5): one character class at either length limit is accepted.
+    // A password has a lowercase letter, an uppercase letter, a digit and a symbol; 8 to 128 characters (ADR 0014 amendment).
+    private static string ComposedPassword(int length) => "Aa1!" + new string('a', length - 4);
+
     [Theory]
-    [InlineData('a', 8)]
-    [InlineData('1', 8)]
-    [InlineData('a', 128)]
-    public async Task Register_PasswordOfOneCharacterClassWithinTheLengthLimits_Returns201(char character, int length)
+    [InlineData(8)]
+    [InlineData(128)]
+    public async Task Register_ComposedPasswordAtEitherLengthLimit_Returns201(int length)
     {
         var response = await _client.PostAsJsonAsync(
             IdentityApi.RegisterPath,
-            new { email = IdentityApi.UniqueEmail(), password = new string(character, length) },
+            new { email = IdentityApi.UniqueEmail(), password = ComposedPassword(length) },
             TestContext.Current.CancellationToken);
 
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
+    }
+
+    [Theory]
+    [InlineData("SENHA-FORTE-123!")]
+    [InlineData("senha-forte-123!")]
+    [InlineData("Senha-forte-sem-numero!")]
+    [InlineData("Senhaforte123")]
+    [InlineData("senhafraca")]
+    public async Task Register_PasswordMissingACharacterClass_Returns400WithThePasswordField(string password)
+    {
+        var response = await _client.PostAsJsonAsync(
+            IdentityApi.RegisterPath,
+            new { email = IdentityApi.UniqueEmail(), password },
+            TestContext.Current.CancellationToken);
+
+        var problem = await ProblemResponse.ReadAsync(response, HttpStatusCode.BadRequest);
+        problem.GetProperty("code").GetString().ShouldBe("validation.failed");
+        problem.GetProperty("errors").TryGetProperty("password", out _).ShouldBeTrue();
     }
 
     [Theory]
@@ -85,7 +104,7 @@ public class IdentityRegisterTests(ApiFactory factory)
     {
         var response = await _client.PostAsJsonAsync(
             IdentityApi.RegisterPath,
-            new { email, password = new string('a', passwordLength) },
+            new { email, password = ComposedPassword(passwordLength) },
             TestContext.Current.CancellationToken);
 
         var problem = await ProblemResponse.ReadAsync(response, HttpStatusCode.BadRequest);

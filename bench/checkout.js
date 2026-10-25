@@ -6,7 +6,7 @@ import exec from 'k6/execution';
 
 const api = `${__ENV.BASE_URL || 'http://host.docker.internal:5080'}/api/v1`;
 const customers = Number(__ENV.CUSTOMERS || 5);
-const password = 'senha-de-carga-123';
+const password = 'Senha-de-carga-123!';
 
 export const options = {
   setupTimeout: '2m',
