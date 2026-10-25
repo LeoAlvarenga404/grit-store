@@ -42,5 +42,3 @@ export const getProducts = cached("products", (query: SearchQuery) => read(api.G
 export const getFacets = cached("facets", (query: FacetQuery) => read(api.GET("/api/v1/catalog/facets", { params: { query } })));
 
 export const getProductBySlug = cached("product", (slug: string) => read(api.GET("/api/v1/catalog/products/{slug}", { params: { path: { slug } } })));
-
-export const getSuggestions = cached("suggestions", (q: string) => read(api.GET("/api/v1/catalog/suggestions", { params: { query: { q } } })));
