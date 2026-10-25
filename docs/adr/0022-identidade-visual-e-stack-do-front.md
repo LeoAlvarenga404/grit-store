@@ -71,4 +71,14 @@ Rodada de acabamento depois do uso real das telas (branch `m15-store-polish`), s
 - **Movimento:** animações de entrada só com CSS (`animation-timeline: view()`, sem JavaScript, ignoradas por navegadores sem suporte e com `prefers-reduced-motion`), texto do hero e zoom lento no slide ativo, faixa com o lema em loop.
 - **Produto e compra:** as abas viraram acordeão (`<details>` nativo), a galeria e a coluna de compra ficam fixas na rolagem, o zoom segue o cursor, e sacola e checkout mostram as etapas (`CheckoutSteps`).
 - **Banners que faltavam:** `auth.webp` (login e cadastro) e os seis `catalog-*-mobile.webp`, cortados das fotos que já existiam. Um banner ausente continua virando espaço reservado, mas nenhum está ausente agora.
-- **Limites conhecidos:** o campo de busca ainda usa o `datalist` nativo; as animações de entrada não aparecem em navegadores sem `animation-timeline`; a página do pedido não mostra as etapas.
+- **Limites conhecidos:** as animações de entrada não aparecem em navegadores sem `animation-timeline`; a página do pedido não mostra as etapas.
+
+## Emenda 2026-10-25: busca ao vivo, logo, cartão, cadastro e extras da loja
+
+- **Busca ao vivo:** o campo abre um painel com até 3 categorias (com contagem) e 5 produtos (foto e preço), vindos da própria busca e das facetas por `/api/suggestions`; setas, Enter e Esc funcionam. O `datalist` saiu e o endpoint `/catalog/suggestions` do backend não é mais chamado pelo front.
+- **Logo:** wordmark GRIT em SVG (`components/logo.tsx`), com o G e o bojo do R chanfrados, mais `app/icon.svg`, `app/apple-icon.tsx` e `app/opengraph-image.tsx`.
+- **Checkout e cadastro:** o seletor de cartão virou um formulário com o botão "Usar cartão de teste" (só o token `pm_card_visa` viaja; só esse cartão é aceito até o P4); o cadastro mostra as regras de senha (ADR 0014, emenda de hoje) e pede a confirmação.
+- **Visibilidade:** `sitemap.xml` (lido a cada requisição, porque o build do front não tem API), `robots.txt` (páginas com sessão ou pagamento ficam fora), metadados e canônica por produto, imagem de compartilhamento padrão. A foto do produto não vai para a pré-visualização: é uma URL assinada de uma hora. `SITE_URL` define o endereço público.
+- **Retorno depois do login:** o proxy repassa o caminho atual no cabeçalho `x-grit-path`; `callApi` manda quem está sem sessão para `/login?next=…`; o login e o cadastro voltam para lá. Só caminhos internos valem (`safeReturnPath`); qualquer outra coisa vai para a home.
+- **Favoritos e vistos recentemente:** listas de slugs no `localStorage` (48 e 12 itens), sem conta e sem backend; `/api/products-by-slug` transforma os slugs em cartões com preço e foto atuais. Coração nos cartões e na página do produto, ícone com contador no cabeçalho, página `/favoritos`, fileira "Vistos recentemente" na home e no produto. Uma wishlist ligada à conta continua para a v2.
+

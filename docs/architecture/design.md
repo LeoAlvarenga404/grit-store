@@ -96,7 +96,7 @@ E-commerce de roupas e tênis esportivos para portfolio: backend .NET maduro, r�
 **Admin mínimo**
 - Cadastro de produto/SKU, ajuste de estoque, lista de pedidos com mudança de status, upload de imagens. O upload escolhe uma das cores dos SKUs do produto (emenda 2026-10-17, 13a).
 
-**Fica para v2:** cupons e promoções, avaliações, frete real por API, parcelamento, notificações por e-mail, wishlist, relatórios, recomendações, devolução e troca, rastreio, Mercado Pago (segunda implementação do `IPaymentGateway`).
+**Fica para v2:** cupons e promoções, avaliações, frete real por API, parcelamento, notificações por e-mail, wishlist ligada à conta (os favoritos do navegador existem, ADR 0022), relatórios, recomendações, devolução e troca, rastreio, Mercado Pago (segunda implementação do `IPaymentGateway`).
 
 ## 9. Performance
 
