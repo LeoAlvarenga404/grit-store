@@ -76,7 +76,8 @@ public sealed class IdentityModule : IModule
         options.User.RequireUniqueEmail = true;
         // The user name is the e-mail, whose format the validator already checks; any character it may carry is allowed.
         options.User.AllowedUserNameCharacters = string.Empty;
-        // Length over composition rules (NIST SP 800-63B); the validators enforce 8 to 128 characters.
+        // The register validator enforces 8 to 128 characters and one of each character class (ADR 0014 amendment);
+        // the options stay at length only, so the development admin seed is not tied to the register rules.
         options.Password.RequiredLength = 8;
         options.Password.RequireDigit = false;
         options.Password.RequireLowercase = false;

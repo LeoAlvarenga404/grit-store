@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
+import { Logo } from "@/components/logo";
 import { Badge } from "@/components/ui/badge";
 import { api } from "@/lib/api/client";
 import { callApi } from "@/lib/api/call-api";
@@ -20,7 +21,7 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
       <header className="border-b bg-background">
         <div className="mx-auto flex h-14 max-w-screen-xl items-center gap-8 px-4 lg:px-8">
           <Link href="/admin" className="flex items-center gap-2">
-            <span className="text-display text-lg">Grit</span>
+            <Logo className="h-5" />
             <Badge variant="outline" className="rounded-sm">Admin</Badge>
           </Link>
           <AdminNav />
