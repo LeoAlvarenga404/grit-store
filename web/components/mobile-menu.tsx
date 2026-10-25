@@ -3,6 +3,7 @@
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { Logo } from "@/components/logo";
 import { SearchField } from "@/components/search-field";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -21,7 +22,9 @@ export function MobileMenu() {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="w-[86vw] max-w-sm gap-0 p-6">
-        <SheetTitle className="text-display mb-6 text-2xl">Grit</SheetTitle>
+        <SheetTitle className="mb-6">
+          <Logo className="h-7" />
+        </SheetTitle>
         <SearchField className="mb-6" onNavigate={() => setIsOpen(false)} />
         <nav aria-label="Menu">
           <ul>
