@@ -16,8 +16,16 @@ type PageProps = { params: Promise<{ slug: string }>; searchParams: Promise<{ co
 const getProduct = cache((slug: string) => getProductBySlug(slug));
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { data } = await getProduct((await params).slug);
-  return { title: data?.name ?? "Produto" };
+  const { slug } = await params;
+  const { data } = await getProduct(slug);
+  if (!data) return { title: "Produto" };
+  // The cover is a signed, short-lived URL on the storage host, so previews use the store image instead.
+  const description = data.description.replace(/\s+/g, " ").trim().slice(0, 160) || `${data.name} na Grit Store.`;
+  return {
+    title: data.name,
+    description,
+    alternates: { canonical: `/products/${slug}` },
+  };
 }
 
 export default async function ProductPage({ params, searchParams }: PageProps) {
