@@ -19,7 +19,7 @@ dotnet run --project src/Grit.AppHost
 
 O AppHost sobe Postgres, Redis, a API e o Next.js, e abre o dashboard do Aspire. Em Development, a API aplica as migrations, carrega o catálogo de `seed/catalog.json` (Tênis e Acessórios importados do Mercado Livre: 20 modelos e 145 SKUs) e de `seed/grit/catalog.json` (a linha própria GRIT de roupas: 12 modelos e 144 SKUs) e dá 10 unidades de estoque para cada SKU. A chave de assinatura do JWT é gerada pelo próprio AppHost: não há segredo para configurar.
 
-A loja abre pelo link do recurso `web` no dashboard (a porta muda a cada execução; a 3000 é a do compose). Para testar o checkout: crie uma conta, adicione itens ao carrinho e finalize. Com o gateway fake (padrão), o cartão `tok_decline` é recusado, a reserva de estoque é liberada e o pedido é cancelado; qualquer outro valor, como o `pm_card_visa` que vem preenchido, é aprovado.
+A loja abre pelo link do recurso `web` no dashboard (a porta muda a cada execução; a 3000 é a do compose). Para testar o checkout: crie uma conta, adicione itens ao carrinho e finalize. Com o gateway fake (padrão), o cartão `tok_decline` é recusado, a reserva de estoque é liberada e o pedido é cancelado; qualquer outro valor, como o `pm_card_visa`, é aprovado. A tela de checkout tem um formulário de cartão e o botão "Usar cartão de teste", que o preenche; só esse cartão é aceito e o `tok_decline` só se exerce pela API.
 
 **Admin:** entre com `admin@grit.local`. A senha é gerada pelo AppHost na primeira execução e fica nos user secrets dele (`dotnet user-secrets list --project src/Grit.AppHost`, chave `Parameters:admin-password`), também visível nos parâmetros do dashboard do Aspire. Em `/admin` dá para:
 - ajustar o estoque por SKU;
