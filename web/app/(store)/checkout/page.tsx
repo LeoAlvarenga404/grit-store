@@ -14,7 +14,7 @@ import { formatPrice } from "@/lib/format";
 import { variantLabel } from "@/lib/product-variants";
 import { flatShippingAmount } from "@/lib/store-navigation";
 import { placeOrder } from "./actions";
-import { TestCardOptions } from "./test-card-options";
+import { CardForm } from "./card-form";
 
 export const metadata: Metadata = { title: "Finalizar compra" };
 
@@ -23,7 +23,7 @@ const errorMessages: Record<string, string> = {
   "ordering.sku_unavailable": "Um item da sacola ficou indisponível. Revise a sacola.",
   "ordering.price_changed": "Um preço mudou desde que você abriu esta página. Confira o novo subtotal.",
   "ordering.checkout_in_progress": "Este pedido ainda está sendo criado. Veja seus pedidos em instantes.",
-  "validation.failed": "Escolha um cartão de teste.",
+  "validation.failed": "Preencha os dados do cartão de teste.",
 };
 
 export default async function CheckoutPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
@@ -65,7 +65,7 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
           {/* A new key per page render: a double submit of this form places one order, a new visit a new one. */}
           <input type="hidden" name="idempotencyKey" value={crypto.randomUUID()} />
           <input type="hidden" name="expectedSubtotalAmount" value={basket.subtotalAmount} />
-          <TestCardOptions />
+          <CardForm />
           {hasUnavailableLine ? (
             <ErrorMessage>
               Um item da sacola ficou indisponível. <Link href="/basket" className="underline">Revise a sacola</Link> para continuar.
